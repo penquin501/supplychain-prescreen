@@ -89,7 +89,7 @@ export default function SupplierProfile() {
       {selectedSupplierId && supplier ? (
         <>
           {/* Business Profile */}
-          <BusinessProfile supplier={supplier} />
+          <BusinessProfile supplier={supplier} randomData={randomData} />
 
           {/* Scoring Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -102,6 +102,7 @@ export default function SupplierProfile() {
               supplierId={selectedSupplierId} 
               supplier={supplier}
               financialData={financialData}
+              randomData={randomData}
             />
           </div>
 

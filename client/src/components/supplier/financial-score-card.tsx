@@ -7,17 +7,20 @@ import { CheckCircle, XCircle, Calculator } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { type RandomCompanyData } from "@/lib/randomData";
 
 interface FinancialScoreCardProps {
   supplierId: string;
   supplier: Supplier;
   financialData?: FinancialData[];
+  randomData?: RandomCompanyData;
 }
 
 export default function FinancialScoreCard({ 
   supplierId, 
   supplier, 
-  financialData 
+  financialData,
+  randomData 
 }: FinancialScoreCardProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -136,20 +139,24 @@ export default function FinancialScoreCard({
         </div>
       </CardHeader>
       <CardContent>
-        {score ? (
+        {randomData ? (
           <>
             <div className="text-center mb-4">
               <div className="text-4xl font-bold text-financial-primary mb-2">
-                {score.financialScore}
+                {randomData.qualificationTotalScore}%
               </div>
-              <div className="text-sm text-slate-600">out of 100</div>
+              <div className="text-lg font-semibold mb-1">
+                {getGradeBadge(randomData.financialGrade)}
+              </div>
+              <div className="text-sm text-slate-600">Qualification Criteria Assessment</div>
             </div>
             <div className="space-y-2 text-sm">
-              {criteria.map((criterion, index) => (
-                <div key={index} className="flex justify-between">
-                  <span className="text-slate-600">{criterion.label}:</span>
-                  <span className={`font-medium ${criterion.status ? 'text-green-600' : 'text-red-600'}`}>
-                    {criterion.value}
+              <div className="text-xs text-slate-500 mb-3">Based on qualification criteria scoring:</div>
+              {randomData.qualificationResults.slice(0, 8).map((criterion) => (
+                <div key={criterion.no} className="flex justify-between">
+                  <span className="text-slate-600">{criterion.qualification}:</span>
+                  <span className={`font-medium ${criterion.result === 'Yes' ? 'text-green-600' : 'text-red-600'}`}>
+                    {criterion.result} ({criterion.weight})
                   </span>
                 </div>
               ))}
@@ -158,14 +165,7 @@ export default function FinancialScoreCard({
         ) : (
           <div className="text-center py-8">
             <Calculator className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-            <p className="text-slate-600 mb-4">Financial score not calculated</p>
-            <Button
-              onClick={() => calculateScoreMutation.mutate()}
-              disabled={calculateScoreMutation.isPending || !latestFinancial}
-              className="bg-financial-primary hover:bg-blue-700"
-            >
-              {calculateScoreMutation.isPending ? "Calculating..." : "Calculate Score"}
-            </Button>
+            <p className="text-slate-600 mb-4">Financial score loading...</p>
           </div>
         )}
       </CardContent>

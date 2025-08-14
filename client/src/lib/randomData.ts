@@ -1,6 +1,14 @@
 // Random data generator for supplier profiles
 export interface RandomCompanyData {
   companyName: string;
+  registrationType: string;
+  vatRegistration: string;
+  businessType: string;
+  taxId: string;
+  establishedDate: string;
+  yearsOfOperation: number;
+  address: string;
+  contactPerson: string;
   businessUnit: string;
   business: string;
   industry: string;
@@ -10,6 +18,8 @@ export interface RandomCompanyData {
   creditLine: string;
   approvalAuthority: string;
   qualificationResults: QualificationResult[];
+  qualificationTotalScore: number;
+  financialGrade: string;
   financialData: FinancialPerformanceData;
 }
 
@@ -52,6 +62,14 @@ export interface FinancialPerformanceData {
 const companies = [
   {
     companyName: "GADHOUSE CO.,LTD.",
+    registrationType: "Ltd",
+    vatRegistration: "Registered",
+    businessType: "Manufacturing",
+    taxId: "1234567890123",
+    establishedDate: "2018-03-15",
+    yearsOfOperation: 6,
+    address: "123 Industrial Road, Bangkok 10400",
+    contactPerson: "Mr. John Smith (CFO)",
     businessUnit: "Factoring",
     business: "HOME",
     industry: "Growth",
@@ -63,6 +81,14 @@ const companies = [
   },
   {
     companyName: "TECHNO SOLUTIONS PLC",
+    registrationType: "PLC",
+    vatRegistration: "Registered",
+    businessType: "Technology Services",
+    taxId: "2345678901234",
+    establishedDate: "2020-07-22",
+    yearsOfOperation: 4,
+    address: "456 Tech Park, Bangkok 10110",
+    contactPerson: "Ms. Jane Doe (Finance Director)",
     businessUnit: "Leasing",
     business: "TECHNOLOGY",
     industry: "Tech",
@@ -74,6 +100,14 @@ const companies = [
   },
   {
     companyName: "GREEN FOOD INDUSTRIES LTD.",
+    registrationType: "Ltd",
+    vatRegistration: "Registered",
+    businessType: "Food Manufacturing",
+    taxId: "3456789012345",
+    establishedDate: "2016-12-05",
+    yearsOfOperation: 8,
+    address: "789 Food Complex, Nonthaburi 11120",
+    contactPerson: "Mr. Robert Kim (Finance Manager)",
     businessUnit: "Supply Chain Finance",
     business: "FOOD",
     industry: "FMCG",
@@ -85,6 +119,14 @@ const companies = [
   },
   {
     companyName: "SUNRISE TRADING CO.",
+    registrationType: "Ltd",
+    vatRegistration: "Registered", 
+    businessType: "Import/Export Trading",
+    taxId: "4567890123456",
+    establishedDate: "2021-09-12",
+    yearsOfOperation: 3,
+    address: "456 Trading Plaza, Samut Prakan 10270",
+    contactPerson: "Ms. Maria Santos (Accounting Head)",
     businessUnit: "Factoring",
     business: "TRADING",
     industry: "Import/Export",
@@ -96,6 +138,14 @@ const companies = [
   },
   {
     companyName: "PACIFIC MANUFACTURING LP",
+    registrationType: "LP",
+    vatRegistration: "Registered",
+    businessType: "Industrial Manufacturing",
+    taxId: "5678901234567",
+    establishedDate: "2014-02-18",
+    yearsOfOperation: 10,
+    address: "321 Industrial Estate, Rayong 21140",
+    contactPerson: "Dr. Michael Zhang (CFO)",
     businessUnit: "Asset Finance",
     business: "MANUFACTURING",
     industry: "Industrial",
@@ -107,6 +157,14 @@ const companies = [
   },
   {
     companyName: "DIGITAL INNOVATIONS LTD.",
+    registrationType: "Ltd",
+    vatRegistration: "Registered",
+    businessType: "Software Development",
+    taxId: "6789012345678",
+    establishedDate: "2019-06-30",
+    yearsOfOperation: 5,
+    address: "654 Digital Park, Bangkok 10330",
+    contactPerson: "Ms. Emily Johnson (Finance Director)",
     businessUnit: "Working Capital",
     business: "SOFTWARE",
     industry: "Tech",
@@ -135,6 +193,29 @@ function seededRandom(seed: string): () => number {
 
 function randomBetween(random: () => number, min: number, max: number): number {
   return min + random() * (max - min);
+}
+
+// Helper function to calculate qualification score and grade
+function calculateQualificationScoreAndGrade(qualificationResults: QualificationResult[]): { score: number; grade: string } {
+  const totalScore = qualificationResults.reduce((sum, result) => {
+    return sum + parseFloat(result.scoring);
+  }, 0);
+  
+  const scorePercentage = Math.round(totalScore * 100);
+  
+  let grade = "F";
+  if (scorePercentage === 100) grade = "AAA";
+  else if (scorePercentage >= 95) grade = "AA";
+  else if (scorePercentage >= 90) grade = "A";
+  else if (scorePercentage >= 85) grade = "B+";
+  else if (scorePercentage >= 80) grade = "B";
+  else if (scorePercentage >= 75) grade = "C+";
+  else if (scorePercentage >= 70) grade = "C";
+  else if (scorePercentage >= 65) grade = "D+";
+  else if (scorePercentage >= 60) grade = "D";
+  else grade = "F";
+  
+  return { score: scorePercentage, grade };
 }
 
 export function getRandomCompanyData(supplierId: string): RandomCompanyData {
@@ -337,9 +418,14 @@ export function getRandomCompanyData(supplierId: string): RandomCompanyData {
     }
   ];
 
+  // Calculate qualification score and grade
+  const { score: qualificationTotalScore, grade: financialGrade } = calculateQualificationScoreAndGrade(qualificationResults);
+
   return {
     ...company,
     qualificationResults,
+    qualificationTotalScore,
+    financialGrade,
     financialData: {
       salesRevenue: { 2024: baseRevenue2024, 2023: baseRevenue2023, 2022: baseRevenue2022 },
       costOfSales: { 2024: costOfSales2024, 2023: costOfSales2023, 2022: costOfSales2022 },

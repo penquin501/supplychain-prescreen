@@ -34,6 +34,9 @@ export default function CreditReport() {
 
   // Get company-specific data including score change
   const companyData = selectedSupplierId ? getRandomCompanyData(selectedSupplierId) : null;
+  
+  // Check if supplier is approved and has factoring services (only show Post-Factoring Performance for these)
+  const isApprovedForFactoring = score?.recommendation === "approved";
 
   const getRecommendationStatus = (recommendation: string) => {
     switch (recommendation) {

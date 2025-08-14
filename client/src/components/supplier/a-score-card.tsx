@@ -168,10 +168,10 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
                       <tr className="bg-slate-50">
                         <th className="border border-slate-300 px-4 py-2 text-left w-12">#</th>
                         <th className="border border-slate-300 px-4 py-2 text-left">Document Name (English)</th>
-                        <th className="border border-slate-300 px-4 py-2 text-center w-20">Status</th>
                         <th className="border border-slate-300 px-4 py-2 text-center w-24">Preview</th>
-                        <th className="border border-slate-300 px-4 py-2 text-center w-32">Upload File</th>
                         <th className="border border-slate-300 px-4 py-2 text-center w-40">Approval Status</th>
+                        <th className="border border-slate-300 px-4 py-2 text-center w-20">Status</th>
+                        <th className="border border-slate-300 px-4 py-2 text-center w-32">Upload File</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -191,13 +191,6 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
                               </div>
                             </td>
                             <td className="border border-slate-300 px-4 py-2 text-center">
-                              {isSubmitted ? (
-                                <CheckCircle className="h-5 w-5 text-green-500 mx-auto" />
-                              ) : (
-                                <XCircle className="h-5 w-5 text-red-500 mx-auto" />
-                              )}
-                            </td>
-                            <td className="border border-slate-300 px-4 py-2 text-center">
                               {existingDoc?.fileUrl ? (
                                 <Button
                                   variant="ghost"
@@ -209,45 +202,6 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
                                 </Button>
                               ) : (
                                 <span className="text-slate-400 text-xs">No file</span>
-                              )}
-                            </td>
-                            <td className="border border-slate-300 px-4 py-2 text-center">
-                              {existingDoc ? (
-                                <ObjectUploader
-                                  maxNumberOfFiles={1}
-                                  maxFileSize={10485760} // 10MB
-                                  onGetUploadParameters={async () => {
-                                    const response = await fetch("/api/objects/upload", {
-                                      method: "POST",
-                                      headers: {
-                                        "Content-Type": "application/json",
-                                      }
-                                    });
-                                    if (!response.ok) {
-                                      throw new Error("Failed to get upload URL");
-                                    }
-                                    const data = await response.json();
-                                    return {
-                                      method: "PUT" as const,
-                                      url: data.uploadURL
-                                    };
-                                  }}
-                                  onComplete={(result) => {
-                                    if (result.successful && result.successful[0]) {
-                                      const uploadURL = result.successful[0].uploadURL;
-                                      uploadMutation.mutate({
-                                        documentId: existingDoc.id,
-                                        fileURL: uploadURL as string
-                                      });
-                                    }
-                                  }}
-                                  buttonClassName="h-8 px-3 text-xs bg-blue-600 hover:bg-blue-700 text-white"
-                                >
-                                  <Upload className="h-3 w-3 mr-1" />
-                                  {isSubmitted ? "Replace" : "Upload"}
-                                </ObjectUploader>
-                              ) : (
-                                <span className="text-xs text-slate-400">No record</span>
                               )}
                             </td>
                             <td className="border border-slate-300 px-4 py-2 text-center">
@@ -302,6 +256,52 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
                                 </div>
                               ) : (
                                 <span className="text-slate-400 text-xs">-</span>
+                              )}
+                            </td>
+                            <td className="border border-slate-300 px-4 py-2 text-center">
+                              {isSubmitted ? (
+                                <CheckCircle className="h-5 w-5 text-green-500 mx-auto" />
+                              ) : (
+                                <XCircle className="h-5 w-5 text-red-500 mx-auto" />
+                              )}
+                            </td>
+                            <td className="border border-slate-300 px-4 py-2 text-center">
+                              {existingDoc ? (
+                                <ObjectUploader
+                                  maxNumberOfFiles={1}
+                                  maxFileSize={10485760} // 10MB
+                                  onGetUploadParameters={async () => {
+                                    const response = await fetch("/api/objects/upload", {
+                                      method: "POST",
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                      }
+                                    });
+                                    if (!response.ok) {
+                                      throw new Error("Failed to get upload URL");
+                                    }
+                                    const data = await response.json();
+                                    return {
+                                      method: "PUT" as const,
+                                      url: data.uploadURL
+                                    };
+                                  }}
+                                  onComplete={(result) => {
+                                    if (result.successful && result.successful[0]) {
+                                      const uploadURL = result.successful[0].uploadURL;
+                                      uploadMutation.mutate({
+                                        documentId: existingDoc.id,
+                                        fileURL: uploadURL as string
+                                      });
+                                    }
+                                  }}
+                                  buttonClassName="h-8 px-3 text-xs bg-blue-600 hover:bg-blue-700 text-white"
+                                >
+                                  <Upload className="h-3 w-3 mr-1" />
+                                  {isSubmitted ? "Replace" : "Upload"}
+                                </ObjectUploader>
+                              ) : (
+                                <span className="text-xs text-slate-400">No record</span>
                               )}
                             </td>
                           </tr>

@@ -74,13 +74,13 @@ export default function FinancialDataTable({ financialData, isLoading }: Financi
                 </td>
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700">Sales Revenue</td>
+                <td className="px-4 py-3 text-slate-700">Net Sales</td>
                 {sortedData.map((data, index) => {
-                  const trend = index > 0 ? getTrend(data.salesRevenue, sortedData[index - 1]?.salesRevenue) : null;
+                  const trend = index > 0 ? getTrend(data.netSales || data.salesRevenue, sortedData[index - 1]?.netSales || sortedData[index - 1]?.salesRevenue) : null;
                   return (
                     <td key={data.year} className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <span>{formatCurrency(data.salesRevenue)}</span>
+                        <span>{formatCurrency(data.netSales || data.salesRevenue)}</span>
                         {trend && (
                           <span className={`flex items-center text-xs ${trend.isPositive ? 'text-green-600' : 'text-red-600'}`}>
                             {trend.isPositive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
@@ -93,61 +93,185 @@ export default function FinancialDataTable({ financialData, isLoading }: Financi
                 })}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700">Cost of Goods Sold</td>
+                <td className="px-4 py-3 text-slate-700">Total Other Income</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.costOfGoodsSold)}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.totalOtherIncome || "0")}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700">Gross Profit</td>
+                <td className="px-4 py-3 text-slate-700 font-medium">Total Revenue</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.grossProfit)}</td>
+                  <td key={data.year} className="px-4 py-3 text-right font-medium">{formatCurrency(data.totalRevenue || data.salesRevenue)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700">Net Income</td>
+                <td className="px-4 py-3 text-slate-700">Cost of Sales/Services</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.costOfSalesServices || data.costOfGoodsSold)}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700 font-medium">Gross Profit (Loss)</td>
                 {sortedData.map(data => {
-                  const netIncome = parseFloat(data.netIncome);
+                  const grossProfit = parseFloat(data.grossProfitLoss || data.grossProfit);
                   return (
-                    <td key={data.year} className={`px-4 py-3 text-right ${netIncome > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {formatCurrency(data.netIncome)}
+                    <td key={data.year} className={`px-4 py-3 text-right font-medium ${grossProfit > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {formatCurrency(data.grossProfitLoss || data.grossProfit)}
+                    </td>
+                  );
+                })}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700">Total Operating Expenses</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.totalOperatingExpenses || "0")}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700">Operating Income (Loss)</td>
+                {sortedData.map(data => {
+                  const operatingIncome = parseFloat(data.operatingIncomeLoss || "0");
+                  return (
+                    <td key={data.year} className={`px-4 py-3 text-right ${operatingIncome > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {formatCurrency(data.operatingIncomeLoss || "0")}
+                    </td>
+                  );
+                })}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700">Interest Expenses</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.interestExpenses || data.interestExpense)}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700">Income Taxes</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.incomeTaxes || "0")}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700 font-medium">Net Income (Loss)</td>
+                {sortedData.map(data => {
+                  const netIncome = parseFloat(data.netIncomeLoss || data.netIncome);
+                  return (
+                    <td key={data.year} className={`px-4 py-3 text-right font-medium ${netIncome > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {formatCurrency(data.netIncomeLoss || data.netIncome)}
                     </td>
                   );
                 })}
               </tr>
               <tr className="bg-slate-50">
                 <td className="px-4 py-3 font-medium text-slate-900" colSpan={years.length + 1}>
-                  Balance Sheet (Million THB)
+                  Balance Sheet - Assets (Million THB)
                 </td>
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700">Total Assets</td>
+                <td className="px-4 py-3 text-slate-700">Cash and Deposits at Financial Institutions</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.totalAssets)}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.cashAndDeposits || "0")}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700">Total Debt</td>
+                <td className="px-4 py-3 text-slate-700">Accounts Receivable</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.totalDebt)}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.accountsReceivable || "0")}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700">Total Equity</td>
+                <td className="px-4 py-3 text-slate-700">Inventories - Net</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.totalEquity)}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.inventoriesNet || "0")}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700">Current Assets</td>
+                <td className="px-4 py-3 text-slate-700 font-medium">Total Current Assets</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.currentAssets)}</td>
+                  <td key={data.year} className="px-4 py-3 text-right font-medium">{formatCurrency(data.totalCurrentAssets || data.currentAssets)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700">Current Liabilities</td>
+                <td className="px-4 py-3 text-slate-700">Property, Plant and Equipment - Net</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.currentLiabilities)}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.propertyPlantEquipmentNet || "0")}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700">Total Non-Current Assets</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.totalNonCurrentAssets || "0")}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700 font-bold">Total Assets</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right font-bold">{formatCurrency(data.totalAssets)}</td>
+                ))}
+              </tr>
+              
+              <tr className="bg-slate-50">
+                <td className="px-4 py-3 font-medium text-slate-900" colSpan={years.length + 1}>
+                  Balance Sheet - Liabilities (Million THB)
+                </td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700">Bank Overdrafts and Short-term Loans</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.bankOverdraftsShortTermLoans || "0")}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700">Accounts Payable</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.accountsPayable || "0")}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700 font-medium">Total Current Liabilities</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right font-medium">{formatCurrency(data.totalCurrentLiabilities || data.currentLiabilities)}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700">Total Long-term Loans</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.totalLongTermLoans || "0")}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700">Total Non-Current Liabilities</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.totalNonCurrentLiabilities || "0")}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700 font-bold">Total Liabilities</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right font-bold">{formatCurrency(data.totalLiabilities || data.totalDebt)}</td>
+                ))}
+              </tr>
+              
+              <tr className="bg-slate-50">
+                <td className="px-4 py-3 font-medium text-slate-900" colSpan={years.length + 1}>
+                  Balance Sheet - Shareholders' Equity (Million THB)
+                </td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700">Issued and Paid-up Common Stocks</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.issuedPaidUpCommonStocks || "0")}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700">Accumulated Retained Earnings</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.accumulatedRetainedEarnings || "0")}</td>
+                ))}
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-slate-700 font-bold">Total Shareholders' Equity</td>
+                {sortedData.map(data => (
+                  <td key={data.year} className="px-4 py-3 text-right font-bold">{formatCurrency(data.totalShareholdersEquity || data.totalEquity)}</td>
                 ))}
               </tr>
               <tr className="bg-slate-50">

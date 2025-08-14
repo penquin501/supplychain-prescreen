@@ -143,11 +143,11 @@ export default function FinancialScoreCard({
           <>
             <div className="text-center mb-4">
               <div className="flex items-center justify-center gap-4 mb-2">
-                <div className="text-4xl font-bold text-financial-primary">
-                  {randomData.qualificationTotalScore}%
-                </div>
                 <div className="text-4xl font-bold">
                   {getGradeBadge(randomData.financialGrade)}
+                </div>
+                <div className="text-4xl font-bold text-financial-primary">
+                  {randomData.qualificationTotalScore}%
                 </div>
               </div>
               <div className="text-sm text-slate-600">Financial Score</div>

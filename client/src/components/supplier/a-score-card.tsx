@@ -167,7 +167,7 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
                     <thead>
                       <tr className="bg-slate-50">
                         <th className="border border-slate-300 px-4 py-2 text-left w-12">#</th>
-                        <th className="border border-slate-300 px-4 py-2 text-left">Document Name (English)</th>
+                        <th className="border border-slate-300 px-4 py-2 text-left">Document Name</th>
                         <th className="border border-slate-300 px-4 py-2 text-center w-24">Preview</th>
                         <th className="border border-slate-300 px-4 py-2 text-center w-40">Approval Status</th>
                         <th className="border border-slate-300 px-4 py-2 text-center w-20">Status</th>
@@ -261,8 +261,12 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
                               )}
                             </td>
                             <td className="border border-slate-300 px-4 py-2 text-center">
-                              {isSubmitted ? (
-                                <CheckCircle className="h-5 w-5 text-green-500 mx-auto" />
+                              {existingDoc?.fileUrl ? (
+                                existingDoc.approvalStatus === "approved" ? (
+                                  <CheckCircle className="h-5 w-5 text-green-500 mx-auto" />
+                                ) : (
+                                  <XCircle className="h-5 w-5 text-red-500 mx-auto" />
+                                )
                               ) : (
                                 <XCircle className="h-5 w-5 text-red-500 mx-auto" />
                               )}

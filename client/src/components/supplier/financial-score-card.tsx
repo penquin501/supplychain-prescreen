@@ -148,7 +148,6 @@ export default function FinancialScoreCard({
               <div className="text-lg font-semibold mb-1">
                 {getGradeBadge(randomData.financialGrade)}
               </div>
-              <div className="text-sm text-slate-600">Qualification Criteria Assessment</div>
             </div>
             <div className="space-y-2 text-sm">
               <div className="text-xs text-slate-500 mb-3">Based on qualification criteria scoring:</div>

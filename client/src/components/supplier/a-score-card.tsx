@@ -3,8 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { FileText, CheckCircle, Clock, XCircle, Eye } from "lucide-react";
+import { FileText, CheckCircle, Clock, XCircle, Eye, Upload } from "lucide-react";
 import { useState } from "react";
+import { ObjectUploader } from "@/components/ObjectUploader";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface AScoreCardProps {
   supplierId: string;
@@ -15,12 +19,51 @@ import { requiredDocuments } from "@/lib/randomData";
 
 export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
   const totalDocuments = requiredDocuments.length; // Always 18 documents
   const submittedDocuments = documents?.filter(d => d.isSubmitted).length || 0;
   const aScore = Math.round((submittedDocuments / totalDocuments) * 100);
 
   // Create a map of submitted document types for easy lookup
   const submittedDocTypes = new Set(documents?.filter(d => d.isSubmitted).map(d => d.documentType) || []);
+  
+  // Create a map to find document ID by type
+  const documentMap = new Map(documents?.map(doc => [doc.documentType, doc]) || []);
+
+  // Upload mutation
+  const uploadMutation = useMutation({
+    mutationFn: async ({ documentId, fileURL }: { documentId: string; fileURL: string }) => {
+      const response = await fetch(`/api/documents/${documentId}/upload`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ fileURL })
+      });
+      if (!response.ok) {
+        throw new Error("Failed to upload document");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Document uploaded successfully!",
+      });
+      // Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['/api/suppliers', supplierId, 'documents'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/suppliers', supplierId, 'score'] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Upload Failed",
+        description: "Failed to upload document. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
 
   const getStatusBadge = (score: number) => {
     if (score >= 80) {
@@ -92,11 +135,14 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
                         <th className="border border-slate-300 px-4 py-2 text-left w-12">#</th>
                         <th className="border border-slate-300 px-4 py-2 text-left">Document Name (English)</th>
                         <th className="border border-slate-300 px-4 py-2 text-center w-20">Status</th>
+                        <th className="border border-slate-300 px-4 py-2 text-center w-32">Upload File</th>
                       </tr>
                     </thead>
                     <tbody>
                       {requiredDocuments.map((doc) => {
                         const isSubmitted = submittedDocTypes.has(doc.english) || submittedDocTypes.has(doc.thai);
+                        const existingDoc = documentMap.get(doc.english) || documentMap.get(doc.thai);
+                        
                         return (
                           <tr key={doc.id} className="hover:bg-slate-50">
                             <td className="border border-slate-300 px-4 py-2 text-center font-medium">
@@ -113,6 +159,45 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
                                 <CheckCircle className="h-5 w-5 text-green-500 mx-auto" />
                               ) : (
                                 <XCircle className="h-5 w-5 text-red-500 mx-auto" />
+                              )}
+                            </td>
+                            <td className="border border-slate-300 px-4 py-2 text-center">
+                              {existingDoc ? (
+                                <ObjectUploader
+                                  maxNumberOfFiles={1}
+                                  maxFileSize={10485760} // 10MB
+                                  onGetUploadParameters={async () => {
+                                    const response = await fetch("/api/objects/upload", {
+                                      method: "POST",
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                      }
+                                    });
+                                    if (!response.ok) {
+                                      throw new Error("Failed to get upload URL");
+                                    }
+                                    const data = await response.json();
+                                    return {
+                                      method: "PUT" as const,
+                                      url: data.uploadURL
+                                    };
+                                  }}
+                                  onComplete={(result) => {
+                                    if (result.successful && result.successful[0]) {
+                                      const uploadURL = result.successful[0].uploadURL;
+                                      uploadMutation.mutate({
+                                        documentId: existingDoc.id,
+                                        fileURL: uploadURL as string
+                                      });
+                                    }
+                                  }}
+                                  buttonClassName="h-8 px-3 text-xs bg-blue-600 hover:bg-blue-700 text-white"
+                                >
+                                  <Upload className="h-3 w-3 mr-1" />
+                                  {isSubmitted ? "Replace" : "Upload"}
+                                </ObjectUploader>
+                              ) : (
+                                <span className="text-xs text-slate-400">No record</span>
                               )}
                             </td>
                           </tr>

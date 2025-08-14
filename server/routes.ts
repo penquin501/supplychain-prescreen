@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { ObjectStorageService } from "./objectStorage";
 import { insertSupplierSchema, insertFinancialDataSchema, insertTransactionSchema, insertDocumentSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -261,6 +262,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(score);
     } catch (error) {
       res.status(500).json({ message: "Failed to calculate score" });
+    }
+  });
+
+  // Object storage endpoints for document uploads
+  app.post("/api/objects/upload", async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Error getting upload URL:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Update document with uploaded file URL
+  app.put("/api/documents/:id/upload", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { fileURL } = req.body;
+
+      if (!fileURL) {
+        return res.status(400).json({ error: "fileURL is required" });
+      }
+
+      const objectStorageService = new ObjectStorageService();
+      const normalizedPath = objectStorageService.normalizeObjectEntityPath(fileURL);
+
+      const document = await storage.updateDocument(id, {
+        isSubmitted: true,
+        submittedDate: new Date().toISOString().split('T')[0],
+        isVerified: true,
+        documentName: normalizedPath
+      });
+
+      if (!document) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+
+      res.json(document);
+    } catch (error) {
+      console.error("Error updating document:", error);
+      res.status(500).json({ error: "Internal server error" });
     }
   });
 

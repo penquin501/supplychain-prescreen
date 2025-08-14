@@ -111,6 +111,7 @@ export default function SupplierProfile() {
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="bg-slate-50">
+                      <th className="border border-slate-300 px-4 py-3 text-center text-sm font-semibold">No.</th>
                       <th className="border border-slate-300 px-4 py-3 text-left text-sm font-semibold">Qualification</th>
                       <th className="border border-slate-300 px-4 py-3 text-left text-sm font-semibold">Criteria</th>
                       <th className="border border-slate-300 px-4 py-3 text-center text-sm font-semibold">Result</th>

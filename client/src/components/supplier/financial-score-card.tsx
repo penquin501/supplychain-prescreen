@@ -143,8 +143,22 @@ export default function FinancialScoreCard({
           <>
             <div className="text-center mb-4">
               <div className="flex items-center justify-center gap-4 mb-2">
-                <div className="text-4xl font-bold">
-                  {getGradeBadge(randomData.financialGrade)}
+                <div className={`text-4xl font-bold px-3 py-1 rounded-lg ${(() => {
+                  const gradeColors: Record<string, string> = {
+                    'AAA': 'bg-green-100 text-green-800',
+                    'AA': 'bg-green-100 text-green-800',
+                    'A': 'bg-green-100 text-green-800',
+                    'B+': 'bg-blue-100 text-blue-800',
+                    'B': 'bg-blue-100 text-blue-800',
+                    'C+': 'bg-yellow-100 text-yellow-800',
+                    'C': 'bg-yellow-100 text-yellow-800',
+                    'D+': 'bg-orange-100 text-orange-800',
+                    'D': 'bg-orange-100 text-orange-800',
+                    'F': 'bg-red-100 text-red-800',
+                  };
+                  return gradeColors[randomData.financialGrade] || 'bg-slate-100 text-slate-800';
+                })()}`}>
+                  {randomData.financialGrade}
                 </div>
                 <div className="text-4xl font-bold text-financial-primary">
                   {randomData.qualificationTotalScore}%

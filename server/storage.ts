@@ -368,6 +368,10 @@ export class MemStorage implements IStorage {
           isSubmitted: docData.isSubmitted,
           submittedDate: submissionDate,
           isVerified: docData.isSubmitted,
+          approvalStatus: docData.isSubmitted ? "approved" : "pending",
+          reviewedBy: docData.isSubmitted ? "System" : null,
+          reviewedDate: docData.isSubmitted ? submissionDate : null,
+          fileUrl: docData.isSubmitted ? `/objects/uploads/${docId}` : null,
         };
         this.documents.set(docId, doc);
       });

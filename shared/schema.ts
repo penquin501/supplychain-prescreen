@@ -145,6 +145,10 @@ export const documents = pgTable("documents", {
   isSubmitted: boolean("is_submitted").notNull().default(false),
   submittedDate: date("submitted_date"),
   isVerified: boolean("is_verified").notNull().default(false),
+  approvalStatus: text("approval_status").notNull().default("pending"), // "pending", "approved", "rejected"
+  reviewedBy: text("reviewed_by"),
+  reviewedDate: date("reviewed_date"),
+  fileUrl: text("file_url"), // URL to the uploaded file
 });
 
 export const scores = pgTable("scores", {

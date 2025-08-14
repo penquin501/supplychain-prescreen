@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { FileText, CheckCircle, Clock, XCircle, Eye, Upload } from "lucide-react";
+import { FileText, CheckCircle, Clock, XCircle, Eye, Upload, Image, FileIcon, ThumbsUp, ThumbsDown } from "lucide-react";
 import { useState } from "react";
 import { ObjectUploader } from "@/components/ObjectUploader";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -60,6 +60,40 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
       toast({
         title: "Upload Failed",
         description: "Failed to upload document. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Approval mutation
+  const approvalMutation = useMutation({
+    mutationFn: async ({ documentId, approvalStatus }: { documentId: string; approvalStatus: "approved" | "rejected" }) => {
+      const response = await fetch(`/api/documents/${documentId}/approval`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          approvalStatus, 
+          reviewedBy: "Admin User" // In real app, this would come from authenticated user
+        })
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update approval status");
+      }
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/suppliers", supplierId, "documents"] });
+      toast({
+        title: `Document ${variables.approvalStatus}`,
+        description: `The document has been ${variables.approvalStatus}.`,
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Approval failed",
+        description: error.message,
         variant: "destructive",
       });
     },
@@ -135,7 +169,9 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
                         <th className="border border-slate-300 px-4 py-2 text-left w-12">#</th>
                         <th className="border border-slate-300 px-4 py-2 text-left">Document Name (English)</th>
                         <th className="border border-slate-300 px-4 py-2 text-center w-20">Status</th>
+                        <th className="border border-slate-300 px-4 py-2 text-center w-24">Preview</th>
                         <th className="border border-slate-300 px-4 py-2 text-center w-32">Upload File</th>
+                        <th className="border border-slate-300 px-4 py-2 text-center w-40">Approval Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -159,6 +195,20 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
                                 <CheckCircle className="h-5 w-5 text-green-500 mx-auto" />
                               ) : (
                                 <XCircle className="h-5 w-5 text-red-500 mx-auto" />
+                              )}
+                            </td>
+                            <td className="border border-slate-300 px-4 py-2 text-center">
+                              {existingDoc?.fileUrl ? (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => window.open(existingDoc.fileUrl, '_blank')}
+                                  className="h-8 w-8 p-0"
+                                >
+                                  <Image className="h-4 w-4 text-blue-600" />
+                                </Button>
+                              ) : (
+                                <span className="text-slate-400 text-xs">No file</span>
                               )}
                             </td>
                             <td className="border border-slate-300 px-4 py-2 text-center">
@@ -198,6 +248,60 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
                                 </ObjectUploader>
                               ) : (
                                 <span className="text-xs text-slate-400">No record</span>
+                              )}
+                            </td>
+                            <td className="border border-slate-300 px-4 py-2 text-center">
+                              {existingDoc?.fileUrl ? (
+                                <div className="flex flex-col items-center gap-1">
+                                  <div className="flex items-center gap-1">
+                                    {existingDoc.approvalStatus === "approved" ? (
+                                      <Badge className="bg-green-100 text-green-800 text-xs">
+                                        <CheckCircle className="h-3 w-3 mr-1" />
+                                        Approved
+                                      </Badge>
+                                    ) : existingDoc.approvalStatus === "rejected" ? (
+                                      <Badge className="bg-red-100 text-red-800 text-xs">
+                                        <XCircle className="h-3 w-3 mr-1" />
+                                        Rejected
+                                      </Badge>
+                                    ) : (
+                                      <Badge className="bg-yellow-100 text-yellow-800 text-xs">
+                                        <Clock className="h-3 w-3 mr-1" />
+                                        Pending
+                                      </Badge>
+                                    )}
+                                  </div>
+                                  {existingDoc.approvalStatus === "pending" && (
+                                    <div className="flex gap-1">
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => approvalMutation.mutate({
+                                          documentId: existingDoc.id,
+                                          approvalStatus: "approved"
+                                        })}
+                                        className="h-6 w-6 p-0 text-green-600 hover:bg-green-50"
+                                        disabled={approvalMutation.isPending}
+                                      >
+                                        <ThumbsUp className="h-3 w-3" />
+                                      </Button>
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => approvalMutation.mutate({
+                                          documentId: existingDoc.id,
+                                          approvalStatus: "rejected"
+                                        })}
+                                        className="h-6 w-6 p-0 text-red-600 hover:bg-red-50"
+                                        disabled={approvalMutation.isPending}
+                                      >
+                                        <ThumbsDown className="h-3 w-3" />
+                                      </Button>
+                                    </div>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="text-slate-400 text-xs">-</span>
                               )}
                             </td>
                           </tr>

@@ -293,7 +293,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const document = await storage.updateDocument(id, {
         isSubmitted: true,
         submittedDate: new Date().toISOString().split('T')[0],
-        isVerified: true,
+        isVerified: false, // Reset verification when new file is uploaded
+        approvalStatus: "pending", // Reset to pending when new file is uploaded
+        reviewedBy: null,
+        reviewedDate: null,
+        fileUrl: normalizedPath,
         documentName: normalizedPath
       });
 
@@ -304,6 +308,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(document);
     } catch (error) {
       console.error("Error updating document:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Approve or reject document
+  app.put("/api/documents/:id/approval", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { approvalStatus, reviewedBy } = req.body;
+
+      if (!["approved", "rejected"].includes(approvalStatus)) {
+        return res.status(400).json({ error: "Invalid approval status. Must be 'approved' or 'rejected'" });
+      }
+
+      if (!reviewedBy) {
+        return res.status(400).json({ error: "reviewedBy is required" });
+      }
+
+      const document = await storage.updateDocument(id, {
+        approvalStatus,
+        reviewedBy,
+        reviewedDate: new Date().toISOString().split('T')[0],
+        isVerified: approvalStatus === "approved"
+      });
+
+      if (!document) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+
+      res.json(document);
+    } catch (error) {
+      console.error("Error updating document approval:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   });

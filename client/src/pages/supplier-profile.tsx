@@ -4,7 +4,8 @@ import { type Supplier, type FinancialData, type Document } from "@shared/schema
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Building, Plus } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Building, Plus, CheckCircle, XCircle, Eye } from "lucide-react";
 import { useState } from "react";
 
 import FinancialScoreCard from "@/components/supplier/financial-score-card";

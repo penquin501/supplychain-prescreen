@@ -1,17 +1,46 @@
 import { type Document } from "@shared/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FileText, CheckCircle, Clock, XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { FileText, CheckCircle, Clock, XCircle, Eye } from "lucide-react";
+import { useState } from "react";
 
 interface AScoreCardProps {
   supplierId: string;
   documents?: Document[];
 }
 
+// Required documents list with English translations
+const requiredDocuments = [
+  { id: 1, thai: "Company Profile", english: "Company Profile" },
+  { id: 2, thai: "ประวัติเจ้าของ / ผู้บริหารหลัก", english: "Owner/Key Executive History" },
+  { id: 3, thai: "หนังสือรับรองบริษัท (ออกภายใน 1 เดือนล่าสุด)", english: "Company Certificate (Issued within the last month)" },
+  { id: 4, thai: "บริคณห์สนธิ", english: "Articles of Association" },
+  { id: 5, thai: "สำเนารายชื่อถือหุ้น (ล่าสุด)", english: "Copy of Shareholders List (Latest)" },
+  { id: 6, thai: "หนังสือแสดงการจดทะเบียนหุ้นส่วนบริษัท", english: "Partnership Registration Certificate" },
+  { id: 7, thai: "ภ.พ.20", english: "Por Por 20 (VAT Registration)" },
+  { id: 8, thai: "บอจ.3 / ใบอนุญาตจัดตั้งโรงงาน", english: "Factory License (Bor Chor 3 / Factory Establishment Permit)" },
+  { id: 9, thai: "งบภายในปี 68 และ ภ.พ.30 ย้อนหลัง ม.ค. 68 – ปัจจุบัน พร้อมใบเสร็จ", english: "Internal Financial Statements for 2025 and Por Por 30 (Jan 2025 - Present) with receipts" },
+  { id: 10, thai: "งบการเงินย้อนหลัง 3 ปี (ล่าสุด) กรณียังไม่ปิดปี 67 ขอ ภ.พ.30 ม.ค.–ธ.ค. 67 พร้อมใบเสร็จ", english: "3-Year Financial Statements (Latest). If 2024 not closed, request Por Por 30 Jan-Dec 2024 with receipts" },
+  { id: 11, thai: "Statement ธนาคารย้อนหลัง 1 ปี", english: "Bank Statements for the past 1 year" },
+  { id: 12, thai: "สำเนาบัตรประจำตัวประชาชน และสำเนาทะเบียนบ้านกรรมการและคู่สมรสกรรมการ (รับรองสำเนาถูกต้อง)", english: "Copy of ID Cards and House Registration of Directors and Spouses (Certified copies)" },
+  { id: 13, thai: "List รายชื่อลูกหนี้ที่ขออนุมัติวงเงิน", english: "List of Debtors for Credit Limit Approval" },
+  { id: 14, thai: "ประวัติการเรียกเก็บเงินจากลูกหนี้การค้าที่เสนอขอวงเงินย้อนหลัง 1 ปี เอกสารประกอบได้แก่ ใบเสนอราคา, ใบสั่งซื้อ, ใบส่งของ, ใบวางบิล, ใบแจ้งหนี้ และภาพถ่ายหน้าเช็คลูกหนี้การค้าหรือเอกสารแสดงรายการโอนเงิน (Remittance) พร้อมแนับหน้า Statement ที่มียอดเงินรับชำระจากลูกค้าเข้ามา", english: "1-Year Collection History from Trade Debtors including: quotations, purchase orders, delivery notes, billing, invoices, check photos or remittance documents with statement pages showing customer payments" },
+  { id: 15, thai: "PO งาน หรือ สัญญาที่ได้รับจากลูกหนี้", english: "Purchase Orders or Contracts from Debtors" },
+  { id: 16, thai: "คาดการณ์ยอดขายลูกหนี้รายที่ขออนุมัติวงเงิน", english: "Sales Forecast for Debtors Requesting Credit Approval" },
+  { id: 17, thai: "เอกสารเครดิตบูโร (บริษัท+กรรมการ+ผู้ค้ำประกัน) (ย้อนหลังไม่เกิน 1 เดือน)", english: "Credit Bureau Reports (Company + Directors + Guarantors) (Not older than 1 month)" },
+  { id: 18, thai: "เงื่อนไขการวางบิลและชำระเงิน", english: "Billing and Payment Terms including: a) Billing schedule, b) Payment schedule, c) Payment type (check/transfer), d) Check receipt documents, e) Payment location, f) Billing/payment procedures (if any)" }
+];
+
 export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
-  const totalDocuments = documents?.length || 18; // Default to 18 required documents
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const totalDocuments = requiredDocuments.length; // Always 18 documents
   const submittedDocuments = documents?.filter(d => d.isSubmitted).length || 0;
   const aScore = Math.round((submittedDocuments / totalDocuments) * 100);
+
+  // Create a map of submitted document types for easy lookup
+  const submittedDocTypes = new Set(documents?.filter(d => d.isSubmitted).map(d => d.documentType) || []);
 
   const getStatusBadge = (score: number) => {
     if (score >= 80) {
@@ -63,30 +92,67 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
           </div>
         </div>
 
-        {documents && documents.length > 0 && (
-          <div className="mt-4 pt-4 border-t border-slate-200">
-            <div className="text-sm font-medium text-slate-900 mb-2">Recent Documents</div>
-            <div className="space-y-1 max-h-24 overflow-y-auto">
-              {documents.slice(0, 3).map((doc) => (
-                <div key={doc.id} className="flex items-center justify-between text-xs">
-                  <span className="text-slate-600 truncate">{doc.documentType}</span>
-                  {doc.isSubmitted ? (
-                    <CheckCircle className="h-3 w-3 text-green-500" />
-                  ) : (
-                    <XCircle className="h-3 w-3 text-red-500" />
-                  )}
+        <div className="mt-4 pt-4 border-t border-slate-200">
+          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="w-full">
+                <Eye className="h-4 w-4 mr-2" />
+                View Details
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Required Documents Checklist</DialogTitle>
+              </DialogHeader>
+              <div className="mt-4">
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse border border-slate-300">
+                    <thead>
+                      <tr className="bg-slate-50">
+                        <th className="border border-slate-300 px-4 py-2 text-left w-12">#</th>
+                        <th className="border border-slate-300 px-4 py-2 text-left">Document Name (English)</th>
+                        <th className="border border-slate-300 px-4 py-2 text-center w-20">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {requiredDocuments.map((doc) => {
+                        const isSubmitted = submittedDocTypes.has(doc.english) || submittedDocTypes.has(doc.thai);
+                        return (
+                          <tr key={doc.id} className="hover:bg-slate-50">
+                            <td className="border border-slate-300 px-4 py-2 text-center font-medium">
+                              {doc.id}
+                            </td>
+                            <td className="border border-slate-300 px-4 py-2">
+                              <div className="text-sm">
+                                <div className="font-medium text-slate-900">{doc.english}</div>
+                                <div className="text-slate-500 text-xs mt-1">{doc.thai}</div>
+                              </div>
+                            </td>
+                            <td className="border border-slate-300 px-4 py-2 text-center">
+                              {isSubmitted ? (
+                                <CheckCircle className="h-5 w-5 text-green-500 mx-auto" />
+                              ) : (
+                                <XCircle className="h-5 w-5 text-red-500 mx-auto" />
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {(!documents || documents.length === 0) && (
-          <div className="text-center py-4">
-            <FileText className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-            <p className="text-sm text-slate-600">No documents submitted</p>
-          </div>
-        )}
+                <div className="mt-4 p-4 bg-slate-50 rounded-lg">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-600">Progress Summary:</span>
+                    <span className="font-medium">
+                      {submittedDocuments} of {totalDocuments} documents submitted ({aScore}%)
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
       </CardContent>
     </Card>
   );

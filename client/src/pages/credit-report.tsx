@@ -151,7 +151,7 @@ export default function CreditReport() {
                   ></div>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-600">RFM Model</span>
+                  <span className="text-slate-600">Transaction Analysis</span>
                   <span className="text-slate-600">Weight: 33.3%</span>
                 </div>
               </CardContent>

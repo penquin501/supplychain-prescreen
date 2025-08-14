@@ -44,6 +44,7 @@ export function calculateFinancialScore(
   return { score, grade };
 }
 
+// Proprietary RFM Model for transactional scoring - core business methodology
 export function calculateTransactionalScore(transactions: Transaction[]): number {
   if (!transactions.length) return 50; // Base score
 

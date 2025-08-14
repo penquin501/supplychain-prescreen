@@ -14,7 +14,7 @@ export default function TransactionalScoreCard({ supplierId }: TransactionalScor
     enabled: !!supplierId,
   });
 
-  // Calculate transactional score
+  // Calculate transactional score using proprietary RFM Model
   const calculateTransactionalScore = (transactions: Transaction[]) => {
     if (!transactions || transactions.length === 0) return { score: 50, recency: 3, frequency: 1, monetary: 1 };
 

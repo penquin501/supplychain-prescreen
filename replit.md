@@ -42,9 +42,14 @@ Each entity uses UUID primary keys and includes proper foreign key relationships
 ## Credit Scoring System
 Implements a multi-factor scoring algorithm including:
 - **Financial Score**: Based on profitability, liquidity ratios, and debt management
-- **Transactional Score**: RFM (Recency, Frequency, Monetary) analysis of transaction patterns
+- **Transactional Score**: Proprietary RFM (Recency, Frequency, Monetary) model for transaction analysis - core business methodology
 - **Document Score (A-Score)**: Compliance tracking based on required document submissions
-- **Overall Recommendation**: Automated approval/rejection logic based on combined scores
+- **Overall Recommendation**: Simple average calculation (Financial + Transactional + A-Score) ÷ 3
+
+## Scoring Color System
+- 0%-30% = Not Pass (Red)
+- 31%-80% = Pending (Yellow) 
+- 80%-100% = Pass (Green)
 
 ## Development Workflow
 - **Type Safety**: Full TypeScript coverage across client, server, and shared schema

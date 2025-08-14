@@ -203,10 +203,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         (financialScore + transactionalScore + aScore) / 3
       );
 
-      // Determine recommendation
+      // Determine recommendation based on combined criteria
       let recommendation = "rejected";
-      if (aScore >= 80 && financialScore >= 70) recommendation = "approved";
-      else if (aScore >= 31 && financialScore >= 60) recommendation = "pending";
+      if (overallScore >= 75 && aScore >= 75 && financialScore >= 65) {
+        recommendation = "approved";
+      } else if (overallScore >= 50 && aScore >= 50 && financialScore >= 40) {
+        recommendation = "pending";
+      }
 
       const scoreData = {
         supplierId,

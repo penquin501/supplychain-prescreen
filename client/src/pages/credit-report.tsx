@@ -577,7 +577,8 @@ export default function CreditReport() {
             </CardContent>
           </Card>
 
-          {/* Post-Factoring Performance */}
+          {/* Post-Factoring Performance - Only show for approved suppliers */}
+          {isApprovedForFactoring && (
           <Card className="border-slate-200">
             <CardHeader>
               <CardTitle>Post-Factoring Performance</CardTitle>
@@ -713,6 +714,28 @@ export default function CreditReport() {
               </div>
             </CardContent>
           </Card>
+          )}
+
+          {/* Message for non-approved suppliers */}
+          {!isApprovedForFactoring && (
+          <Card className="border-slate-200">
+            <CardHeader>
+              <CardTitle>Post-Factoring Performance</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8">
+                <InfoIcon className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-slate-900 mb-2">No Factoring Services</h3>
+                <p className="text-slate-600 mb-4">
+                  This supplier has not been approved for factoring services or is not currently using our platform.
+                </p>
+                <div className="text-sm text-slate-500">
+                  Post-factoring performance data is only available for approved suppliers who are actively using our factoring services.
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          )}
 
           {/* Risk Monitoring & Alerts */}
           <Card className="border-slate-200">

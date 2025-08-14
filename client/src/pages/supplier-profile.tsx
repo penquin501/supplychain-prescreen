@@ -12,6 +12,7 @@ import TransactionalScoreCard from "@/components/supplier/transactional-score-ca
 import AScoreCard from "@/components/supplier/a-score-card";
 import BusinessProfile from "@/components/supplier/business-profile";
 import FinancialDataTable from "@/components/supplier/financial-data-table";
+import { getRandomCompanyData } from "@/lib/randomData";
 
 export default function SupplierProfile() {
   const [location] = useLocation();
@@ -38,6 +39,9 @@ export default function SupplierProfile() {
     queryKey: ["/api/suppliers", selectedSupplierId, "documents"],
     enabled: !!selectedSupplierId,
   });
+
+  // Get random data for the selected supplier
+  const randomData = selectedSupplierId ? getRandomCompanyData(selectedSupplierId) : null;
 
   if (supplierLoading) {
     return (
@@ -121,149 +125,40 @@ export default function SupplierProfile() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">1</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Registered Entity</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Public Company (PLC) / Limited Company (Ltd.) / Limited Partnership (LP)</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Yes
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.05</td>
-                    </tr>
-                    <tr className="bg-slate-25">
-                      <td className="border border-slate-300 px-4 py-2 text-sm">2</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Registered in the VAT System</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Registered for VAT</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Yes
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.05</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">3</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Years of Operation</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">In business for at least 2 years</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Yes
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.05</td>
-                    </tr>
-                    <tr className="bg-slate-25">
-                      <td className="border border-slate-300 px-4 py-2 text-sm">4</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Sales Revenue</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">&gt; 30 million THB</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Yes
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.05</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">5</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Credit Term</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">≤ 180 days</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Yes
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.05</td>
-                    </tr>
-                    <tr className="bg-slate-25">
-                      <td className="border border-slate-300 px-4 py-2 text-sm">6</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Business Performance</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Profitable in the latest year or in 2 of the last 3 years</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                          No
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.00</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">7</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Equity</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">No accumulated losses exceeding paid-up capital*</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Yes
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">15.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.15</td>
-                    </tr>
-                    <tr className="bg-slate-25">
-                      <td className="border border-slate-300 px-4 py-2 text-sm">8</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">D/E Ratio</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Not more than 4 times</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                          No
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">20.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.00</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">9</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">DSCR</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Not less than 1.2 times</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                          No
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">15.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.00</td>
-                    </tr>
-                    <tr className="bg-slate-25">
-                      <td className="border border-slate-300 px-4 py-2 text-sm">10</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Current Ratio</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Greater than 1 time</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          Yes
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">10.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.10</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">11</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Interest Coverage Ratio</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Greater than 1 time</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                          No
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">10.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.00</td>
-                    </tr>
+                    {randomData?.qualificationResults.map((item, index) => (
+                      <tr key={item.no} className={index % 2 === 1 ? "bg-slate-25" : ""}>
+                        <td className="border border-slate-300 px-4 py-2 text-sm">{item.no}</td>
+                        <td className="border border-slate-300 px-4 py-2 text-sm">{item.qualification}</td>
+                        <td className="border border-slate-300 px-4 py-2 text-sm">{item.criteria}</td>
+                        <td className="border border-slate-300 px-4 py-2 text-center">
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                            item.result === 'Yes' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                            {item.result}
+                          </span>
+                        </td>
+                        <td className="border border-slate-300 px-4 py-2 text-center text-sm">{item.value}</td>
+                        <td className="border border-slate-300 px-4 py-2 text-center text-sm">{item.weight}</td>
+                        <td className="border border-slate-300 px-4 py-2 text-center text-sm">{item.scoring}</td>
+                      </tr>
+                    )) || (
+                      // Fallback static data if randomData is null
+                      Array.from({ length: 11 }, (_, i) => (
+                        <tr key={i + 1} className={i % 2 === 1 ? "bg-slate-25" : ""}>
+                          <td className="border border-slate-300 px-4 py-2 text-sm">{i + 1}</td>
+                          <td className="border border-slate-300 px-4 py-2 text-sm">Loading...</td>
+                          <td className="border border-slate-300 px-4 py-2 text-sm">-</td>
+                          <td className="border border-slate-300 px-4 py-2 text-center">
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                              -
+                            </span>
+                          </td>
+                          <td className="border border-slate-300 px-4 py-2 text-center text-sm">-</td>
+                          <td className="border border-slate-300 px-4 py-2 text-center text-sm">-</td>
+                          <td className="border border-slate-300 px-4 py-2 text-center text-sm">-</td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -282,39 +177,39 @@ export default function SupplierProfile() {
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                     <div>
                       <span className="text-slate-600">Client Name</span>
-                      <div className="font-medium">GADHOUSE CO.,LTD.</div>
+                      <div className="font-medium">{randomData?.companyName || supplier?.companyName}</div>
                     </div>
                     <div>
                       <span className="text-slate-600">Business Unit</span>
-                      <div className="font-medium">Factoring</div>
+                      <div className="font-medium">{randomData?.businessUnit || "Factoring"}</div>
                     </div>
                     <div>
                       <span className="text-slate-600">Approval Authority</span>
-                      <div className="font-medium">Executive Committee</div>
+                      <div className="font-medium">{randomData?.approvalAuthority || "Executive Committee"}</div>
                     </div>
                     <div>
                       <span className="text-slate-600">Business</span>
-                      <div className="font-medium">HOME</div>
+                      <div className="font-medium">{randomData?.business || "HOME"}</div>
                     </div>
                     <div>
                       <span className="text-slate-600">Industry</span>
-                      <div className="font-medium">Growth</div>
+                      <div className="font-medium">{randomData?.industry || "Growth"}</div>
                     </div>
                     <div>
                       <span className="text-slate-600">Registered Capital</span>
-                      <div className="font-medium">10</div>
+                      <div className="font-medium">{randomData?.registeredCapital || 10}</div>
                     </div>
                     <div>
                       <span className="text-slate-600">Client Status</span>
-                      <div className="font-medium">Existing Client</div>
+                      <div className="font-medium">{randomData?.clientStatus || "Existing Client"}</div>
                     </div>
                     <div>
                       <span className="text-slate-600">Additional Credit Line</span>
-                      <div className="font-medium">-</div>
+                      <div className="font-medium">{randomData?.additionalCreditLine || "-"}</div>
                     </div>
                     <div>
                       <span className="text-slate-600">Credit Line</span>
-                      <div className="font-medium"></div>
+                      <div className="font-medium">{randomData?.creditLine || ""}</div>
                     </div>
                   </div>
                 </div>
@@ -331,150 +226,73 @@ export default function SupplierProfile() {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">Sales Revenue</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">44.52</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">90.51</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">72.96</td>
-                      </tr>
-                      <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">Cost of Sales</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">25.11</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">55.77</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">39.92</td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">Gross Profit</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">19.41</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">34.74</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">33.04</td>
-                      </tr>
-                      <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">OPEX</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">18.81</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">33.88</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">32.78</td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">Operating Profit</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">0.60</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">0.86</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">0.25</td>
-                      </tr>
-                      <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">EBITDA</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">1.48</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">1.94</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">0.59</td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">Depreciation and amortization</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">-</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">-</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">-</td>
-                      </tr>
-                      <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">Interest</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">1.98</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">2.13</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">0.13</td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">Taxes</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">0.06</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">0.14</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">0.34</td>
-                      </tr>
-                      <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">Net Profit (Loss)</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">-0.56</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">-0.32</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-green-600">0.12</td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">Current Assets</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">59.12</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">64.31</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">45.61</td>
-                      </tr>
-                      <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">Total Assets</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">61.09</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">66.85</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">48.48</td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">Debt Principle Payment</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">14.04</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">13.80</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">14.55</td>
-                      </tr>
-                      <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">Current Liabilities</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">44.10</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">58.07</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">40.12</td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">Total Liabilities</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">49.83</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">58.92</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">41.09</td>
-                      </tr>
-                      <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">Retained Earning</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">6.26</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">6.82</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">7.14</td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">Shareholders' Equity</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">11.26</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">7.93</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">7.39</td>
-                      </tr>
-                      <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">Gross Margin (%)</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">43.6%</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">38.4%</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">45.3%</td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">Net Profit (%)</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">-1.3%</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">-0.4%</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-green-600">0.2%</td>
-                      </tr>
-                      <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">Current Ratio (times)</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">1.34</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">1.11</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right">1.14</td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">DSCR</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">0.09</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">0.12</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">0.04</td>
-                      </tr>
-                      <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">Interest Coverage Ratio</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">0.75</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">0.91</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-green-600">4.58</td>
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">Debt-to-Equity Ratio (D/E) (times)</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">4.43</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">7.43</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">5.56</td>
-                      </tr>
-                      <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">Revenue CAGR</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">-50.8%</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-green-600">24.0%</td>
-                        <td className="border border-slate-300 px-3 py-2 text-right text-green-600">38.9%</td>
-                      </tr>
+                      {randomData && (() => {
+                        const { financialData: fd } = randomData;
+                        const financialRows = [
+                          { label: "Sales Revenue", values: [fd.salesRevenue[2024], fd.salesRevenue[2023], fd.salesRevenue[2022]] },
+                          { label: "Cost of Sales", values: [fd.costOfSales[2024], fd.costOfSales[2023], fd.costOfSales[2022]] },
+                          { label: "Gross Profit", values: [fd.grossProfit[2024], fd.grossProfit[2023], fd.grossProfit[2022]] },
+                          { label: "OPEX", values: [fd.opex[2024], fd.opex[2023], fd.opex[2022]] },
+                          { label: "Operating Profit", values: [fd.operatingProfit[2024], fd.operatingProfit[2023], fd.operatingProfit[2022]] },
+                          { label: "EBITDA", values: [fd.ebitda[2024], fd.ebitda[2023], fd.ebitda[2022]] },
+                          { label: "Depreciation and amortization", values: ["-", "-", "-"], isStatic: true },
+                          { label: "Interest", values: [fd.interest[2024], fd.interest[2023], fd.interest[2022]] },
+                          { label: "Taxes", values: [fd.taxes[2024], fd.taxes[2023], fd.taxes[2022]] },
+                          { label: "Net Profit (Loss)", values: [fd.netProfit[2024], fd.netProfit[2023], fd.netProfit[2022]], colorCode: true },
+                          { label: "Current Assets", values: [fd.currentAssets[2024], fd.currentAssets[2023], fd.currentAssets[2022]] },
+                          { label: "Total Assets", values: [fd.totalAssets[2024], fd.totalAssets[2023], fd.totalAssets[2022]] },
+                          { label: "Debt Principle Payment", values: [fd.debtPrinciplePayment[2024], fd.debtPrinciplePayment[2023], fd.debtPrinciplePayment[2022]] },
+                          { label: "Current Liabilities", values: [fd.currentLiabilities[2024], fd.currentLiabilities[2023], fd.currentLiabilities[2022]] },
+                          { label: "Total Liabilities", values: [fd.totalLiabilities[2024], fd.totalLiabilities[2023], fd.totalLiabilities[2022]] },
+                          { label: "Retained Earning", values: [fd.retainedEarning[2024], fd.retainedEarning[2023], fd.retainedEarning[2022]] },
+                          { label: "Shareholders' Equity", values: [fd.shareholdersEquity[2024], fd.shareholdersEquity[2023], fd.shareholdersEquity[2022]] },
+                          { label: "Gross Margin (%)", values: [fd.grossMargin[2024], fd.grossMargin[2023], fd.grossMargin[2022]], isStatic: true },
+                          { label: "Net Profit (%)", values: [fd.netProfitMargin[2024], fd.netProfitMargin[2023], fd.netProfitMargin[2022]], colorCode: true, isStatic: true },
+                          { label: "Current Ratio (times)", values: [fd.currentRatio[2024], fd.currentRatio[2023], fd.currentRatio[2022]] },
+                          { label: "DSCR", values: [fd.dscr[2024], fd.dscr[2023], fd.dscr[2022]], colorCode: true },
+                          { label: "Interest Coverage Ratio", values: [fd.interestCoverageRatio[2024], fd.interestCoverageRatio[2023], fd.interestCoverageRatio[2022]], colorCode: true },
+                          { label: "Debt-to-Equity Ratio (D/E) (times)", values: [fd.debtToEquityRatio[2024], fd.debtToEquityRatio[2023], fd.debtToEquityRatio[2022]], colorCode: true },
+                          { label: "Revenue CAGR", values: [fd.revenueCagr[2024], fd.revenueCagr[2023], fd.revenueCagr[2022]], colorCode: true, isStatic: true }
+                        ];
+
+                        return financialRows.map((row, index) => (
+                          <tr key={row.label} className={index % 2 === 1 ? "bg-slate-25" : ""}>
+                            <td className="border border-slate-300 px-3 py-2">{row.label}</td>
+                            {row.values.map((value, i) => {
+                              const numValue = typeof value === "number" ? value : parseFloat(String(value));
+                              const displayValue = row.isStatic ? value : (typeof value === "number" ? value.toFixed(2) : value);
+                              let textColor = "";
+                              
+                              if (row.colorCode && typeof value !== "string") {
+                                if (row.label === "Net Profit (Loss)" || row.label === "Net Profit (%)") {
+                                  textColor = numValue >= 0 ? "text-green-600" : "text-red-600";
+                                } else if (row.label === "DSCR") {
+                                  textColor = numValue >= 1.2 ? "text-green-600" : "text-red-600";
+                                } else if (row.label === "Interest Coverage Ratio") {
+                                  textColor = numValue > 1 ? "text-green-600" : "text-red-600";
+                                } else if (row.label === "Debt-to-Equity Ratio (D/E) (times)") {
+                                  textColor = numValue <= 4 ? "text-green-600" : "text-red-600";
+                                } else if (row.label === "Revenue CAGR" && typeof value === "string") {
+                                  textColor = value.includes("-") ? "text-red-600" : "text-green-600";
+                                }
+                              }
+
+                              return (
+                                <td key={i} className={`border border-slate-300 px-3 py-2 text-right ${textColor}`}>
+                                  {displayValue}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        ));
+                      })() || (
+                        // Fallback for no data
+                        <tr>
+                          <td colSpan="4" className="border border-slate-300 px-3 py-2 text-center text-gray-500">
+                            No financial data available
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>

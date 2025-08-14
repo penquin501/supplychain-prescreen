@@ -32,9 +32,12 @@ The backend implements a clean separation between routes, storage layer, and bus
 ## Database Schema Design
 The system uses a relational schema with the following core entities:
 - **Suppliers**: Company information, registration details, and business profiles
-- **Financial Data**: Multi-year financial statements including income and balance sheet data
-- **Transactions**: Purchase orders and payment history with buyers
-- **Documents**: Document submission tracking for compliance
+- **Financial Data**: Comprehensive 5-year financial statements with detailed Balance Sheet and Income Statement fields
+  - Balance Sheet: Complete asset, liability, and equity breakdown with current/non-current classifications
+  - Income Statement: Full revenue, expense, and profitability analysis with operating metrics
+  - Additional Information: Shareholders' equity details including stock information and per-share metrics
+- **Transactions**: Purchase orders and payment history with buyers using proprietary RFM analysis
+- **Documents**: Document submission tracking for compliance (18 required documents)
 - **Scores**: Calculated credit scores and recommendations
 
 Each entity uses UUID primary keys and includes proper foreign key relationships for data integrity.

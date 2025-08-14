@@ -123,17 +123,32 @@ export default function CreditReport() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-semibold text-slate-900">Financial Score</h4>
-                  <span className="text-2xl font-bold text-financial-primary">{score.financialScore}</span>
+                  <span className={`text-2xl font-bold ${
+                    parseInt(score.financialScore) >= 80 ? 'text-green-600' : 
+                    parseInt(score.financialScore) >= 31 ? 'text-yellow-600' : 
+                    'text-red-600'
+                  }`}>{score.financialScore}</span>
                 </div>
                 <div className="w-full bg-slate-200 rounded-full h-3 mb-2">
                   <div 
-                    className="bg-green-500 h-3 rounded-full transition-all duration-500" 
+                    className={`h-3 rounded-full transition-all duration-500 ${
+                      parseInt(score.financialScore) >= 80 ? 'bg-green-500' : 
+                      parseInt(score.financialScore) >= 31 ? 'bg-yellow-500' : 
+                      'bg-red-500'
+                    }`}
                     style={{ width: `${score.financialScore}%` }}
                   ></div>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-600">Grade: {score.financialGrade}</span>
                   <span className="text-slate-600">Weight: 33.3%</span>
+                </div>
+                <div className={`text-center text-sm font-medium mt-2 ${
+                  parseInt(score.financialScore) >= 80 ? 'text-green-600' : 
+                  parseInt(score.financialScore) >= 31 ? 'text-yellow-600' : 
+                  'text-red-600'
+                }`}>
+                  {parseInt(score.financialScore) >= 80 ? 'Pass' : parseInt(score.financialScore) >= 31 ? 'Pending' : 'Not Pass'}
                 </div>
               </CardContent>
             </Card>
@@ -142,17 +157,32 @@ export default function CreditReport() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-semibold text-slate-900">Transactional Score</h4>
-                  <span className="text-2xl font-bold text-financial-primary">{score.transactionalScore}</span>
+                  <span className={`text-2xl font-bold ${
+                    parseInt(score.transactionalScore) >= 80 ? 'text-green-600' : 
+                    parseInt(score.transactionalScore) >= 31 ? 'text-yellow-600' : 
+                    'text-red-600'
+                  }`}>{score.transactionalScore}</span>
                 </div>
                 <div className="w-full bg-slate-200 rounded-full h-3 mb-2">
                   <div 
-                    className="bg-blue-500 h-3 rounded-full transition-all duration-500" 
+                    className={`h-3 rounded-full transition-all duration-500 ${
+                      parseInt(score.transactionalScore) >= 80 ? 'bg-green-500' : 
+                      parseInt(score.transactionalScore) >= 31 ? 'bg-yellow-500' : 
+                      'bg-red-500'
+                    }`}
                     style={{ width: `${score.transactionalScore}%` }}
                   ></div>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-600">Transaction Analysis</span>
                   <span className="text-slate-600">Weight: 33.3%</span>
+                </div>
+                <div className={`text-center text-sm font-medium mt-2 ${
+                  parseInt(score.transactionalScore) >= 80 ? 'text-green-600' : 
+                  parseInt(score.transactionalScore) >= 31 ? 'text-yellow-600' : 
+                  'text-red-600'
+                }`}>
+                  {parseInt(score.transactionalScore) >= 80 ? 'Pass' : parseInt(score.transactionalScore) >= 31 ? 'Pending' : 'Not Pass'}
                 </div>
               </CardContent>
             </Card>
@@ -161,17 +191,32 @@ export default function CreditReport() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-semibold text-slate-900">A-Score</h4>
-                  <span className="text-2xl font-bold text-financial-warning">{score.aScore}</span>
+                  <span className={`text-2xl font-bold ${
+                    parseInt(score.aScore) >= 80 ? 'text-green-600' : 
+                    parseInt(score.aScore) >= 31 ? 'text-yellow-600' : 
+                    'text-red-600'
+                  }`}>{score.aScore}</span>
                 </div>
                 <div className="w-full bg-slate-200 rounded-full h-3 mb-2">
                   <div 
-                    className="bg-yellow-500 h-3 rounded-full transition-all duration-500" 
+                    className={`h-3 rounded-full transition-all duration-500 ${
+                      parseInt(score.aScore) >= 80 ? 'bg-green-500' : 
+                      parseInt(score.aScore) >= 31 ? 'bg-yellow-500' : 
+                      'bg-red-500'
+                    }`}
                     style={{ width: `${score.aScore}%` }}
                   ></div>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-600">Documents</span>
                   <span className="text-slate-600">Weight: 33.3%</span>
+                </div>
+                <div className={`text-center text-sm font-medium mt-2 ${
+                  parseInt(score.aScore) >= 80 ? 'text-green-600' : 
+                  parseInt(score.aScore) >= 31 ? 'text-yellow-600' : 
+                  'text-red-600'
+                }`}>
+                  {parseInt(score.aScore) >= 80 ? 'Pass' : parseInt(score.aScore) >= 31 ? 'Pending' : 'Not Pass'}
                 </div>
               </CardContent>
             </Card>

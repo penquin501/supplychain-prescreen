@@ -14,8 +14,8 @@ export default function TransactionalScoreCard({ supplierId }: TransactionalScor
     enabled: !!supplierId,
   });
 
-  // Calculate RFM score
-  const calculateRFMScore = (transactions: Transaction[]) => {
+  // Calculate transactional score
+  const calculateTransactionalScore = (transactions: Transaction[]) => {
     if (!transactions || transactions.length === 0) return { score: 50, recency: 3, frequency: 1, monetary: 1 };
 
     // Recency (1-5): How recently they made transactions
@@ -34,7 +34,7 @@ export default function TransactionalScoreCard({ supplierId }: TransactionalScor
     return { score, recency, frequency, monetary };
   };
 
-  const rfm = calculateRFMScore(transactions || []);
+  const scoreData = calculateTransactionalScore(transactions || []);
   const avgPaymentTerm = transactions?.length ? 
     Math.round(transactions.reduce((sum, t) => sum + t.poPaymentTerm, 0) / transactions.length) : 0;
 
@@ -61,30 +61,37 @@ export default function TransactionalScoreCard({ supplierId }: TransactionalScor
   return (
     <Card className="border-slate-200">
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Transactional Score</CardTitle>
-          <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
-            RFM Model
-          </Badge>
-        </div>
+        <CardTitle>Transactional Score</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="text-center mb-4">
-          <div className="text-4xl font-bold text-financial-primary mb-2">{rfm.score}</div>
-          <div className="text-sm text-slate-600">RFM Score</div>
+          <div className={`text-4xl font-bold mb-2 ${
+            scoreData.score >= 80 ? 'text-green-600' : 
+            scoreData.score >= 31 ? 'text-yellow-600' : 
+            'text-red-600'
+          }`}>
+            {scoreData.score}
+          </div>
+          <div className={`text-sm font-medium ${
+            scoreData.score >= 80 ? 'text-green-600' : 
+            scoreData.score >= 31 ? 'text-yellow-600' : 
+            'text-red-600'
+          }`}>
+            {scoreData.score >= 80 ? 'Pass' : scoreData.score >= 31 ? 'Pending' : 'Not Pass'}
+          </div>
         </div>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
             <span className="text-slate-600">Recency:</span>
-            <span className="font-medium">{rfm.recency}/5</span>
+            <span className="font-medium">{scoreData.recency}/5</span>
           </div>
           <div className="flex justify-between">
             <span className="text-slate-600">Frequency:</span>
-            <span className="font-medium">{rfm.frequency}/5</span>
+            <span className="font-medium">{scoreData.frequency}/5</span>
           </div>
           <div className="flex justify-between">
             <span className="text-slate-600">Monetary:</span>
-            <span className="font-medium">{rfm.monetary}/5</span>
+            <span className="font-medium">{scoreData.monetary}/5</span>
           </div>
           <div className="flex justify-between">
             <span className="text-slate-600">Transactions:</span>

@@ -142,23 +142,15 @@ export default function FinancialScoreCard({
         {randomData ? (
           <>
             <div className="text-center mb-4">
-              <div className="text-4xl font-bold text-financial-primary mb-2">
-                {randomData.qualificationTotalScore}%
-              </div>
-              <div className="text-lg font-semibold mb-1">
-                {getGradeBadge(randomData.financialGrade)}
-              </div>
-            </div>
-            <div className="space-y-2 text-sm">
-              <div className="text-xs text-slate-500 mb-3">Based on qualification criteria scoring:</div>
-              {randomData.qualificationResults.slice(0, 8).map((criterion) => (
-                <div key={criterion.no} className="flex justify-between">
-                  <span className="text-slate-600">{criterion.qualification}:</span>
-                  <span className={`font-medium ${criterion.result === 'Yes' ? 'text-green-600' : 'text-red-600'}`}>
-                    {criterion.result} ({criterion.weight})
-                  </span>
+              <div className="flex items-center justify-center gap-4 mb-2">
+                <div className="text-4xl font-bold text-financial-primary">
+                  {randomData.qualificationTotalScore}%
                 </div>
-              ))}
+                <div className="text-4xl font-bold">
+                  {getGradeBadge(randomData.financialGrade)}
+                </div>
+              </div>
+              <div className="text-sm text-slate-600">Financial Score</div>
             </div>
           </>
         ) : (

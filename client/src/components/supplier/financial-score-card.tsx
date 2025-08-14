@@ -123,20 +123,7 @@ export default function FinancialScoreCard({
   return (
     <Card className="border-slate-200">
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Financial Score</CardTitle>
-          {score ? getGradeBadge(score.financialGrade) : (
-            <Button
-              size="sm"
-              onClick={() => calculateScoreMutation.mutate()}
-              disabled={calculateScoreMutation.isPending}
-              className="bg-financial-primary hover:bg-blue-700"
-            >
-              <Calculator className="h-4 w-4 mr-2" />
-              Calculate
-            </Button>
-          )}
-        </div>
+        <CardTitle>Financial Score</CardTitle>
       </CardHeader>
       <CardContent>
         {randomData ? (
@@ -164,7 +151,19 @@ export default function FinancialScoreCard({
                   {randomData.qualificationTotalScore}%
                 </div>
               </div>
-              <div className="text-sm text-slate-600">Financial Score</div>
+              <div className={`text-sm font-medium px-2 py-1 rounded ${(() => {
+                const score = randomData.qualificationTotalScore;
+                if (score >= 80) return 'bg-green-100 text-green-800';
+                if (score >= 31) return 'bg-yellow-100 text-yellow-800';
+                return 'bg-red-100 text-red-800';
+              })()}`}>
+                {(() => {
+                  const score = randomData.qualificationTotalScore;
+                  if (score >= 80) return 'Pass';
+                  if (score >= 31) return 'Pending';
+                  return 'Not Pass';
+                })()}
+              </div>
             </div>
           </>
         ) : (

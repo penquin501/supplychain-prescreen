@@ -21,9 +21,9 @@ export default function Sidebar() {
             return (
               <li key={item.name}>
                 <Link href={item.href}>
-                  <a
+                  <div
                     className={cn(
-                      "flex items-center px-4 py-2 rounded-lg font-medium transition-colors",
+                      "flex items-center px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer",
                       isActive
                         ? "text-financial-primary bg-blue-50"
                         : "text-slate-600 hover:text-financial-primary hover:bg-slate-50"
@@ -31,7 +31,7 @@ export default function Sidebar() {
                   >
                     <item.icon className="h-5 w-5 mr-3" />
                     {item.name}
-                  </a>
+                  </div>
                 </Link>
               </li>
             );

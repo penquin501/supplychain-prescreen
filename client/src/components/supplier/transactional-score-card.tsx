@@ -19,7 +19,7 @@ export default function TransactionalScoreCard({ supplierId }: TransactionalScor
     if (!transactions || transactions.length === 0) return { score: 50, recency: 3, frequency: 1, monetary: 1 };
 
     // Recency (1-5): How recently they made transactions
-    const latestTransaction = Math.max(...transactions.map(t => new Date(t.paymentDate || t.invoiceDate).getTime()));
+    const latestTransaction = Math.max(...transactions.map(t => new Date(t.paymentDate || t.invoiceDate || t.poDate).getTime()));
     const daysSinceLatest = Math.floor((Date.now() - latestTransaction) / (1000 * 60 * 60 * 24));
     const recency = daysSinceLatest <= 30 ? 5 : daysSinceLatest <= 90 ? 4 : daysSinceLatest <= 180 ? 3 : daysSinceLatest <= 365 ? 2 : 1;
 

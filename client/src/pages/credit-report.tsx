@@ -15,6 +15,7 @@ export default function CreditReport() {
   const initialSupplierId = urlParams.get('id') || '';
   
   const [selectedSupplierId, setSelectedSupplierId] = useState(initialSupplierId);
+  const [selectedBuyer, setSelectedBuyer] = useState<string | null>(null);
 
   const { data: suppliers } = useQuery<Supplier[]>({
     queryKey: ["/api/suppliers"],
@@ -363,36 +364,162 @@ export default function CreditReport() {
                   <h4 className="font-medium text-slate-900 mb-3">Top Buyers</h4>
                   <div className="space-y-3">
                     {[
-                      { name: "PTT Public Company Limited", volume: "45.2M THB", transactions: 24, paymentDays: 45, status: "excellent" },
-                      { name: "CP All Public Company Limited", volume: "32.8M THB", transactions: 18, paymentDays: 38, status: "good" },
-                      { name: "True Corporation Public Company Limited", volume: "28.5M THB", transactions: 15, paymentDays: 52, status: "average" },
-                      { name: "Central Retail Corporation Public Company Limited", volume: "19.3M THB", transactions: 12, paymentDays: 41, status: "good" }
+                      { 
+                        id: "ptt",
+                        name: "PTT Public Company Limited", 
+                        volume: "45.2M THB", 
+                        transactions: 24, 
+                        paymentDays: 45, 
+                        status: "excellent",
+                        details: {
+                          industry: "Oil & Gas",
+                          relationship: "3 years",
+                          avgOrderSize: "1.9M THB",
+                          paymentHistory: "99.2%",
+                          creditLimit: "60M THB",
+                          riskLevel: "Low",
+                          lastTransaction: "Dec 2024",
+                          growthRate: "+12%"
+                        }
+                      },
+                      { 
+                        id: "cpall",
+                        name: "CP All Public Company Limited", 
+                        volume: "32.8M THB", 
+                        transactions: 18, 
+                        paymentDays: 38, 
+                        status: "good",
+                        details: {
+                          industry: "Retail",
+                          relationship: "2 years",
+                          avgOrderSize: "1.8M THB",
+                          paymentHistory: "97.8%",
+                          creditLimit: "45M THB",
+                          riskLevel: "Low",
+                          lastTransaction: "Dec 2024",
+                          growthRate: "+8%"
+                        }
+                      },
+                      { 
+                        id: "true",
+                        name: "True Corporation Public Company Limited", 
+                        volume: "28.5M THB", 
+                        transactions: 15, 
+                        paymentDays: 52, 
+                        status: "average",
+                        details: {
+                          industry: "Telecommunications",
+                          relationship: "1.5 years",
+                          avgOrderSize: "1.9M THB",
+                          paymentHistory: "92.1%",
+                          creditLimit: "35M THB",
+                          riskLevel: "Medium",
+                          lastTransaction: "Nov 2024",
+                          growthRate: "+5%"
+                        }
+                      },
+                      { 
+                        id: "central",
+                        name: "Central Retail Corporation Public Company Limited", 
+                        volume: "19.3M THB", 
+                        transactions: 12, 
+                        paymentDays: 41, 
+                        status: "good",
+                        details: {
+                          industry: "Retail",
+                          relationship: "4 years",
+                          avgOrderSize: "1.6M THB",
+                          paymentHistory: "96.5%",
+                          creditLimit: "25M THB",
+                          riskLevel: "Low",
+                          lastTransaction: "Dec 2024",
+                          growthRate: "+15%"
+                        }
+                      }
                     ].map((buyer, index) => (
-                      <div key={index} className="border rounded-lg p-3 bg-slate-50">
-                        <div className="flex justify-between items-start mb-2">
-                          <span className="font-medium text-slate-900 text-sm">{buyer.name}</span>
-                          <span className={`text-xs px-2 py-1 rounded ${
-                            buyer.status === 'excellent' ? 'bg-green-100 text-green-800' :
-                            buyer.status === 'good' ? 'bg-blue-100 text-blue-800' :
-                            'bg-yellow-100 text-yellow-800'
-                          }`}>
-                            {buyer.status}
-                          </span>
+                      <div key={index}>
+                        <div 
+                          className="border rounded-lg p-3 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors"
+                          onClick={() => setSelectedBuyer(selectedBuyer === buyer.id ? null : buyer.id)}
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="font-medium text-slate-900 text-sm">{buyer.name}</span>
+                            <div className="flex items-center gap-2">
+                              <span className={`text-xs px-2 py-1 rounded ${
+                                buyer.status === 'excellent' ? 'bg-green-100 text-green-800' :
+                                buyer.status === 'good' ? 'bg-blue-100 text-blue-800' :
+                                'bg-yellow-100 text-yellow-800'
+                              }`}>
+                                {buyer.status}
+                              </span>
+                              <span className="text-xs text-slate-400">
+                                {selectedBuyer === buyer.id ? '▼' : '▶'}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-3 gap-2 text-xs text-slate-600">
+                            <div>
+                              <span className="block">Volume</span>
+                              <span className="font-medium text-slate-900">{buyer.volume}</span>
+                            </div>
+                            <div>
+                              <span className="block">Transactions</span>
+                              <span className="font-medium text-slate-900">{buyer.transactions}</span>
+                            </div>
+                            <div>
+                              <span className="block">Avg Payment</span>
+                              <span className="font-medium text-slate-900">{buyer.paymentDays} days</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="grid grid-cols-3 gap-2 text-xs text-slate-600">
-                          <div>
-                            <span className="block">Volume</span>
-                            <span className="font-medium text-slate-900">{buyer.volume}</span>
+                        
+                        {/* Expanded Details */}
+                        {selectedBuyer === buyer.id && (
+                          <div className="mt-2 ml-4 p-3 border-l-2 border-blue-200 bg-blue-50 rounded-r-lg">
+                            <h5 className="font-medium text-slate-900 mb-3">Detailed Performance</h5>
+                            <div className="grid grid-cols-2 gap-3 text-xs">
+                              <div className="space-y-2">
+                                <div className="flex justify-between">
+                                  <span className="text-slate-600">Industry:</span>
+                                  <span className="font-medium">{buyer.details.industry}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-slate-600">Relationship:</span>
+                                  <span className="font-medium">{buyer.details.relationship}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-slate-600">Avg Order Size:</span>
+                                  <span className="font-medium">{buyer.details.avgOrderSize}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-slate-600">Payment History:</span>
+                                  <span className="font-medium text-green-600">{buyer.details.paymentHistory}</span>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <div className="flex justify-between">
+                                  <span className="text-slate-600">Credit Limit:</span>
+                                  <span className="font-medium">{buyer.details.creditLimit}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-slate-600">Risk Level:</span>
+                                  <span className={`font-medium ${
+                                    buyer.details.riskLevel === 'Low' ? 'text-green-600' :
+                                    buyer.details.riskLevel === 'Medium' ? 'text-yellow-600' : 'text-red-600'
+                                  }`}>{buyer.details.riskLevel}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-slate-600">Last Transaction:</span>
+                                  <span className="font-medium">{buyer.details.lastTransaction}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-slate-600">Growth Rate:</span>
+                                  <span className="font-medium text-blue-600">{buyer.details.growthRate}</span>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <div>
-                            <span className="block">Transactions</span>
-                            <span className="font-medium text-slate-900">{buyer.transactions}</span>
-                          </div>
-                          <div>
-                            <span className="block">Avg Payment</span>
-                            <span className="font-medium text-slate-900">{buyer.paymentDays} days</span>
-                          </div>
-                        </div>
+                        )}
                       </div>
                     ))}
                   </div>

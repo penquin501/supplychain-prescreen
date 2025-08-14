@@ -11,6 +11,7 @@ import {
   type InsertScore
 } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { getRandomDocumentSubmissions } from "../client/src/lib/randomData";
 
 export interface IStorage {
   // Suppliers
@@ -348,42 +349,25 @@ export class MemStorage implements IStorage {
       }
     });
 
-    // Create sample documents for all suppliers
-    const documentTypes = [
-      "Company Registration Certificate", "VAT Registration", "Financial Statements", 
-      "Bank Statements", "Audit Report", "Tax Clearance", "Business License",
-      "Director ID Copy", "Company Profile", "Reference Letters", "Insurance Policy",
-      "Power of Attorney", "Board Resolution", "Share Certificate", "MOA & AOA",
-      "Bank Reference Letter", "Credit Report", "Trade References"
-    ];
-
-    const supplierDocumentSubmission = [
-      { supplierId: supplier1.id, submittedCount: 16 }, // Excellent completion
-      { supplierId: supplier2.id, submittedCount: 12 }, // Good completion
-      { supplierId: supplier3.id, submittedCount: 6 },  // Poor completion
-      { supplierId: supplier4.id, submittedCount: 18 }, // Perfect completion
-      { supplierId: supplier5.id, submittedCount: 10 }, // Average completion
-      { supplierId: supplier6.id, submittedCount: 4 },  // Very poor completion
-      { supplierId: supplier7.id, submittedCount: 15 }, // Very good completion
-      { supplierId: supplier8.id, submittedCount: 13 }, // Good completion
-    ];
-
-    supplierDocumentSubmission.forEach(supplierDocs => {
-      documentTypes.forEach((docType, index) => {
+    // Create random documents for all suppliers
+    const allSuppliers = [supplier1, supplier2, supplier3, supplier4, supplier5, supplier6, supplier7, supplier8];
+    
+    allSuppliers.forEach(supplier => {
+      const randomDocs = getRandomDocumentSubmissions(supplier.id);
+      randomDocs.forEach(docData => {
         const docId = randomUUID();
-        const isSubmitted = index < supplierDocs.submittedCount;
-        const submissionDate = isSubmitted ? 
+        const submissionDate = docData.isSubmitted ? 
           new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] : 
           null;
         
         const doc: Document = {
           id: docId,
-          supplierId: supplierDocs.supplierId,
-          documentType: docType,
-          documentName: `${docType.replace(/\s+/g, '_').toLowerCase()}.pdf`,
-          isSubmitted,
+          supplierId: supplier.id,
+          documentType: docData.documentType,
+          documentName: `${docData.documentType.replace(/\s+/g, '_').toLowerCase()}.pdf`,
+          isSubmitted: docData.isSubmitted,
           submittedDate: submissionDate,
-          isVerified: isSubmitted,
+          isVerified: docData.isSubmitted,
         };
         this.documents.set(docId, doc);
       });

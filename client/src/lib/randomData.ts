@@ -1,3 +1,40 @@
+// Required documents list with English translations
+export const requiredDocuments = [
+  { id: 1, thai: "Company Profile", english: "Company Profile" },
+  { id: 2, thai: "ประวัติเจ้าของ / ผู้บริหารหลัก", english: "Owner/Key Executive History" },
+  { id: 3, thai: "หนังสือรับรองบริษัท (ออกภายใน 1 เดือนล่าสุด)", english: "Company Certificate (Issued within the last month)" },
+  { id: 4, thai: "บริคณห์สนธิ", english: "Articles of Association" },
+  { id: 5, thai: "สำเนารายชื่อถือหุ้น (ล่าสุด)", english: "Copy of Shareholders List (Latest)" },
+  { id: 6, thai: "หนังสือแสดงการจดทะเบียนหุ้นส่วนบริษัท", english: "Partnership Registration Certificate" },
+  { id: 7, thai: "ภ.พ.20", english: "Por Por 20 (VAT Registration)" },
+  { id: 8, thai: "บอจ.3 / ใบอนุญาตจัดตั้งโรงงาน", english: "Factory License (Bor Chor 3 / Factory Establishment Permit)" },
+  { id: 9, thai: "งบภายในปี 68 และ ภ.พ.30 ย้อนหลัง ม.ค. 68 – ปัจจุบัน พร้อมใบเสร็จ", english: "Internal Financial Statements for 2025 and Por Por 30 (Jan 2025 - Present) with receipts" },
+  { id: 10, thai: "งบการเงินย้อนหลัง 3 ปี (ล่าสุด) กรณียังไม่ปิดปี 67 ขอ ภ.พ.30 ม.ค.–ธ.ค. 67 พร้อมใบเสร็จ", english: "3-Year Financial Statements (Latest). If 2024 not closed, request Por Por 30 Jan-Dec 2024 with receipts" },
+  { id: 11, thai: "Statement ธนาคารย้อนหลัง 1 ปี", english: "Bank Statements for the past 1 year" },
+  { id: 12, thai: "สำเนาบัตรประจำตัวประชาชน และสำเนาทะเบียนบ้านกรรมการและคู่สมรสกรรมการ (รับรองสำเนาถูกต้อง)", english: "Copy of ID Cards and House Registration of Directors and Spouses (Certified copies)" },
+  { id: 13, thai: "List รายชื่อลูกหนี้ที่ขออนุมัติวงเงิน", english: "List of Debtors for Credit Limit Approval" },
+  { id: 14, thai: "ประวัติการเรียกเก็บเงินจากลูกหนี้การค้าที่เสนอขอวงเงินย้อนหลัง 1 ปี เอกสารประกอบได้แก่ ใบเสนอราคา, ใบสั่งซื้อ, ใบส่งของ, ใบวางบิล, ใบแจ้งหนี้ และภาพถ่ายหน้าเช็คลูกหนี้การค้าหรือเอกสารแสดงรายการโอนเงิน (Remittance) พร้อมแนับหน้า Statement ที่มียอดเงินรับชำระจากลูกค้าเข้ามา", english: "1-Year Collection History from Trade Debtors including: quotations, purchase orders, delivery notes, billing, invoices, check photos or remittance documents with statement pages showing customer payments" },
+  { id: 15, thai: "PO งาน หรือ สัญญาที่ได้รับจากลูกหนี้", english: "Purchase Orders or Contracts from Debtors" },
+  { id: 16, thai: "คาดการณ์ยอดขายลูกหนี้รายที่ขออนุมัติวงเงิน", english: "Sales Forecast for Debtors Requesting Credit Approval" },
+  { id: 17, thai: "เอกสารเครดิตบูโร (บริษัท+กรรมการ+ผู้ค้ำประกัน) (ย้อนหลังไม่เกิน 1 เดือน)", english: "Credit Bureau Reports (Company + Directors + Guarantors) (Not older than 1 month)" },
+  { id: 18, thai: "เงื่อนไขการวางบิลและชำระเงิน", english: "Billing and Payment Terms including: a) Billing schedule, b) Payment schedule, c) Payment type (check/transfer), d) Check receipt documents, e) Payment location, f) Billing/payment procedures (if any)" }
+];
+
+// Function to generate random document submission data for a supplier
+export function getRandomDocumentSubmissions(supplierId: string): { documentType: string; isSubmitted: boolean }[] {
+  // Use supplier ID as seed for consistent random data
+  const seed = supplierId.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+  const random = (index: number) => {
+    // Simple deterministic random based on supplier ID and document index
+    return ((seed * (index + 1) * 1103515245 + 12345) % 2147483647) / 2147483647;
+  };
+
+  return requiredDocuments.map((doc, index) => ({
+    documentType: doc.english,
+    isSubmitted: random(index) > 0.3 // 70% chance of being submitted
+  }));
+}
+
 // Random data generator for supplier profiles
 export interface RandomCompanyData {
   companyName: string;

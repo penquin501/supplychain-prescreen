@@ -594,17 +594,17 @@ export default function CreditReport() {
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-1 mb-2">
-                    <div className="text-3xl font-bold text-red-600">-13</div>
-                    <div className="text-lg text-red-600">points</div>
+                    <div className="text-3xl font-bold text-green-600">+7</div>
+                    <div className="text-lg text-green-600">points</div>
                   </div>
                   <div className="text-sm text-slate-600">Score Change</div>
                   <div className="text-xs text-slate-500 mt-1">Last 12 months</div>
-                  <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded">
-                    <div className="text-xs text-red-700">
-                      <div className="font-medium">Risk Factors:</div>
-                      <div>• Market downturn impact</div>
-                      <div>• Delayed payments from buyers</div>
-                      <div>• Increased operating costs</div>
+                  <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded">
+                    <div className="text-xs text-green-700">
+                      <div className="font-medium">Growth Factors:</div>
+                      <div>• Improved payment collection</div>
+                      <div>• Stronger buyer relationships</div>
+                      <div>• Enhanced operational efficiency</div>
                     </div>
                   </div>
                 </div>
@@ -626,40 +626,44 @@ export default function CreditReport() {
                       </li>
                       <li className="flex items-center text-green-600">
                         <CheckCircle className="h-4 w-4 mr-2" />
-                        New production equipment acquired
+                        Payment collection rate improved
                       </li>
                       <li className="flex items-center text-green-600">
                         <CheckCircle className="h-4 w-4 mr-2" />
                         Expanded to 2 new markets
                       </li>
+                      <li className="flex items-center text-green-600">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Reduced operational risks
+                      </li>
                     </ul>
                   </div>
                   <div>
-                    <h5 className="text-sm font-medium text-slate-700 mb-3">Areas of Concern</h5>
+                    <h5 className="text-sm font-medium text-slate-700 mb-3">Areas for Monitoring</h5>
                     <ul className="space-y-2 text-sm">
-                      <li className="flex items-center text-red-600">
-                        <TriangleAlert className="h-4 w-4 mr-2" />
-                        Operating costs increased 8%
+                      <li className="flex items-center text-blue-600">
+                        <InfoIcon className="h-4 w-4 mr-2" />
+                        Debt-to-equity ratio stable at 2.1x
+                      </li>
+                      <li className="flex items-center text-blue-600">
+                        <InfoIcon className="h-4 w-4 mr-2" />
+                        Market competition increasing
                       </li>
                       <li className="flex items-center text-yellow-600">
                         <TriangleAlert className="h-4 w-4 mr-2" />
-                        Debt-to-equity ratio rose to 2.8x
+                        Seasonal demand fluctuations
                       </li>
-                      <li className="flex items-center text-red-600">
-                        <TriangleAlert className="h-4 w-4 mr-2" />
-                        Buyer payment delays increased
-                      </li>
-                      <li className="flex items-center text-yellow-600">
-                        <TriangleAlert className="h-4 w-4 mr-2" />
-                        Market share decline in core sector
+                      <li className="flex items-center text-blue-600">
+                        <InfoIcon className="h-4 w-4 mr-2" />
+                        Staff increased from 85 to 112
                       </li>
                     </ul>
-                    <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded">
-                      <div className="text-xs text-yellow-800">
-                        <div className="font-medium">Score Impact Analysis:</div>
-                        <div>• External market conditions: -8 points</div>
-                        <div>• Increased financial leverage: -3 points</div>
-                        <div>• Buyer concentration risk: -2 points</div>
+                    <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded">
+                      <div className="text-xs text-green-800">
+                        <div className="font-medium">Score Improvement Drivers:</div>
+                        <div>• Enhanced collection efficiency: +4 points</div>
+                        <div>• Stronger buyer relationships: +2 points</div>
+                        <div>• Operational improvements: +1 point</div>
                       </div>
                     </div>
                   </div>

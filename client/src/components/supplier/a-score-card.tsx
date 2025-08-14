@@ -228,28 +228,30 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
                                   {existingDoc.approvalStatus === "pending" && (
                                     <div className="flex gap-1">
                                       <Button
-                                        variant="ghost"
+                                        variant="outline"
                                         size="sm"
                                         onClick={() => approvalMutation.mutate({
                                           documentId: existingDoc.id,
                                           approvalStatus: "approved"
                                         })}
-                                        className="h-6 w-6 p-0 text-green-600 hover:bg-green-50"
+                                        className="h-7 px-2 text-xs text-green-600 border-green-600 hover:bg-green-50"
                                         disabled={approvalMutation.isPending}
                                       >
-                                        <ThumbsUp className="h-3 w-3" />
+                                        <ThumbsUp className="h-3 w-3 mr-1" />
+                                        Approve
                                       </Button>
                                       <Button
-                                        variant="ghost"
+                                        variant="outline"
                                         size="sm"
                                         onClick={() => approvalMutation.mutate({
                                           documentId: existingDoc.id,
                                           approvalStatus: "rejected"
                                         })}
-                                        className="h-6 w-6 p-0 text-red-600 hover:bg-red-50"
+                                        className="h-7 px-2 text-xs text-red-600 border-red-600 hover:bg-red-50"
                                         disabled={approvalMutation.isPending}
                                       >
-                                        <ThumbsDown className="h-3 w-3" />
+                                        <ThumbsDown className="h-3 w-3 mr-1" />
+                                        Reject
                                       </Button>
                                     </div>
                                   )}

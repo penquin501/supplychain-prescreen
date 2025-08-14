@@ -151,11 +151,11 @@ export default function FinancialScoreCard({
                   {randomData.qualificationTotalScore}%
                 </div>
               </div>
-              <div className={`text-sm font-medium px-2 py-1 rounded ${(() => {
+              <div className={`text-sm font-medium ${(() => {
                 const score = randomData.qualificationTotalScore;
-                if (score >= 80) return 'bg-green-100 text-green-800';
-                if (score >= 31) return 'bg-yellow-100 text-yellow-800';
-                return 'bg-red-100 text-red-800';
+                if (score >= 80) return 'text-green-600';
+                if (score >= 31) return 'text-yellow-600';
+                return 'text-red-600';
               })()}`}>
                 {(() => {
                   const score = randomData.qualificationTotalScore;

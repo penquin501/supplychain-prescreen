@@ -84,22 +84,22 @@ export default function SupplierProfile() {
 
       {selectedSupplierId && supplier ? (
         <>
+          {/* Business Profile */}
+          <BusinessProfile supplier={supplier} />
+
           {/* Scoring Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <AScoreCard 
+              supplierId={selectedSupplierId}
+              documents={documents}
+            />
+            <TransactionalScoreCard supplierId={selectedSupplierId} />
             <FinancialScoreCard 
               supplierId={selectedSupplierId} 
               supplier={supplier}
               financialData={financialData}
             />
-            <TransactionalScoreCard supplierId={selectedSupplierId} />
-            <AScoreCard 
-              supplierId={selectedSupplierId}
-              documents={documents}
-            />
           </div>
-
-          {/* Business Profile */}
-          <BusinessProfile supplier={supplier} />
 
           {/* Qualification Criteria Assessment */}
           <Card className="border-slate-200">

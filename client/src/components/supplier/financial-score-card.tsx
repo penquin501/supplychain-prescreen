@@ -148,12 +148,12 @@ export default function FinancialScoreCard({
                     'AAA': 'bg-green-100 text-green-800',
                     'AA': 'bg-green-100 text-green-800',
                     'A': 'bg-green-100 text-green-800',
-                    'B+': 'bg-blue-100 text-blue-800',
-                    'B': 'bg-blue-100 text-blue-800',
+                    'B+': 'bg-yellow-100 text-yellow-800',
+                    'B': 'bg-yellow-100 text-yellow-800',
                     'C+': 'bg-yellow-100 text-yellow-800',
                     'C': 'bg-yellow-100 text-yellow-800',
-                    'D+': 'bg-orange-100 text-orange-800',
-                    'D': 'bg-orange-100 text-orange-800',
+                    'D+': 'bg-yellow-100 text-yellow-800',
+                    'D': 'bg-yellow-100 text-yellow-800',
                     'F': 'bg-red-100 text-red-800',
                   };
                   return gradeColors[randomData.financialGrade] || 'bg-slate-100 text-slate-800';

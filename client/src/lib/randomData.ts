@@ -21,6 +21,14 @@ export interface RandomCompanyData {
   qualificationTotalScore: number;
   financialGrade: string;
   financialData: FinancialPerformanceData;
+  scoreChange: ScoreChangeData;
+}
+
+export interface ScoreChangeData {
+  change: number;
+  type: 'positive' | 'negative' | 'neutral';
+  factors: string[];
+  impactBreakdown?: { factor: string; points: number }[];
 }
 
 export interface QualificationResult {
@@ -421,6 +429,56 @@ export function getRandomCompanyData(supplierId: string): RandomCompanyData {
   // Calculate qualification score and grade
   const { score: qualificationTotalScore, grade: financialGrade } = calculateQualificationScoreAndGrade(qualificationResults);
 
+  // Generate score change data based on supplier ID
+  function generateScoreChange(supplierId: string): ScoreChangeData {
+    const scoreChangeRandom = seededRandom(supplierId + "_score_change");
+    const changeValue = Math.floor(scoreChangeRandom() * 40 - 20); // Range: -20 to +19
+    
+    if (changeValue > 5) {
+      return {
+        change: changeValue,
+        type: 'positive',
+        factors: [
+          "Improved payment collection",
+          "Stronger buyer relationships", 
+          "Enhanced operational efficiency"
+        ],
+        impactBreakdown: [
+          { factor: "Enhanced collection efficiency", points: Math.floor(changeValue * 0.6) },
+          { factor: "Stronger buyer relationships", points: Math.floor(changeValue * 0.3) },
+          { factor: "Operational improvements", points: changeValue - Math.floor(changeValue * 0.6) - Math.floor(changeValue * 0.3) }
+        ]
+      };
+    } else if (changeValue < -3) {
+      return {
+        change: changeValue,
+        type: 'negative',
+        factors: [
+          "Market downturn impact",
+          "Delayed payments from buyers",
+          "Increased operating costs"
+        ],
+        impactBreakdown: [
+          { factor: "External market conditions", points: Math.floor(changeValue * 0.6) },
+          { factor: "Increased financial leverage", points: Math.floor(changeValue * 0.2) },
+          { factor: "Buyer concentration risk", points: changeValue - Math.floor(changeValue * 0.6) - Math.floor(changeValue * 0.2) }
+        ]
+      };
+    } else {
+      return {
+        change: changeValue,
+        type: 'neutral',
+        factors: [
+          "Stable market conditions",
+          "Consistent payment patterns",
+          "Steady operational performance"
+        ]
+      };
+    }
+  }
+
+  const scoreChange = generateScoreChange(supplierId);
+
   return {
     ...company,
     qualificationResults,
@@ -462,6 +520,7 @@ export function getRandomCompanyData(supplierId: string): RandomCompanyData {
         2023: (((baseRevenue2023 / baseRevenue2022) - 1) * 100).toFixed(1) + "%", 
         2022: "38.9%"
       }
-    }
+    },
+    scoreChange
   };
 }

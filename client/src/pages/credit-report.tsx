@@ -8,6 +8,7 @@ import { CheckCircle, TriangleAlert, InfoIcon, Clock } from "lucide-react";
 import { useState } from "react";
 
 import CreditScoreCircle from "@/components/credit/credit-score-circle";
+import { getRandomCompanyData } from "@/lib/randomData";
 
 export default function CreditReport() {
   const [location] = useLocation();
@@ -30,6 +31,9 @@ export default function CreditReport() {
     queryKey: ["/api/suppliers", selectedSupplierId, "score"],
     enabled: !!selectedSupplierId,
   });
+
+  // Get company-specific data including score change
+  const companyData = selectedSupplierId ? getRandomCompanyData(selectedSupplierId) : null;
 
   const getRecommendationStatus = (recommendation: string) => {
     switch (recommendation) {
@@ -594,19 +598,44 @@ export default function CreditReport() {
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-1 mb-2">
-                    <div className="text-3xl font-bold text-green-600">+7</div>
-                    <div className="text-lg text-green-600">points</div>
+                    <div className={`text-3xl font-bold ${
+                      !companyData?.scoreChange ? 'text-slate-600' :
+                      companyData.scoreChange.type === 'positive' ? 'text-green-600' :
+                      companyData.scoreChange.type === 'negative' ? 'text-red-600' : 'text-slate-600'
+                    }`}>
+                      {!companyData?.scoreChange ? '0' : 
+                       companyData.scoreChange.change > 0 ? `+${companyData.scoreChange.change}` : 
+                       companyData.scoreChange.change.toString()}
+                    </div>
+                    <div className={`text-lg ${
+                      !companyData?.scoreChange ? 'text-slate-600' :
+                      companyData.scoreChange.type === 'positive' ? 'text-green-600' :
+                      companyData.scoreChange.type === 'negative' ? 'text-red-600' : 'text-slate-600'
+                    }`}>points</div>
                   </div>
                   <div className="text-sm text-slate-600">Score Change</div>
                   <div className="text-xs text-slate-500 mt-1">Last 12 months</div>
-                  <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded">
-                    <div className="text-xs text-green-700">
-                      <div className="font-medium">Growth Factors:</div>
-                      <div>• Improved payment collection</div>
-                      <div>• Stronger buyer relationships</div>
-                      <div>• Enhanced operational efficiency</div>
+                  {companyData?.scoreChange && (
+                    <div className={`mt-2 p-2 border rounded ${
+                      companyData.scoreChange.type === 'positive' ? 'bg-green-50 border-green-200' :
+                      companyData.scoreChange.type === 'negative' ? 'bg-red-50 border-red-200' :
+                      'bg-slate-50 border-slate-200'
+                    }`}>
+                      <div className={`text-xs ${
+                        companyData.scoreChange.type === 'positive' ? 'text-green-700' :
+                        companyData.scoreChange.type === 'negative' ? 'text-red-700' :
+                        'text-slate-700'
+                      }`}>
+                        <div className="font-medium">
+                          {companyData.scoreChange.type === 'positive' ? 'Growth Factors:' :
+                           companyData.scoreChange.type === 'negative' ? 'Risk Factors:' : 'Status Factors:'}
+                        </div>
+                        {companyData.scoreChange.factors.map((factor, index) => (
+                          <div key={index}>• {factor}</div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
               
@@ -658,14 +687,24 @@ export default function CreditReport() {
                         Staff increased from 85 to 112
                       </li>
                     </ul>
-                    <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded">
-                      <div className="text-xs text-green-800">
-                        <div className="font-medium">Score Improvement Drivers:</div>
-                        <div>• Enhanced collection efficiency: +4 points</div>
-                        <div>• Stronger buyer relationships: +2 points</div>
-                        <div>• Operational improvements: +1 point</div>
+                    {companyData?.scoreChange?.impactBreakdown && (
+                      <div className={`mt-3 p-3 border rounded ${
+                        companyData.scoreChange.type === 'positive' ? 'bg-green-50 border-green-200' :
+                        companyData.scoreChange.type === 'negative' ? 'bg-yellow-50 border-yellow-200' :
+                        'bg-slate-50 border-slate-200'
+                      }`}>
+                        <div className={`text-xs ${
+                          companyData.scoreChange.type === 'positive' ? 'text-green-800' :
+                          companyData.scoreChange.type === 'negative' ? 'text-yellow-800' :
+                          'text-slate-800'
+                        }`}>
+                          <div className="font-medium">Score Impact Analysis:</div>
+                          {companyData.scoreChange.impactBreakdown.map((item, index) => (
+                            <div key={index}>• {item.factor}: {item.points > 0 ? '+' : ''}{item.points} points</div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>

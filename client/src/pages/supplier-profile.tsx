@@ -101,6 +101,173 @@ export default function SupplierProfile() {
           {/* Business Profile */}
           <BusinessProfile supplier={supplier} />
 
+          {/* Qualification Criteria Assessment */}
+          <Card className="border-slate-200">
+            <CardHeader>
+              <CardTitle>Qualification Criteria Assessment</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50">
+                      <th className="border border-slate-300 px-4 py-3 text-left text-sm font-semibold">Qualification</th>
+                      <th className="border border-slate-300 px-4 py-3 text-left text-sm font-semibold">Criteria</th>
+                      <th className="border border-slate-300 px-4 py-3 text-center text-sm font-semibold">Result</th>
+                      <th className="border border-slate-300 px-4 py-3 text-center text-sm font-semibold">Weight</th>
+                      <th className="border border-slate-300 px-4 py-3 text-center text-sm font-semibold">Scoring</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">1. Registered Entity</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Public Company (PLC) / Limited Company (Ltd.) / Limited Partnership (LP)</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          {supplier.registrationType ? 'Yes' : 'No'}
+                        </span>
+                      </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">{supplier.registrationType ? '0.05' : '0.00'}</td>
+                    </tr>
+                    <tr className="bg-slate-25">
+                      <td className="border border-slate-300 px-4 py-2 text-sm">2. Registered in the VAT System</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Registered for VAT</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center">
+                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${supplier.vatRegistered ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                          {supplier.vatRegistered ? 'Yes' : 'No'}
+                        </span>
+                      </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">{supplier.vatRegistered ? '0.05' : '0.00'}</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">3. Years of Operation</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">In business for at least 2 years</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center">
+                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${supplier.yearsOfOperation >= 2 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                          {supplier.yearsOfOperation >= 2 ? 'Yes' : 'No'}
+                        </span>
+                      </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">{supplier.yearsOfOperation >= 2 ? '0.05' : '0.00'}</td>
+                    </tr>
+                    <tr className="bg-slate-25">
+                      <td className="border border-slate-300 px-4 py-2 text-sm">4. Sales Revenue</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">&gt; 30 million THB</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center">
+                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${financialData && financialData[0] && parseFloat(financialData[0].salesRevenue) > 30000000 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                          {financialData && financialData[0] && parseFloat(financialData[0].salesRevenue) > 30000000 ? 'Yes' : 'No'}
+                        </span>
+                      </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">{financialData && financialData[0] && parseFloat(financialData[0].salesRevenue) > 30000000 ? '0.05' : '0.00'}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Financial Performance Summary */}
+          <Card className="border-slate-200">
+            <CardHeader>
+              <CardTitle>Financial Performance Summary</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="bg-slate-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-slate-900 mb-3">Client Information</h4>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-slate-600">Client Name:</span>
+                        <div className="font-medium">{supplier?.companyName}</div>
+                      </div>
+                      <div>
+                        <span className="text-slate-600">Business Unit:</span>
+                        <div className="font-medium">Factoring</div>
+                      </div>
+                      <div>
+                        <span className="text-slate-600">Business:</span>
+                        <div className="font-medium">{supplier?.businessType}</div>
+                      </div>
+                      <div>
+                        <span className="text-slate-600">Industry:</span>
+                        <div className="font-medium">Growth</div>
+                      </div>
+                      <div>
+                        <span className="text-slate-600">Registered Capital:</span>
+                        <div className="font-medium">10 Million THB</div>
+                      </div>
+                      <div>
+                        <span className="text-slate-600">Client Status:</span>
+                        <div className="font-medium">Existing Client</div>
+                      </div>
+                      <div>
+                        <span className="text-slate-600">Approval Authority:</span>
+                        <div className="font-medium">Executive Committee</div>
+                      </div>
+                      <div>
+                        <span className="text-slate-600">Credit Line:</span>
+                        <div className="font-medium">Under Review</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <h4 className="font-semibold text-slate-900 mb-3">Key Financial Ratios</h4>
+                  <table className="w-full border-collapse text-sm">
+                    <thead>
+                      <tr className="bg-slate-100">
+                        <th className="border border-slate-300 px-3 py-2 text-left">Ratio</th>
+                        {financialData?.sort((a, b) => b.year - a.year).slice(0, 3).map(data => (
+                          <th key={data.year} className="border border-slate-300 px-3 py-2 text-right">{data.year}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border border-slate-300 px-3 py-2">Current Ratio (times)</td>
+                        {financialData?.sort((a, b) => b.year - a.year).slice(0, 3).map(data => {
+                          const ratio = parseFloat(data.currentAssets) / parseFloat(data.currentLiabilities);
+                          return (
+                            <td key={data.year} className={`border border-slate-300 px-3 py-2 text-right ${ratio > 1 ? 'text-green-600' : 'text-red-600'}`}>
+                              {ratio.toFixed(2)}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                      <tr className="bg-slate-25">
+                        <td className="border border-slate-300 px-3 py-2">Debt-to-Equity Ratio (D/E)</td>
+                        {financialData?.sort((a, b) => b.year - a.year).slice(0, 3).map(data => {
+                          const ratio = parseFloat(data.totalDebt) / parseFloat(data.totalEquity);
+                          return (
+                            <td key={data.year} className={`border border-slate-300 px-3 py-2 text-right ${ratio <= 4 ? 'text-green-600' : 'text-red-600'}`}>
+                              {ratio.toFixed(2)}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-300 px-3 py-2">Net Profit Margin (%)</td>
+                        {financialData?.sort((a, b) => b.year - a.year).slice(0, 3).map(data => {
+                          const margin = (parseFloat(data.netIncome) / parseFloat(data.salesRevenue)) * 100;
+                          return (
+                            <td key={data.year} className={`border border-slate-300 px-3 py-2 text-right ${margin > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                              {margin.toFixed(1)}%
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Financial Data Table */}
           <FinancialDataTable 
             financialData={financialData || []}
@@ -276,179 +443,12 @@ export default function SupplierProfile() {
                       <td className="px-4 py-3 text-slate-700">Number of Weighted Average Ordinary Shares</td>
                       {financialData?.sort((a, b) => a.year - b.year).map(data => (
                         <td key={data.year} className="px-4 py-3 text-right">
-                          {parseFloat(data.numberOfWeightedAverageOrdinaryShares || "0").toLocaleString()}
+                          {parseInt(data.numberOfWeightedAverageOrdinaryShares || "0").toLocaleString()}
                         </td>
                       ))}
                     </tr>
                   </tbody>
                 </table>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Qualification Criteria Assessment */}
-          <Card className="border-slate-200">
-            <CardHeader>
-              <CardTitle>Qualification Criteria Assessment</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-slate-50">
-                      <th className="border border-slate-300 px-4 py-3 text-left text-sm font-semibold">Qualification</th>
-                      <th className="border border-slate-300 px-4 py-3 text-left text-sm font-semibold">Criteria</th>
-                      <th className="border border-slate-300 px-4 py-3 text-center text-sm font-semibold">Result</th>
-                      <th className="border border-slate-300 px-4 py-3 text-center text-sm font-semibold">Weight</th>
-                      <th className="border border-slate-300 px-4 py-3 text-center text-sm font-semibold">Scoring</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">1. Registered Entity</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Public Company (PLC) / Limited Company (Ltd.) / Limited Partnership (LP)</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          {supplier.registrationType ? 'Yes' : 'No'}
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">{supplier.registrationType ? '0.05' : '0.00'}</td>
-                    </tr>
-                    <tr className="bg-slate-25">
-                      <td className="border border-slate-300 px-4 py-2 text-sm">2. Registered in the VAT System</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">Registered for VAT</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${supplier.vatRegistered ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                          {supplier.vatRegistered ? 'Yes' : 'No'}
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">{supplier.vatRegistered ? '0.05' : '0.00'}</td>
-                    </tr>
-                    <tr>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">3. Years of Operation</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">In business for at least 2 years</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${supplier.yearsOfOperation >= 2 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                          {supplier.yearsOfOperation >= 2 ? 'Yes' : 'No'}
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">{supplier.yearsOfOperation >= 2 ? '0.05' : '0.00'}</td>
-                    </tr>
-                    <tr className="bg-slate-25">
-                      <td className="border border-slate-300 px-4 py-2 text-sm">4. Sales Revenue</td>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">&gt; 30 million THB</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${financialData && financialData[0] && parseFloat(financialData[0].salesRevenue) > 30000000 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                          {financialData && financialData[0] && parseFloat(financialData[0].salesRevenue) > 30000000 ? 'Yes' : 'No'}
-                        </span>
-                      </td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">{financialData && financialData[0] && parseFloat(financialData[0].salesRevenue) > 30000000 ? '0.05' : '0.00'}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Financial Performance Summary */}
-          <Card className="border-slate-200">
-            <CardHeader>
-              <CardTitle>Financial Performance Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="bg-slate-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-slate-900 mb-3">Client Information</h4>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-slate-600">Client Name:</span>
-                        <div className="font-medium">{supplier?.companyName}</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Business Unit:</span>
-                        <div className="font-medium">Factoring</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Business:</span>
-                        <div className="font-medium">{supplier?.businessType}</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Industry:</span>
-                        <div className="font-medium">Growth</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Registered Capital:</span>
-                        <div className="font-medium">10 Million THB</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Client Status:</span>
-                        <div className="font-medium">Existing Client</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Approval Authority:</span>
-                        <div className="font-medium">Executive Committee</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Credit Line:</span>
-                        <div className="font-medium">Under Review</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <h4 className="font-semibold text-slate-900 mb-3">Key Financial Ratios</h4>
-                  <table className="w-full border-collapse text-sm">
-                    <thead>
-                      <tr className="bg-slate-100">
-                        <th className="border border-slate-300 px-3 py-2 text-left">Ratio</th>
-                        {financialData?.sort((a, b) => b.year - a.year).slice(0, 3).map(data => (
-                          <th key={data.year} className="border border-slate-300 px-3 py-2 text-right">{data.year}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">Current Ratio (times)</td>
-                        {financialData?.sort((a, b) => b.year - a.year).slice(0, 3).map(data => {
-                          const ratio = parseFloat(data.currentAssets) / parseFloat(data.currentLiabilities);
-                          return (
-                            <td key={data.year} className={`border border-slate-300 px-3 py-2 text-right ${ratio > 1 ? 'text-green-600' : 'text-red-600'}`}>
-                              {ratio.toFixed(2)}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                      <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">Debt-to-Equity Ratio (D/E)</td>
-                        {financialData?.sort((a, b) => b.year - a.year).slice(0, 3).map(data => {
-                          const ratio = parseFloat(data.totalDebt) / parseFloat(data.totalEquity);
-                          return (
-                            <td key={data.year} className={`border border-slate-300 px-3 py-2 text-right ${ratio <= 4 ? 'text-green-600' : 'text-red-600'}`}>
-                              {ratio.toFixed(2)}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                      <tr>
-                        <td className="border border-slate-300 px-3 py-2">Net Profit Margin (%)</td>
-                        {financialData?.sort((a, b) => b.year - a.year).slice(0, 3).map(data => {
-                          const margin = (parseFloat(data.netIncome) / parseFloat(data.salesRevenue)) * 100;
-                          return (
-                            <td key={data.year} className={`border border-slate-300 px-3 py-2 text-right ${margin > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                              {margin.toFixed(1)}%
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
               </div>
             </CardContent>
           </Card>

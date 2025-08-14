@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { type Transaction } from "@shared/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+
 import { TrendingUp } from "lucide-react";
 
 interface TransactionalScoreCardProps {
@@ -42,7 +42,7 @@ export default function TransactionalScoreCard({ supplierId }: TransactionalScor
     return (
       <Card className="border-slate-200">
         <CardHeader>
-          <CardTitle>Document Completeness</CardTitle>
+          <CardTitle>Transactional Score</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="animate-pulse space-y-4">
@@ -61,7 +61,7 @@ export default function TransactionalScoreCard({ supplierId }: TransactionalScor
   return (
     <Card className="border-slate-200">
       <CardHeader>
-        <CardTitle>Document Completeness</CardTitle>
+        <CardTitle>Transactional Score</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="text-center mb-4">
@@ -72,13 +72,13 @@ export default function TransactionalScoreCard({ supplierId }: TransactionalScor
           }`}>
             {scoreData.score}%
           </div>
-          <Badge className={`${
-            scoreData.score >= 80 ? 'bg-green-100 text-green-800' : 
-            scoreData.score >= 31 ? 'bg-yellow-100 text-yellow-800' : 
-            'bg-red-100 text-red-800'
+          <div className={`text-sm font-medium ${
+            scoreData.score >= 80 ? 'text-green-600' : 
+            scoreData.score >= 31 ? 'text-yellow-600' : 
+            'text-red-600'
           }`}>
             {scoreData.score >= 80 ? 'Pass' : scoreData.score >= 31 ? 'Pending' : 'Not Pass'}
-          </Badge>
+          </div>
         </div>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">

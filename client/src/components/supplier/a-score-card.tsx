@@ -61,24 +61,6 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
               style={{ width: `${aScore}%` }}
             ></div>
           </div>
-          
-          <div className="text-xs text-slate-500 space-y-1">
-            <div>Status Guidelines:</div>
-            <div className="ml-2">
-              <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span>80%-100% = Pass</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                <span>31%-80% = Pending</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                <span>0%-30% = Not Pass</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         {documents && documents.length > 0 && (

@@ -1,11 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { type Supplier, type Score } from "@shared/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, TriangleAlert, InfoIcon, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { CheckCircle, TriangleAlert, InfoIcon, Clock, ThumbsUp, ThumbsDown } from "lucide-react";
 import { useState } from "react";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 import CreditScoreCircle from "@/components/credit/credit-score-circle";
 import { getRandomCompanyData } from "@/lib/randomData";
@@ -17,6 +20,31 @@ export default function CreditReport() {
   
   const [selectedSupplierId, setSelectedSupplierId] = useState(initialSupplierId);
   const [selectedBuyer, setSelectedBuyer] = useState<string | null>(null);
+  
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  // Mutation to update recommendation status
+  const updateRecommendationMutation = useMutation({
+    mutationFn: async ({ supplierId, recommendation }: { supplierId: string; recommendation: string }) => {
+      const response = await apiRequest('PATCH', `/api/suppliers/${supplierId}/recommendation`, { recommendation });
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/suppliers", variables.supplierId, "score"] });
+      toast({
+        title: "Success",
+        description: `Supplier ${variables.recommendation === 'approved' ? 'approved' : 'rejected'} successfully`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update recommendation status",
+        variant: "destructive",
+      });
+    }
+  });
 
   const { data: suppliers } = useQuery<Supplier[]>({
     queryKey: ["/api/suppliers"],
@@ -118,6 +146,42 @@ export default function CreditReport() {
                     {getRecommendationStatus(score.recommendation).text}
                   </span>
                 </Badge>
+                
+                {/* Show Approve/Reject buttons for yellow zone scores (31-80%) */}
+                {score.recommendation === 'pending' && (
+                  <div className="flex justify-center gap-3 mt-4">
+                    <Button 
+                      variant="default" 
+                      size="sm" 
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                      disabled={updateRecommendationMutation.isPending}
+                      onClick={() => {
+                        updateRecommendationMutation.mutate({
+                          supplierId: selectedSupplierId,
+                          recommendation: 'approved'
+                        });
+                      }}
+                    >
+                      <ThumbsUp className="h-4 w-4 mr-2" />
+                      Approve
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-red-500 text-red-600 hover:bg-red-50"
+                      disabled={updateRecommendationMutation.isPending}
+                      onClick={() => {
+                        updateRecommendationMutation.mutate({
+                          supplierId: selectedSupplierId,
+                          recommendation: 'rejected'
+                        });
+                      }}
+                    >
+                      <ThumbsDown className="h-4 w-4 mr-2" />
+                      Reject
+                    </Button>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

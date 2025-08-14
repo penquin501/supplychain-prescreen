@@ -119,6 +119,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Scores
+  // Update recommendation status
+  app.patch("/api/suppliers/:id/recommendation", async (req, res) => {
+    try {
+      const { recommendation } = req.body;
+      const supplierId = req.params.id;
+      
+      if (!["approved", "rejected", "pending"].includes(recommendation)) {
+        return res.status(400).json({ message: "Invalid recommendation status" });
+      }
+      
+      const existingScore = await storage.getScore(supplierId);
+      if (!existingScore) {
+        return res.status(404).json({ message: "Score not found" });
+      }
+      
+      const updatedScore = await storage.updateScore(supplierId, {
+        ...existingScore,
+        recommendation,
+        lastUpdated: new Date().toISOString().split('T')[0],
+      });
+      
+      res.json(updatedScore);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update recommendation" });
+    }
+  });
+
   app.get("/api/suppliers/:id/score", async (req, res) => {
     try {
       const score = await storage.getScore(req.params.id);

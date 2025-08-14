@@ -82,19 +82,7 @@ export default function TransactionalScoreCard({ supplierId }: TransactionalScor
         </div>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
-            <span className="text-slate-600">Recency:</span>
-            <span className="font-medium">{scoreData.recency}/5</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-600">Frequency:</span>
-            <span className="font-medium">{scoreData.frequency}/5</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-600">Monetary:</span>
-            <span className="font-medium">{scoreData.monetary}/5</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-slate-600">Transactions:</span>
+            <span className="text-slate-600">Total Transactions:</span>
             <span className="font-medium">{transactions?.length || 0}</span>
           </div>
           <div className="flex justify-between">

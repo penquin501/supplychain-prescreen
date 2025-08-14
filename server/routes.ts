@@ -198,9 +198,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const totalDocs = documents.length || 18;
       const aScore = Math.round((submittedDocs / totalDocs) * 100);
 
-      // Calculate Overall Credit Score (weighted average)
+      // Calculate Overall Credit Score (simple average of all three scores)
       const overallScore = Math.round(
-        (financialScore * 0.5) + (transactionalScore * 0.3) + (aScore * 0.2)
+        (financialScore + transactionalScore + aScore) / 3
       );
 
       // Determine recommendation

@@ -73,7 +73,7 @@ export function calculateOverallCreditScore(
   aScore: number
 ): number {
   return Math.round(
-    (financialScore * 0.5) + (transactionalScore * 0.3) + (aScore * 0.2)
+    (financialScore + transactionalScore + aScore) / 3
   );
 }
 

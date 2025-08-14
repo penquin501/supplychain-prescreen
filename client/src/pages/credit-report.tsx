@@ -99,9 +99,12 @@ export default function CreditReport() {
           <Card className="border-slate-200">
             <CardContent className="p-6">
               <div className="text-center">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4">Overall Credit Score</h3>
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">Overall Credit Score (Average %)</h3>
                 <CreditScoreCircle score={parseFloat(score.overallCreditScore)} />
-                <div className="text-lg font-medium text-slate-900 mb-2 mt-4">
+                <div className="text-sm text-slate-500 mb-2 mt-2">
+                  ({score.financialScore}% + {score.transactionalScore}% + {score.aScore}%) ÷ 3 = {score.overallCreditScore}%
+                </div>
+                <div className="text-lg font-medium text-slate-900 mb-2">
                   {getCreditStanding(parseFloat(score.overallCreditScore))}
                 </div>
                 <Badge className={getRecommendationStatus(score.recommendation).className}>
@@ -130,7 +133,7 @@ export default function CreditReport() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-600">Grade: {score.financialGrade}</span>
-                  <span className="text-slate-600">Weight: 50%</span>
+                  <span className="text-slate-600">Weight: 33.3%</span>
                 </div>
               </CardContent>
             </Card>
@@ -149,7 +152,7 @@ export default function CreditReport() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-600">RFM Model</span>
-                  <span className="text-slate-600">Weight: 30%</span>
+                  <span className="text-slate-600">Weight: 33.3%</span>
                 </div>
               </CardContent>
             </Card>
@@ -168,7 +171,7 @@ export default function CreditReport() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-600">Documents</span>
-                  <span className="text-slate-600">Weight: 20%</span>
+                  <span className="text-slate-600">Weight: 33.3%</span>
                 </div>
               </CardContent>
             </Card>

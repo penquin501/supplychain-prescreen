@@ -389,7 +389,7 @@ export class MemStorage implements IStorage {
       });
     });
 
-    // Create scores for key suppliers
+    // Create scores for all suppliers
     const supplierScores = [
       {
         supplierId: supplier1.id,
@@ -397,7 +397,7 @@ export class MemStorage implements IStorage {
         financialGrade: "B+",
         transactionalScore: "82",
         aScore: "89", // 16/18 * 100
-        overallCreditScore: "84",
+        overallCreditScore: "85", // (85+82+89)/3
         recommendation: "approved"
       },
       {
@@ -406,8 +406,17 @@ export class MemStorage implements IStorage {
         financialGrade: "C+",
         transactionalScore: "68",
         aScore: "67", // 12/18 * 100
-        overallCreditScore: "70",
+        overallCreditScore: "69", // (72+68+67)/3
         recommendation: "pending"
+      },
+      {
+        supplierId: supplier3.id,
+        financialScore: "58",
+        financialGrade: "D",
+        transactionalScore: "45",
+        aScore: "33", // 6/18 * 100
+        overallCreditScore: "45", // (58+45+33)/3
+        recommendation: "rejected"
       },
       {
         supplierId: supplier4.id,
@@ -415,8 +424,26 @@ export class MemStorage implements IStorage {
         financialGrade: "AA",
         transactionalScore: "88",
         aScore: "100", // 18/18 * 100
-        overallCreditScore: "92",
+        overallCreditScore: "94", // (95+88+100)/3
         recommendation: "approved"
+      },
+      {
+        supplierId: supplier5.id,
+        financialScore: "76",
+        financialGrade: "C+",
+        transactionalScore: "72",
+        aScore: "56", // 10/18 * 100
+        overallCreditScore: "68", // (76+72+56)/3
+        recommendation: "pending"
+      },
+      {
+        supplierId: supplier6.id,
+        financialScore: "52",
+        financialGrade: "F",
+        transactionalScore: "38",
+        aScore: "22", // 4/18 * 100
+        overallCreditScore: "37", // (52+38+22)/3
+        recommendation: "rejected"
       },
       {
         supplierId: supplier7.id,
@@ -424,8 +451,17 @@ export class MemStorage implements IStorage {
         financialGrade: "A",
         transactionalScore: "75",
         aScore: "83", // 15/18 * 100
-        overallCreditScore: "85",
+        overallCreditScore: "83", // (90+75+83)/3
         recommendation: "approved"
+      },
+      {
+        supplierId: supplier8.id,
+        financialScore: "81",
+        financialGrade: "B",
+        transactionalScore: "65",
+        aScore: "72", // 13/18 * 100
+        overallCreditScore: "73", // (81+65+72)/3
+        recommendation: "pending"
       }
     ];
 

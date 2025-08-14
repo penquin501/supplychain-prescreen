@@ -598,7 +598,7 @@ export default function CreditReport() {
                     <div className="text-lg text-red-600">points</div>
                   </div>
                   <div className="text-sm text-slate-600">Score Change</div>
-                  <div className="text-xs text-slate-500 mt-1">Since factoring start</div>
+                  <div className="text-xs text-slate-500 mt-1">Last 12 months</div>
                   <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded">
                     <div className="text-xs text-red-700">
                       <div className="font-medium">Risk Factors:</div>

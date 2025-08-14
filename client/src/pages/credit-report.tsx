@@ -352,6 +352,234 @@ export default function CreditReport() {
             </CardContent>
           </Card>
 
+          {/* Buyer Performance Analysis */}
+          <Card className="border-slate-200">
+            <CardHeader>
+              <CardTitle>Buyer Performance Analysis</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-medium text-slate-900 mb-3">Top Buyers</h4>
+                  <div className="space-y-3">
+                    {[
+                      { name: "PTT Public Company Limited", volume: "45.2M THB", transactions: 24, paymentDays: 45, status: "excellent" },
+                      { name: "CP All Public Company Limited", volume: "32.8M THB", transactions: 18, paymentDays: 38, status: "good" },
+                      { name: "True Corporation Public Company Limited", volume: "28.5M THB", transactions: 15, paymentDays: 52, status: "average" },
+                      { name: "Central Retail Corporation Public Company Limited", volume: "19.3M THB", transactions: 12, paymentDays: 41, status: "good" }
+                    ].map((buyer, index) => (
+                      <div key={index} className="border rounded-lg p-3 bg-slate-50">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="font-medium text-slate-900 text-sm">{buyer.name}</span>
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            buyer.status === 'excellent' ? 'bg-green-100 text-green-800' :
+                            buyer.status === 'good' ? 'bg-blue-100 text-blue-800' :
+                            'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {buyer.status}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2 text-xs text-slate-600">
+                          <div>
+                            <span className="block">Volume</span>
+                            <span className="font-medium text-slate-900">{buyer.volume}</span>
+                          </div>
+                          <div>
+                            <span className="block">Transactions</span>
+                            <span className="font-medium text-slate-900">{buyer.transactions}</span>
+                          </div>
+                          <div>
+                            <span className="block">Avg Payment</span>
+                            <span className="font-medium text-slate-900">{buyer.paymentDays} days</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium text-slate-900 mb-3">Buyer Relationship Quality</h4>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-slate-600">Payment Reliability</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-24 h-2 bg-slate-200 rounded-full">
+                          <div className="w-20 h-2 bg-green-500 rounded-full"></div>
+                        </div>
+                        <span className="text-sm font-medium">85%</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-slate-600">Dispute Rate</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-24 h-2 bg-slate-200 rounded-full">
+                          <div className="w-1 h-2 bg-green-500 rounded-full"></div>
+                        </div>
+                        <span className="text-sm font-medium">2%</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-slate-600">Repeat Business</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-24 h-2 bg-slate-200 rounded-full">
+                          <div className="w-22 h-2 bg-blue-500 rounded-full"></div>
+                        </div>
+                        <span className="text-sm font-medium">92%</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-slate-600">Growth Trend</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-24 h-2 bg-slate-200 rounded-full">
+                          <div className="w-18 h-2 bg-blue-500 rounded-full"></div>
+                        </div>
+                        <span className="text-sm font-medium">+15%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Post-Factoring Performance */}
+          <Card className="border-slate-200">
+            <CardHeader>
+              <CardTitle>Post-Factoring Performance</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-600 mb-2">98.5%</div>
+                  <div className="text-sm text-slate-600">Collection Rate</div>
+                  <div className="text-xs text-slate-500 mt-1">Last 12 months</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-blue-600 mb-2">42 days</div>
+                  <div className="text-sm text-slate-600">Avg Collection Period</div>
+                  <div className="text-xs text-slate-500 mt-1">Target: 45 days</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-600 mb-2">125M</div>
+                  <div className="text-sm text-slate-600">Total Factored (THB)</div>
+                  <div className="text-xs text-slate-500 mt-1">Since inception</div>
+                </div>
+              </div>
+              
+              <div className="mt-6 pt-6 border-t border-slate-200">
+                <h4 className="font-medium text-slate-900 mb-4">Business Improvement After Factoring</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h5 className="text-sm font-medium text-slate-700 mb-3">Financial Improvements</h5>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center text-green-600">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Cash flow improved by 35%
+                      </li>
+                      <li className="flex items-center text-green-600">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Working capital increased 28%
+                      </li>
+                      <li className="flex items-center text-green-600">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Operating costs reduced by 12%
+                      </li>
+                      <li className="flex items-center text-blue-600">
+                        <InfoIcon className="h-4 w-4 mr-2" />
+                        Debt-to-equity ratio stable at 2.1x
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h5 className="text-sm font-medium text-slate-700 mb-3">Operational Improvements</h5>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center text-green-600">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        New production equipment acquired
+                      </li>
+                      <li className="flex items-center text-green-600">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Inventory turnover improved 22%
+                      </li>
+                      <li className="flex items-center text-green-600">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Expanded to 2 new markets
+                      </li>
+                      <li className="flex items-center text-blue-600">
+                        <InfoIcon className="h-4 w-4 mr-2" />
+                        Staff increased from 85 to 112
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Risk Monitoring & Alerts */}
+          <Card className="border-slate-200">
+            <CardHeader>
+              <CardTitle>Risk Monitoring & Early Warning Indicators</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-medium text-slate-900 mb-3">Current Risk Status</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 border rounded-lg bg-green-50 border-green-200">
+                      <div className="flex items-center">
+                        <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
+                        <span className="text-sm font-medium">Payment Behavior</span>
+                      </div>
+                      <span className="text-sm text-green-600">Low Risk</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3 border rounded-lg bg-green-50 border-green-200">
+                      <div className="flex items-center">
+                        <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
+                        <span className="text-sm font-medium">Financial Stability</span>
+                      </div>
+                      <span className="text-sm text-green-600">Low Risk</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3 border rounded-lg bg-yellow-50 border-yellow-200">
+                      <div className="flex items-center">
+                        <Clock className="h-5 w-5 text-yellow-600 mr-2" />
+                        <span className="text-sm font-medium">Market Exposure</span>
+                      </div>
+                      <span className="text-sm text-yellow-600">Medium Risk</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium text-slate-900 mb-3">Monitoring Alerts</h4>
+                  <div className="space-y-3">
+                    <div className="p-3 border rounded-lg bg-blue-50 border-blue-200">
+                      <div className="flex items-center mb-1">
+                        <InfoIcon className="h-4 w-4 text-blue-600 mr-2" />
+                        <span className="text-sm font-medium text-blue-800">Quarterly Review Due</span>
+                      </div>
+                      <p className="text-xs text-blue-700">Financial statements review scheduled for next month</p>
+                    </div>
+                    <div className="p-3 border rounded-lg bg-green-50 border-green-200">
+                      <div className="flex items-center mb-1">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
+                        <span className="text-sm font-medium text-green-800">Payment Performance</span>
+                      </div>
+                      <p className="text-xs text-green-700">Consistent on-time payments for 8 consecutive months</p>
+                    </div>
+                    <div className="p-3 border rounded-lg bg-slate-50 border-slate-200">
+                      <div className="flex items-center mb-1">
+                        <InfoIcon className="h-4 w-4 text-slate-600 mr-2" />
+                        <span className="text-sm font-medium text-slate-800">Market Update</span>
+                      </div>
+                      <p className="text-xs text-slate-700">Industry outlook remains positive with 8% growth forecast</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
         </>
       ) : selectedSupplierId ? (

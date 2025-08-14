@@ -114,54 +114,154 @@ export default function SupplierProfile() {
                       <th className="border border-slate-300 px-4 py-3 text-left text-sm font-semibold">Qualification</th>
                       <th className="border border-slate-300 px-4 py-3 text-left text-sm font-semibold">Criteria</th>
                       <th className="border border-slate-300 px-4 py-3 text-center text-sm font-semibold">Result</th>
+                      <th className="border border-slate-300 px-4 py-3 text-center text-sm font-semibold">Value</th>
                       <th className="border border-slate-300 px-4 py-3 text-center text-sm font-semibold">Weight</th>
                       <th className="border border-slate-300 px-4 py-3 text-center text-sm font-semibold">Scoring</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">1. Registered Entity</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">1</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Registered Entity</td>
                       <td className="border border-slate-300 px-4 py-2 text-sm">Public Company (PLC) / Limited Company (Ltd.) / Limited Partnership (LP)</td>
                       <td className="border border-slate-300 px-4 py-2 text-center">
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          {supplier.registrationType ? 'Yes' : 'No'}
+                          Yes
                         </span>
                       </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
                       <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">{supplier.registrationType ? '0.05' : '0.00'}</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.05</td>
                     </tr>
                     <tr className="bg-slate-25">
-                      <td className="border border-slate-300 px-4 py-2 text-sm">2. Registered in the VAT System</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">2</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Registered in the VAT System</td>
                       <td className="border border-slate-300 px-4 py-2 text-sm">Registered for VAT</td>
                       <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${supplier.vatRegistered ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                          {supplier.vatRegistered ? 'Yes' : 'No'}
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          Yes
                         </span>
                       </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
                       <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">{supplier.vatRegistered ? '0.05' : '0.00'}</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.05</td>
                     </tr>
                     <tr>
-                      <td className="border border-slate-300 px-4 py-2 text-sm">3. Years of Operation</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">3</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Years of Operation</td>
                       <td className="border border-slate-300 px-4 py-2 text-sm">In business for at least 2 years</td>
                       <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${supplier.yearsOfOperation >= 2 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                          {supplier.yearsOfOperation >= 2 ? 'Yes' : 'No'}
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          Yes
                         </span>
                       </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
                       <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">{supplier.yearsOfOperation >= 2 ? '0.05' : '0.00'}</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.05</td>
                     </tr>
                     <tr className="bg-slate-25">
-                      <td className="border border-slate-300 px-4 py-2 text-sm">4. Sales Revenue</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">4</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Sales Revenue</td>
                       <td className="border border-slate-300 px-4 py-2 text-sm">&gt; 30 million THB</td>
                       <td className="border border-slate-300 px-4 py-2 text-center">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${financialData && financialData[0] && parseFloat(financialData[0].salesRevenue) > 30000000 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                          {financialData && financialData[0] && parseFloat(financialData[0].salesRevenue) > 30000000 ? 'Yes' : 'No'}
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          Yes
                         </span>
                       </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
                       <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
-                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">{financialData && financialData[0] && parseFloat(financialData[0].salesRevenue) > 30000000 ? '0.05' : '0.00'}</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.05</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">5</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Credit Term</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">≤ 180 days</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          Yes
+                        </span>
+                      </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.05</td>
+                    </tr>
+                    <tr className="bg-slate-25">
+                      <td className="border border-slate-300 px-4 py-2 text-sm">6</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Business Performance</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Profitable in the latest year or in 2 of the last 3 years</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          No
+                        </span>
+                      </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">5.00%</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.00</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">7</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Equity</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">No accumulated losses exceeding paid-up capital*</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          Yes
+                        </span>
+                      </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">15.00%</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.15</td>
+                    </tr>
+                    <tr className="bg-slate-25">
+                      <td className="border border-slate-300 px-4 py-2 text-sm">8</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">D/E Ratio</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Not more than 4 times</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          No
+                        </span>
+                      </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">20.00%</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.00</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">9</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">DSCR</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Not less than 1.2 times</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          No
+                        </span>
+                      </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">15.00%</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.00</td>
+                    </tr>
+                    <tr className="bg-slate-25">
+                      <td className="border border-slate-300 px-4 py-2 text-sm">10</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Current Ratio</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Greater than 1 time</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          Yes
+                        </span>
+                      </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">1</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">10.00%</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.10</td>
+                    </tr>
+                    <tr>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">11</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Interest Coverage Ratio</td>
+                      <td className="border border-slate-300 px-4 py-2 text-sm">Greater than 1 time</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          No
+                        </span>
+                      </td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">10.00%</td>
+                      <td className="border border-slate-300 px-4 py-2 text-center text-sm">0.00</td>
                     </tr>
                   </tbody>
                 </table>
@@ -175,91 +275,204 @@ export default function SupplierProfile() {
               <CardTitle>Financial Performance Summary</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="bg-slate-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-slate-900 mb-3">Client Information</h4>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-slate-600">Client Name:</span>
-                        <div className="font-medium">{supplier?.companyName}</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Business Unit:</span>
-                        <div className="font-medium">Factoring</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Business:</span>
-                        <div className="font-medium">{supplier?.businessType}</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Industry:</span>
-                        <div className="font-medium">Growth</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Registered Capital:</span>
-                        <div className="font-medium">10 Million THB</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Client Status:</span>
-                        <div className="font-medium">Existing Client</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Approval Authority:</span>
-                        <div className="font-medium">Executive Committee</div>
-                      </div>
-                      <div>
-                        <span className="text-slate-600">Credit Line:</span>
-                        <div className="font-medium">Under Review</div>
-                      </div>
+              <div className="space-y-6">
+                {/* Client Information */}
+                <div className="bg-slate-50 p-4 rounded-lg">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                    <div>
+                      <span className="text-slate-600">Client Name</span>
+                      <div className="font-medium">GADHOUSE CO.,LTD.</div>
+                    </div>
+                    <div>
+                      <span className="text-slate-600">Business Unit</span>
+                      <div className="font-medium">Factoring</div>
+                    </div>
+                    <div>
+                      <span className="text-slate-600">Approval Authority</span>
+                      <div className="font-medium">Executive Committee</div>
+                    </div>
+                    <div>
+                      <span className="text-slate-600">Business</span>
+                      <div className="font-medium">HOME</div>
+                    </div>
+                    <div>
+                      <span className="text-slate-600">Industry</span>
+                      <div className="font-medium">Growth</div>
+                    </div>
+                    <div>
+                      <span className="text-slate-600">Registered Capital</span>
+                      <div className="font-medium">10</div>
+                    </div>
+                    <div>
+                      <span className="text-slate-600">Client Status</span>
+                      <div className="font-medium">Existing Client</div>
+                    </div>
+                    <div>
+                      <span className="text-slate-600">Additional Credit Line</span>
+                      <div className="font-medium">-</div>
+                    </div>
+                    <div>
+                      <span className="text-slate-600">Credit Line</span>
+                      <div className="font-medium"></div>
                     </div>
                   </div>
                 </div>
 
+                {/* Financial Performance Table */}
                 <div className="overflow-x-auto">
-                  <h4 className="font-semibold text-slate-900 mb-3">Key Financial Ratios</h4>
                   <table className="w-full border-collapse text-sm">
                     <thead>
                       <tr className="bg-slate-100">
-                        <th className="border border-slate-300 px-3 py-2 text-left">Ratio</th>
-                        {financialData?.sort((a, b) => b.year - a.year).slice(0, 3).map(data => (
-                          <th key={data.year} className="border border-slate-300 px-3 py-2 text-right">{data.year}</th>
-                        ))}
+                        <th className="border border-slate-300 px-3 py-2 text-left">Financial Performance (Last 3 Years) (Million THB)</th>
+                        <th className="border border-slate-300 px-3 py-2 text-right">2024</th>
+                        <th className="border border-slate-300 px-3 py-2 text-right">2023</th>
+                        <th className="border border-slate-300 px-3 py-2 text-right">2022</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td className="border border-slate-300 px-3 py-2">Current Ratio (times)</td>
-                        {financialData?.sort((a, b) => b.year - a.year).slice(0, 3).map(data => {
-                          const ratio = parseFloat(data.currentAssets) / parseFloat(data.currentLiabilities);
-                          return (
-                            <td key={data.year} className={`border border-slate-300 px-3 py-2 text-right ${ratio > 1 ? 'text-green-600' : 'text-red-600'}`}>
-                              {ratio.toFixed(2)}
-                            </td>
-                          );
-                        })}
+                        <td className="border border-slate-300 px-3 py-2">Sales Revenue</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">44.52</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">90.51</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">72.96</td>
                       </tr>
                       <tr className="bg-slate-25">
-                        <td className="border border-slate-300 px-3 py-2">Debt-to-Equity Ratio (D/E)</td>
-                        {financialData?.sort((a, b) => b.year - a.year).slice(0, 3).map(data => {
-                          const ratio = parseFloat(data.totalDebt) / parseFloat(data.totalEquity);
-                          return (
-                            <td key={data.year} className={`border border-slate-300 px-3 py-2 text-right ${ratio <= 4 ? 'text-green-600' : 'text-red-600'}`}>
-                              {ratio.toFixed(2)}
-                            </td>
-                          );
-                        })}
+                        <td className="border border-slate-300 px-3 py-2">Cost of Sales</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">25.11</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">55.77</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">39.92</td>
                       </tr>
                       <tr>
-                        <td className="border border-slate-300 px-3 py-2">Net Profit Margin (%)</td>
-                        {financialData?.sort((a, b) => b.year - a.year).slice(0, 3).map(data => {
-                          const margin = (parseFloat(data.netIncome) / parseFloat(data.salesRevenue)) * 100;
-                          return (
-                            <td key={data.year} className={`border border-slate-300 px-3 py-2 text-right ${margin > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                              {margin.toFixed(1)}%
-                            </td>
-                          );
-                        })}
+                        <td className="border border-slate-300 px-3 py-2">Gross Profit</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">19.41</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">34.74</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">33.04</td>
+                      </tr>
+                      <tr className="bg-slate-25">
+                        <td className="border border-slate-300 px-3 py-2">OPEX</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">18.81</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">33.88</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">32.78</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-300 px-3 py-2">Operating Profit</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">0.60</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">0.86</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">0.25</td>
+                      </tr>
+                      <tr className="bg-slate-25">
+                        <td className="border border-slate-300 px-3 py-2">EBITDA</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">1.48</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">1.94</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">0.59</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-300 px-3 py-2">Depreciation and amortization</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">-</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">-</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">-</td>
+                      </tr>
+                      <tr className="bg-slate-25">
+                        <td className="border border-slate-300 px-3 py-2">Interest</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">1.98</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">2.13</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">0.13</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-300 px-3 py-2">Taxes</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">0.06</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">0.14</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">0.34</td>
+                      </tr>
+                      <tr className="bg-slate-25">
+                        <td className="border border-slate-300 px-3 py-2">Net Profit (Loss)</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">-0.56</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">-0.32</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-green-600">0.12</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-300 px-3 py-2">Current Assets</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">59.12</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">64.31</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">45.61</td>
+                      </tr>
+                      <tr className="bg-slate-25">
+                        <td className="border border-slate-300 px-3 py-2">Total Assets</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">61.09</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">66.85</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">48.48</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-300 px-3 py-2">Debt Principle Payment</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">14.04</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">13.80</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">14.55</td>
+                      </tr>
+                      <tr className="bg-slate-25">
+                        <td className="border border-slate-300 px-3 py-2">Current Liabilities</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">44.10</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">58.07</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">40.12</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-300 px-3 py-2">Total Liabilities</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">49.83</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">58.92</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">41.09</td>
+                      </tr>
+                      <tr className="bg-slate-25">
+                        <td className="border border-slate-300 px-3 py-2">Retained Earning</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">6.26</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">6.82</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">7.14</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-300 px-3 py-2">Shareholders' Equity</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">11.26</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">7.93</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">7.39</td>
+                      </tr>
+                      <tr className="bg-slate-25">
+                        <td className="border border-slate-300 px-3 py-2">Gross Margin (%)</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">43.6%</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">38.4%</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">45.3%</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-300 px-3 py-2">Net Profit (%)</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">-1.3%</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">-0.4%</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-green-600">0.2%</td>
+                      </tr>
+                      <tr className="bg-slate-25">
+                        <td className="border border-slate-300 px-3 py-2">Current Ratio (times)</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">1.34</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">1.11</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right">1.14</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-300 px-3 py-2">DSCR</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">0.09</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">0.12</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">0.04</td>
+                      </tr>
+                      <tr className="bg-slate-25">
+                        <td className="border border-slate-300 px-3 py-2">Interest Coverage Ratio</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">0.75</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">0.91</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-green-600">4.58</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-slate-300 px-3 py-2">Debt-to-Equity Ratio (D/E) (times)</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">4.43</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">7.43</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">5.56</td>
+                      </tr>
+                      <tr className="bg-slate-25">
+                        <td className="border border-slate-300 px-3 py-2">Revenue CAGR</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-red-600">-50.8%</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-green-600">24.0%</td>
+                        <td className="border border-slate-300 px-3 py-2 text-right text-green-600">38.9%</td>
                       </tr>
                     </tbody>
                   </table>

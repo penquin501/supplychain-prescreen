@@ -22,6 +22,15 @@ export default function CreditReport() {
   const [selectedSupplierId, setSelectedSupplierId] = useState(initialSupplierId);
   const [selectedBuyer, setSelectedBuyer] = useState<string | null>(null);
   
+  // State for AI recommendation interaction
+  const [recommendationStatus, setRecommendationStatus] = useState<'pending' | 'accepted' | 'adjusting'>('pending');
+  const [manualPricing, setManualPricing] = useState({
+    factoring: '',
+    fee: '',
+    interest: '',
+    creditLimit: ''
+  });
+  
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -480,6 +489,321 @@ export default function CreditReport() {
                   <p className="text-sm text-purple-600">
                     maximum factoring limit
                   </p>
+                </div>
+              </div>
+              
+              {/* AI Recommendation Confirmation */}
+              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h5 className="font-medium text-blue-900 mb-1">AI Pricing Recommendations</h5>
+                    <p className="text-sm text-blue-700">
+                      Based on comprehensive risk analysis, here are our recommended pricing terms for this supplier.
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    {recommendationStatus === 'pending' && (
+                      <>
+                        <button 
+                          className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
+                          onClick={() => {
+                            setRecommendationStatus('accepted');
+                            toast({
+                              title: "Recommendations Accepted",
+                              description: "AI pricing recommendations have been applied successfully.",
+                            });
+                          }}
+                        >
+                          Accept Recommendations
+                        </button>
+                        <button 
+                          className="px-4 py-2 bg-slate-600 text-white text-sm font-medium rounded-lg hover:bg-slate-700 transition-colors"
+                          onClick={() => {
+                            setRecommendationStatus('adjusting');
+                            // Initialize manual pricing with current AI recommendations
+                            const overallScore = parseFloat(score.overallCreditScore);
+                            const financialScore = parseInt(score.financialScore);
+                            const transactionalScore = parseInt(score.transactionalScore);
+                            const yearsOfOperation = supplier?.yearsOfOperation || 0;
+                            
+                            // Set AI recommendations as default values
+                            const factoring = overallScore >= 85 && financialScore >= 80 ? "90-95%" :
+                                           overallScore >= 75 && financialScore >= 70 ? "85-90%" :
+                                           overallScore >= 65 ? "80-85%" :
+                                           overallScore >= 55 ? "75-80%" : "70-75%";
+                            
+                            const fee = overallScore >= 85 && financialScore >= 80 ? "1.8-2.2%" :
+                                      overallScore >= 75 && financialScore >= 70 ? "2.2-2.8%" :
+                                      overallScore >= 65 ? "2.8-3.5%" :
+                                      overallScore >= 55 ? "3.5-4.2%" : "4.2-5.0%";
+                            
+                            let baseRate = overallScore >= 85 ? 8.5 : overallScore >= 75 ? 10.0 : overallScore >= 65 ? 12.0 : overallScore >= 55 ? 14.5 : overallScore >= 45 ? 17.0 : 20.0;
+                            let riskAdjustment = 0;
+                            if (financialScore >= 85) riskAdjustment -= 1.0;
+                            else if (financialScore >= 75) riskAdjustment -= 0.5;
+                            else if (financialScore < 55) riskAdjustment += 1.5;
+                            if (transactionalScore >= 85) riskAdjustment -= 1.0;
+                            else if (transactionalScore >= 70) riskAdjustment -= 0.5;
+                            else if (transactionalScore < 50) riskAdjustment += 2.0;
+                            if (yearsOfOperation >= 10) riskAdjustment -= 0.5;
+                            else if (yearsOfOperation >= 5) riskAdjustment -= 0.25;
+                            else if (yearsOfOperation < 2) riskAdjustment += 1.0;
+                            const finalRate = Math.max(baseRate + riskAdjustment, 7.0);
+                            const upperRate = finalRate + 1.0;
+                            const interest = `${finalRate.toFixed(1)}-${upperRate.toFixed(1)}%`;
+                            
+                            setManualPricing({
+                              factoring,
+                              fee,
+                              interest,
+                              creditLimit: "10-25M THB" // Simplified default
+                            });
+                          }}
+                        >
+                          Adjust Manually
+                        </button>
+                      </>
+                    )}
+                    
+                    {recommendationStatus === 'accepted' && (
+                      <div className="flex items-center gap-2 text-green-700">
+                        <CheckCircle className="w-4 h-4" />
+                        <span className="text-sm font-medium">Recommendations Accepted</span>
+                        <button 
+                          className="ml-2 px-3 py-1 bg-slate-100 text-slate-600 text-xs rounded hover:bg-slate-200 transition-colors"
+                          onClick={() => setRecommendationStatus('pending')}
+                        >
+                          Reset
+                        </button>
+                      </div>
+                    )}
+                    
+                    {recommendationStatus === 'adjusting' && (
+                      <div className="flex gap-2">
+                        <button 
+                          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                          onClick={() => {
+                            setRecommendationStatus('accepted');
+                            toast({
+                              title: "Manual Adjustments Saved",
+                              description: "Your custom pricing terms have been applied.",
+                            });
+                          }}
+                        >
+                          Save Changes
+                        </button>
+                        <button 
+                          className="px-3 py-2 bg-slate-200 text-slate-600 text-sm font-medium rounded-lg hover:bg-slate-300 transition-colors"
+                          onClick={() => setRecommendationStatus('pending')}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+                  {recommendationStatus === 'adjusting' ? (
+                    // Manual adjustment mode - editable inputs
+                    <>
+                      <div className="bg-white p-3 rounded border">
+                        <label className="block font-medium text-slate-700 mb-1">Factoring (%):</label>
+                        <input
+                          type="text"
+                          value={manualPricing.factoring}
+                          onChange={(e) => setManualPricing(prev => ({ ...prev, factoring: e.target.value }))}
+                          className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          placeholder="e.g. 85-90%"
+                        />
+                      </div>
+                      <div className="bg-white p-3 rounded border">
+                        <label className="block font-medium text-slate-700 mb-1">Fee (%):</label>
+                        <input
+                          type="text"
+                          value={manualPricing.fee}
+                          onChange={(e) => setManualPricing(prev => ({ ...prev, fee: e.target.value }))}
+                          className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-green-500"
+                          placeholder="e.g. 2.5-3.0%"
+                        />
+                      </div>
+                      <div className="bg-white p-3 rounded border">
+                        <label className="block font-medium text-slate-700 mb-1">Interest (%):</label>
+                        <input
+                          type="text"
+                          value={manualPricing.interest}
+                          onChange={(e) => setManualPricing(prev => ({ ...prev, interest: e.target.value }))}
+                          className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-orange-500"
+                          placeholder="e.g. 12.0-13.0%"
+                        />
+                      </div>
+                      <div className="bg-white p-3 rounded border">
+                        <label className="block font-medium text-slate-700 mb-1">Credit Limit:</label>
+                        <input
+                          type="text"
+                          value={manualPricing.creditLimit}
+                          onChange={(e) => setManualPricing(prev => ({ ...prev, creditLimit: e.target.value }))}
+                          className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-purple-500"
+                          placeholder="e.g. 25M THB"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    // Display mode - show current values (AI or manual)
+                    <>
+                      <div className="bg-white p-3 rounded border">
+                        <span className="font-medium text-slate-700">Factoring:</span>
+                        <span className="ml-2 text-blue-700 font-medium">
+                          {recommendationStatus === 'accepted' && manualPricing.factoring ? 
+                            manualPricing.factoring : 
+                            (() => {
+                              const overallScore = parseFloat(score.overallCreditScore);
+                              const financialScore = parseInt(score.financialScore);
+                              
+                              if (overallScore >= 85 && financialScore >= 80) return "90-95%";
+                              else if (overallScore >= 75 && financialScore >= 70) return "85-90%";
+                              else if (overallScore >= 65) return "80-85%";
+                              else if (overallScore >= 55) return "75-80%";
+                              else return "70-75%";
+                            })()
+                          }
+                        </span>
+                      </div>
+                      <div className="bg-white p-3 rounded border">
+                        <span className="font-medium text-slate-700">Fee:</span>
+                        <span className="ml-2 text-green-700 font-medium">
+                          {recommendationStatus === 'accepted' && manualPricing.fee ? 
+                            manualPricing.fee : 
+                            (() => {
+                              const overallScore = parseFloat(score.overallCreditScore);
+                              const financialScore = parseInt(score.financialScore);
+                              
+                              if (overallScore >= 85 && financialScore >= 80) return "1.8-2.2%";
+                              else if (overallScore >= 75 && financialScore >= 70) return "2.2-2.8%";
+                              else if (overallScore >= 65) return "2.8-3.5%";
+                              else if (overallScore >= 55) return "3.5-4.2%";
+                              else return "4.2-5.0%";
+                            })()
+                          }
+                        </span>
+                      </div>
+                      <div className="bg-white p-3 rounded border">
+                        <span className="font-medium text-slate-700">Interest:</span>
+                        <span className="ml-2 text-orange-700 font-medium">
+                          {recommendationStatus === 'accepted' && manualPricing.interest ? 
+                            manualPricing.interest : 
+                            (() => {
+                              const overallScore = parseFloat(score.overallCreditScore);
+                              const financialScore = parseInt(score.financialScore);
+                              const transactionalScore = parseInt(score.transactionalScore);
+                              const yearsOfOperation = supplier?.yearsOfOperation || 0;
+                              
+                              let baseRate = 0;
+                              if (overallScore >= 85) baseRate = 8.5;
+                              else if (overallScore >= 75) baseRate = 10.0;
+                              else if (overallScore >= 65) baseRate = 12.0;
+                              else if (overallScore >= 55) baseRate = 14.5;
+                              else if (overallScore >= 45) baseRate = 17.0;
+                              else baseRate = 20.0;
+                              
+                              let riskAdjustment = 0;
+                              if (financialScore >= 85) riskAdjustment -= 1.0;
+                              else if (financialScore >= 75) riskAdjustment -= 0.5;
+                              else if (financialScore < 55) riskAdjustment += 1.5;
+                              
+                              if (transactionalScore >= 85) riskAdjustment -= 1.0;
+                              else if (transactionalScore >= 70) riskAdjustment -= 0.5;
+                              else if (transactionalScore < 50) riskAdjustment += 2.0;
+                              
+                              if (yearsOfOperation >= 10) riskAdjustment -= 0.5;
+                              else if (yearsOfOperation >= 5) riskAdjustment -= 0.25;
+                              else if (yearsOfOperation < 2) riskAdjustment += 1.0;
+                              
+                              const finalRate = Math.max(baseRate + riskAdjustment, 7.0);
+                              const upperRate = finalRate + 1.0;
+                              
+                              return `${finalRate.toFixed(1)}-${upperRate.toFixed(1)}%`;
+                            })()
+                          }
+                        </span>
+                      </div>
+                      <div className="bg-white p-3 rounded border">
+                        <span className="font-medium text-slate-700">Limit:</span>
+                        <span className="ml-2 text-purple-700 font-medium">
+                          {recommendationStatus === 'accepted' && manualPricing.creditLimit ? 
+                            manualPricing.creditLimit : 
+                            (() => {
+                              const overallScore = parseFloat(score.overallCreditScore);
+                              const financialScore = parseInt(score.financialScore);
+                              const transactionalScore = parseInt(score.transactionalScore);
+                              const aScore = parseInt(score.aScore);
+                              const yearsOfOperation = supplier?.yearsOfOperation || 0;
+                              
+                              let baseFactoringLimit = 0;
+                              if (overallScore >= 80) baseFactoringLimit = 50;
+                              else if (overallScore >= 60) baseFactoringLimit = 25;
+                              else baseFactoringLimit = 8;
+                              
+                              let factoringAdjustment = 1.0;
+                              
+                              if (financialScore >= 85) factoringAdjustment *= 1.5;
+                              else if (financialScore >= 75) factoringAdjustment *= 1.3;
+                              else if (financialScore >= 65) factoringAdjustment *= 1.0;
+                              else if (financialScore >= 55) factoringAdjustment *= 0.7;
+                              else factoringAdjustment *= 0.5;
+                              
+                              if (transactionalScore >= 85) factoringAdjustment *= 1.4;
+                              else if (transactionalScore >= 70) factoringAdjustment *= 1.2;
+                              else if (transactionalScore < 50) factoringAdjustment *= 0.6;
+                              
+                              if (yearsOfOperation >= 10) factoringAdjustment *= 1.2;
+                              else if (yearsOfOperation >= 5) factoringAdjustment *= 1.1;
+                              else if (yearsOfOperation >= 2) factoringAdjustment *= 1.0;
+                              else factoringAdjustment *= 0.8;
+                              
+                              if (supplier?.vatRegistered) factoringAdjustment *= 1.15;
+                              
+                              if (aScore >= 90) factoringAdjustment *= 1.3;
+                              else if (aScore >= 80) factoringAdjustment *= 1.1;
+                              else if (aScore < 60) factoringAdjustment *= 0.7;
+                              
+                              let factoringCreditLimit = Math.round(baseFactoringLimit * factoringAdjustment);
+                              
+                              const factoringRevenueCap = (() => {
+                                if (overallScore >= 80 && yearsOfOperation >= 5) {
+                                  return Math.min(factoringCreditLimit, 100);
+                                } else if (overallScore >= 60 && yearsOfOperation >= 3) {
+                                  return Math.min(factoringCreditLimit, 48);
+                                } else {
+                                  return Math.min(factoringCreditLimit, 24);
+                                }
+                              })();
+                              
+                              factoringCreditLimit = factoringRevenueCap;
+                              
+                              if (factoringCreditLimit >= 60) return `${factoringCreditLimit}-${factoringCreditLimit + 15}M THB`;
+                              else if (factoringCreditLimit >= 30) return `${factoringCreditLimit}-${factoringCreditLimit + 10}M THB`;
+                              else if (factoringCreditLimit >= 15) return `${factoringCreditLimit}-${factoringCreditLimit + 8}M THB`;
+                              else return `${Math.max(factoringCreditLimit, 3)}-${Math.max(factoringCreditLimit + 5, 8)}M THB`;
+                            })()
+                          }
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
+                
+                <div className="mt-3 text-xs text-blue-600">
+                  <strong>Confidence Level:</strong> {(() => {
+                    const overallScore = parseFloat(score.overallCreditScore);
+                    const aScore = parseInt(score.aScore);
+                    
+                    if (overallScore >= 80 && aScore >= 85) return "High (95%)";
+                    else if (overallScore >= 65 && aScore >= 70) return "Medium-High (85%)";
+                    else if (overallScore >= 50 && aScore >= 60) return "Medium (75%)";
+                    else return "Low-Medium (65%)";
+                  })()} | 
+                  Recommendations are based on {score.financialGrade} financial grade, {score.transactionalScore}% transaction quality, and {score.aScore}% documentation completion.
                 </div>
               </div>
               

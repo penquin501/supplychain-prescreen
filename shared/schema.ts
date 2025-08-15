@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, decimal, integer, date, jsonb, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, decimal, integer, date, jsonb, boolean, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -163,6 +163,16 @@ export const scores = pgTable("scores", {
   lastUpdated: date("last_updated").default(sql`CURRENT_DATE`),
 });
 
+export const pricingDecisions = pgTable("pricing_decisions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  supplierId: varchar("supplier_id").references(() => suppliers.id).notNull(),
+  pricingData: jsonb("pricing_data").notNull(), // { factoring, fee, interest, creditLimit }
+  isAIRecommendation: boolean("is_ai_recommendation").notNull(),
+  supplierScores: jsonb("supplier_scores").notNull(), // Store scores at time of decision
+  approvedAt: timestamp("approved_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertSupplierSchema = createInsertSchema(suppliers).omit({
   id: true,
   createdAt: true,
@@ -184,6 +194,11 @@ export const insertScoreSchema = createInsertSchema(scores).omit({
   id: true,
 });
 
+export const insertPricingDecisionSchema = createInsertSchema(pricingDecisions).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertSupplier = z.infer<typeof insertSupplierSchema>;
 export type Supplier = typeof suppliers.$inferSelect;
 export type InsertFinancialData = z.infer<typeof insertFinancialDataSchema>;
@@ -194,3 +209,5 @@ export type InsertDocument = z.infer<typeof insertDocumentSchema>;
 export type Document = typeof documents.$inferSelect;
 export type InsertScore = z.infer<typeof insertScoreSchema>;
 export type Score = typeof scores.$inferSelect;
+export type InsertPricingDecision = z.infer<typeof insertPricingDecisionSchema>;
+export type PricingDecision = typeof pricingDecisions.$inferSelect;

@@ -119,6 +119,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Pricing Decision - for machine learning
+  app.post("/api/suppliers/:id/pricing-decision", async (req, res) => {
+    try {
+      const pricingDecision = await storage.createPricingDecision({
+        supplierId: req.params.id,
+        pricingData: req.body.pricingData,
+        isAIRecommendation: req.body.isAIRecommendation,
+        supplierScores: req.body.supplierScores,
+        approvedAt: req.body.approvedAt
+      });
+      res.status(201).json(pricingDecision);
+    } catch (error) {
+      console.error('Error saving pricing decision:', error);
+      res.status(500).json({ message: "Failed to save pricing decision" });
+    }
+  });
+
   // Scores
   // Update recommendation status
   app.patch("/api/suppliers/:id/recommendation", async (req, res) => {

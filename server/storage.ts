@@ -8,7 +8,9 @@ import {
   type Document,
   type InsertDocument,
   type Score,
-  type InsertScore
+  type InsertScore,
+  type PricingDecision,
+  type InsertPricingDecision
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { getRandomDocumentSubmissions } from "../client/src/lib/randomData";
@@ -37,6 +39,10 @@ export interface IStorage {
   getScore(supplierId: string): Promise<Score | undefined>;
   createScore(score: InsertScore): Promise<Score>;
   updateScore(supplierId: string, score: Partial<InsertScore>): Promise<Score | undefined>;
+
+  // Pricing Decisions (for machine learning)
+  createPricingDecision(decision: InsertPricingDecision): Promise<PricingDecision>;
+  getPricingDecisions(supplierId: string): Promise<PricingDecision[]>;
 }
 
 export class MemStorage implements IStorage {
@@ -45,6 +51,7 @@ export class MemStorage implements IStorage {
   private transactions: Map<string, Transaction> = new Map();
   private documents: Map<string, Document> = new Map();
   private scores: Map<string, Score> = new Map();
+  private pricingDecisions: Map<string, PricingDecision> = new Map();
 
   constructor() {
     this.seedData();
@@ -588,6 +595,22 @@ export class MemStorage implements IStorage {
     const updated = { ...existing, ...score };
     this.scores.set(existing.id, updated);
     return updated;
+  }
+
+  // Pricing Decisions (for machine learning)
+  async createPricingDecision(decision: InsertPricingDecision): Promise<PricingDecision> {
+    const id = randomUUID();
+    const newDecision: PricingDecision = { 
+      ...decision, 
+      id,
+      createdAt: new Date().toISOString()
+    };
+    this.pricingDecisions.set(id, newDecision);
+    return newDecision;
+  }
+
+  async getPricingDecisions(supplierId: string): Promise<PricingDecision[]> {
+    return Array.from(this.pricingDecisions.values()).filter(decision => decision.supplierId === supplierId);
   }
 }
 

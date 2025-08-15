@@ -608,43 +608,43 @@ export default function CreditReport() {
                     // Manual adjustment mode - editable inputs
                     <>
                       <div className="bg-white p-3 rounded border">
-                        <label className="block font-medium text-slate-700 mb-1">Factoring (%):</label>
+                        <label className="block font-medium text-slate-700 mb-1">Factoring (%)</label>
                         <input
                           type="text"
                           value={manualPricing.factoring}
                           onChange={(e) => setManualPricing(prev => ({ ...prev, factoring: e.target.value }))}
                           className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                          placeholder="e.g. 85-90%"
+                          placeholder="85-90%"
                         />
                       </div>
                       <div className="bg-white p-3 rounded border">
-                        <label className="block font-medium text-slate-700 mb-1">Fee (%):</label>
+                        <label className="block font-medium text-slate-700 mb-1">Fee</label>
                         <input
                           type="text"
                           value={manualPricing.fee}
                           onChange={(e) => setManualPricing(prev => ({ ...prev, fee: e.target.value }))}
                           className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-green-500"
-                          placeholder="e.g. 2.5-3.0%"
+                          placeholder="2.5-3.0%"
                         />
                       </div>
                       <div className="bg-white p-3 rounded border">
-                        <label className="block font-medium text-slate-700 mb-1">Interest (%):</label>
+                        <label className="block font-medium text-slate-700 mb-1">Interest</label>
                         <input
                           type="text"
                           value={manualPricing.interest}
                           onChange={(e) => setManualPricing(prev => ({ ...prev, interest: e.target.value }))}
                           className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-orange-500"
-                          placeholder="e.g. 12.0-13.0%"
+                          placeholder="12.0-13.0%"
                         />
                       </div>
                       <div className="bg-white p-3 rounded border">
-                        <label className="block font-medium text-slate-700 mb-1">Credit Limit:</label>
+                        <label className="block font-medium text-slate-700 mb-1">Credit Limit</label>
                         <input
                           type="text"
                           value={manualPricing.creditLimit}
                           onChange={(e) => setManualPricing(prev => ({ ...prev, creditLimit: e.target.value }))}
                           className="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-purple-500"
-                          placeholder="e.g. 25M THB"
+                          placeholder="25M THB"
                         />
                       </div>
                     </>

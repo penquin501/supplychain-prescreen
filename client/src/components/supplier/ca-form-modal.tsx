@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,35 +16,48 @@ const caFormSchema = z.object({
   // Company Information
   companyNameThai: z.string().min(1, "Thai company name is required"),
   companyNameEnglish: z.string().min(1, "English company name is required"),
-  registrationNumber: z.string().min(1, "Registration number is required"),
+  businessType: z.string().min(1, "Business type is required"),
+  registeredCapital: z.number().min(0, "Registered capital must be positive"),
+  
+  // Registration Details
   taxId: z.string().min(1, "Tax ID is required"),
   vatRegistered: z.boolean(),
+  establishedDate: z.string().min(1, "Established date is required"),
   
-  // Contact Information
-  address: z.string().min(1, "Address is required"),
+  // Address Information
+  registeredAddress: z.string().min(1, "Registered address is required"),
+  businessAddress: z.string().min(1, "Business address is required"),
   district: z.string().min(1, "District is required"),
   province: z.string().min(1, "Province is required"),
   postalCode: z.string().min(1, "Postal code is required"),
+  
+  // Contact Information
   phoneNumber: z.string().min(1, "Phone number is required"),
   email: z.string().email("Valid email is required"),
-  website: z.string().optional(),
+  contactPerson: z.string().min(1, "Contact person is required"),
   
   // Business Information
-  businessType: z.string().min(1, "Business type is required"),
   industry: z.string().min(1, "Industry is required"),
+  businessDescription: z.string().min(1, "Business description is required"),
   yearsOfOperation: z.number().min(0, "Years of operation must be positive"),
   numberOfEmployees: z.number().min(1, "Number of employees is required"),
   
   // Financial Information
   annualRevenue: z.number().min(0, "Annual revenue must be positive"),
-  majorCustomers: z.string().min(1, "Major customers information is required"),
-  bankName: z.string().min(1, "Bank name is required"),
+  bankName: z.string().min(1, "Primary bank name is required"),
   bankAccountNumber: z.string().min(1, "Bank account number is required"),
   
-  // Additional Information
-  businessDescription: z.string().min(1, "Business description is required"),
-  keyProducts: z.string().min(1, "Key products/services is required"),
-  competitiveAdvantages: z.string().optional(),
+  // Factoring Information
+  requestedCreditLimit: z.number().min(0, "Requested credit limit must be positive"),
+  factoringPurpose: z.string().min(1, "Purpose of factoring is required"),
+  majorCustomers: z.string().min(1, "Major customers information is required"),
+  creditTerms: z.number().min(0, "Credit terms must be positive"),
+  
+  // Guarantors Information
+  guarantor1Name: z.string().optional(),
+  guarantor1Position: z.string().optional(),
+  guarantor2Name: z.string().optional(),
+  guarantor2Position: z.string().optional(),
 });
 
 type CAFormData = z.infer<typeof caFormSchema>;
@@ -63,27 +76,34 @@ export function CAFormModal({ supplier, onSubmit, children }: CAFormModalProps) 
     defaultValues: {
       companyNameThai: supplier?.companyName || "",
       companyNameEnglish: supplier?.companyName || "",
-      registrationNumber: supplier?.taxId || "", // Use taxId as registration number
+      businessType: supplier?.businessType || "",
+      registeredCapital: 0,
       taxId: supplier?.taxId || "",
       vatRegistered: supplier?.vatRegistered || false,
-      address: supplier?.address || "",
+      establishedDate: supplier?.establishedDate || "",
+      registeredAddress: supplier?.address || "",
+      businessAddress: supplier?.address || "",
       district: "",
       province: "",
       postalCode: "",
-      phoneNumber: "", // This is required field that user needs to fill
-      email: "", // Not available in current supplier schema
-      website: "", // Not available in current supplier schema
-      businessType: supplier?.businessType || "",
-      industry: "", // Not available in current supplier schema
+      phoneNumber: "", // Required field for user input
+      email: "", // Required field for user input
+      contactPerson: supplier?.contactPerson || "",
+      industry: "",
+      businessDescription: "",
       yearsOfOperation: supplier?.yearsOfOperation || 0,
-      numberOfEmployees: 0, // Not available in current supplier schema
+      numberOfEmployees: 0,
       annualRevenue: 0,
-      majorCustomers: "",
       bankName: "",
       bankAccountNumber: "",
-      businessDescription: "",
-      keyProducts: "",
-      competitiveAdvantages: "",
+      requestedCreditLimit: 0,
+      factoringPurpose: "",
+      majorCustomers: "",
+      creditTerms: 45, // Default credit terms from document
+      guarantor1Name: "",
+      guarantor1Position: "",
+      guarantor2Name: "",
+      guarantor2Position: "",
     },
   });
 
@@ -99,7 +119,10 @@ export function CAFormModal({ supplier, onSubmit, children }: CAFormModalProps) 
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>CA Form - Supplier Information</DialogTitle>
+          <DialogTitle>CA Form - Credit Application for Factoring</DialogTitle>
+          <DialogDescription>
+            Complete supplier information form for credit approval and factoring facility setup
+          </DialogDescription>
         </DialogHeader>
         
         <Form {...form}>
@@ -109,77 +132,161 @@ export function CAFormModal({ supplier, onSubmit, children }: CAFormModalProps) 
               <CardHeader>
                 <CardTitle className="text-lg">Company Information</CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="companyNameThai"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Company Name (Thai)</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="companyNameThai"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Company Name (Thai)</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="companyNameEnglish"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Company Name (English)</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 
-                <FormField
-                  control={form.control}
-                  name="companyNameEnglish"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Company Name (English)</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="businessType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Business Type</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select business type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="corporation">Corporation</SelectItem>
+                            <SelectItem value="partnership">Partnership</SelectItem>
+                            <SelectItem value="sole-proprietorship">Sole Proprietorship</SelectItem>
+                            <SelectItem value="cooperative">Cooperative</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="registeredCapital"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Registered Capital (THB)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="number" 
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="establishedDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Established Date</FormLabel>
+                        <FormControl>
+                          <Input {...field} type="date" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 
-                <FormField
-                  control={form.control}
-                  name="registrationNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Registration Number</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="taxId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tax ID</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="taxId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Tax ID</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="vatRegistered"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>VAT Registration</FormLabel>
+                        <Select onValueChange={(value) => field.onChange(value === "true")} defaultValue={field.value ? "true" : "false"}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select VAT status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="true">VAT Registered</SelectItem>
+                            <SelectItem value="false">Not VAT Registered</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </CardContent>
             </Card>
 
-            {/* Contact Information */}
+            {/* Address Information */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Contact Information</CardTitle>
+                <CardTitle className="text-lg">Address Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <FormField
                   control={form.control}
-                  name="address"
+                  name="registeredAddress"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Address</FormLabel>
+                      <FormLabel>Registered Address</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} rows={2} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="businessAddress"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Business Address</FormLabel>
                       <FormControl>
                         <Textarea {...field} rows={2} />
                       </FormControl>
@@ -231,89 +338,21 @@ export function CAFormModal({ supplier, onSubmit, children }: CAFormModalProps) 
                     )}
                   />
                 </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="phoneNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone Number *</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Required field" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input {...field} type="email" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="website"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Website</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
               </CardContent>
             </Card>
 
-            {/* Business Information */}
+            {/* Contact Information */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Business Information</CardTitle>
+                <CardTitle className="text-lg">Contact Information</CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <FormField
                   control={form.control}
-                  name="businessType"
+                  name="contactPerson"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Business Type</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select business type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="corporation">Corporation</SelectItem>
-                          <SelectItem value="partnership">Partnership</SelectItem>
-                          <SelectItem value="sole-proprietorship">Sole Proprietorship</SelectItem>
-                          <SelectItem value="cooperative">Cooperative</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="industry"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Industry</FormLabel>
+                      <FormLabel>Contact Person</FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
@@ -324,16 +363,82 @@ export function CAFormModal({ supplier, onSubmit, children }: CAFormModalProps) 
                 
                 <FormField
                   control={form.control}
-                  name="yearsOfOperation"
+                  name="phoneNumber"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Years of Operation</FormLabel>
+                      <FormLabel>Phone Number *</FormLabel>
                       <FormControl>
-                        <Input 
-                          {...field} 
-                          type="number" 
-                          onChange={(e) => field.onChange(Number(e.target.value))}
-                        />
+                        <Input {...field} placeholder="Required field" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email *</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="email" placeholder="Required field" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Business Information */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Business Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="industry"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Industry</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="e.g., Food & Beverage, Manufacturing" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="yearsOfOperation"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Years of Operation</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="number" 
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <FormField
+                  control={form.control}
+                  name="businessDescription"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Business Description</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} rows={3} placeholder="Describe the nature of your business and main activities" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -392,7 +497,7 @@ export function CAFormModal({ supplier, onSubmit, children }: CAFormModalProps) 
                       <FormItem>
                         <FormLabel>Primary Bank</FormLabel>
                         <FormControl>
-                          <Input {...field} />
+                          <Input {...field} placeholder="e.g., Bangkok Bank, SCB" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -421,7 +526,7 @@ export function CAFormModal({ supplier, onSubmit, children }: CAFormModalProps) 
                     <FormItem>
                       <FormLabel>Major Customers</FormLabel>
                       <FormControl>
-                        <Textarea {...field} rows={3} />
+                        <Textarea {...field} rows={3} placeholder="List major customers and their relationship details" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -430,53 +535,132 @@ export function CAFormModal({ supplier, onSubmit, children }: CAFormModalProps) 
               </CardContent>
             </Card>
 
-            {/* Additional Information */}
+            {/* Factoring Information */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Additional Information</CardTitle>
+                <CardTitle className="text-lg">Factoring Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="businessDescription"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Business Description</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} rows={3} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="requestedCreditLimit"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Requested Credit Limit (THB Million)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="number" 
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                            placeholder="e.g., 8"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="creditTerms"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Credit Terms (Days)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="number" 
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 
                 <FormField
                   control={form.control}
-                  name="keyProducts"
+                  name="factoringPurpose"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Key Products/Services</FormLabel>
+                      <FormLabel>Purpose of Factoring</FormLabel>
                       <FormControl>
-                        <Textarea {...field} rows={3} />
+                        <Textarea {...field} rows={2} placeholder="Explain the intended use of factoring facility" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+              </CardContent>
+            </Card>
+
+            {/* Guarantors Information */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Guarantors Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="guarantor1Name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Guarantor 1 - Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Optional" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="guarantor1Position"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Guarantor 1 - Position</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Optional" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 
-                <FormField
-                  control={form.control}
-                  name="competitiveAdvantages"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Competitive Advantages</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} rows={2} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="guarantor2Name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Guarantor 2 - Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Optional" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="guarantor2Position"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Guarantor 2 - Position</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Optional" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </CardContent>
             </Card>
 

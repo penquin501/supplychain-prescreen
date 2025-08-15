@@ -317,19 +317,24 @@ export default function CreditReport() {
               <CardTitle>Pricing Recommendations</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-blue-900 mb-2">Factoring Debt</h4>
+                  <h4 className="font-semibold text-blue-900 mb-2">Factoring (%)</h4>
                   <div className="text-2xl font-bold text-blue-700 mb-1">
                     {(() => {
                       const overallScore = parseFloat(score.overallCreditScore);
-                      if (overallScore >= 80) return "85-90%";
-                      if (overallScore >= 60) return "75-85%";
-                      return "65-75%";
+                      const financialScore = parseInt(score.financialScore);
+                      
+                      // Factoring percentage based on credit quality
+                      if (overallScore >= 85 && financialScore >= 80) return "90-95%";
+                      else if (overallScore >= 75 && financialScore >= 70) return "85-90%";
+                      else if (overallScore >= 65) return "80-85%";
+                      else if (overallScore >= 55) return "75-80%";
+                      else return "70-75%";
                     })()}
                   </div>
                   <p className="text-sm text-blue-600">
-                    of invoice value recommended for factoring
+                    of invoice value
                   </p>
                 </div>
                 
@@ -350,7 +355,56 @@ export default function CreditReport() {
                     })()}
                   </div>
                   <p className="text-sm text-green-600">
-                    service fee per factored invoice
+                    service fee per invoice
+                  </p>
+                </div>
+                
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-orange-900 mb-2">Interest</h4>
+                  <div className="text-2xl font-bold text-orange-700 mb-1">
+                    {(() => {
+                      // Interest rate calculation based on supplier risk
+                      const overallScore = parseFloat(score.overallCreditScore);
+                      const financialScore = parseInt(score.financialScore);
+                      const transactionalScore = parseInt(score.transactionalScore);
+                      const yearsOfOperation = supplier?.yearsOfOperation || 0;
+                      
+                      // Base interest rate from overall credit quality
+                      let baseRate = 0;
+                      if (overallScore >= 85) baseRate = 8.5; // Premium clients
+                      else if (overallScore >= 75) baseRate = 10.0; // Excellent clients
+                      else if (overallScore >= 65) baseRate = 12.0; // Good clients
+                      else if (overallScore >= 55) baseRate = 14.5; // Fair clients
+                      else if (overallScore >= 45) baseRate = 17.0; // Below average
+                      else baseRate = 20.0; // High risk
+                      
+                      // Risk adjustments
+                      let riskAdjustment = 0;
+                      
+                      // Financial grade adjustment
+                      if (financialScore >= 85) riskAdjustment -= 1.0; // AAA grade discount
+                      else if (financialScore >= 75) riskAdjustment -= 0.5; // AA grade discount
+                      else if (financialScore < 55) riskAdjustment += 1.5; // Below B grade penalty
+                      
+                      // Transaction quality adjustment
+                      if (transactionalScore >= 85) riskAdjustment -= 1.0; // Excellent transaction history
+                      else if (transactionalScore >= 70) riskAdjustment -= 0.5; // Good transaction history
+                      else if (transactionalScore < 50) riskAdjustment += 2.0; // Poor transaction history
+                      
+                      // Business maturity adjustment
+                      if (yearsOfOperation >= 10) riskAdjustment -= 0.5; // Established business
+                      else if (yearsOfOperation >= 5) riskAdjustment -= 0.25; // Mature business
+                      else if (yearsOfOperation < 2) riskAdjustment += 1.0; // New business risk
+                      
+                      // Calculate final interest rate
+                      const finalRate = Math.max(baseRate + riskAdjustment, 7.0); // Minimum 7.0%
+                      const upperRate = finalRate + 1.0; // Range of 1%
+                      
+                      return `${finalRate.toFixed(1)}-${upperRate.toFixed(1)}%`;
+                    })()}
+                  </div>
+                  <p className="text-sm text-orange-600">
+                    annual interest rate
                   </p>
                 </div>
                 
@@ -424,7 +478,7 @@ export default function CreditReport() {
                     })()} THB
                   </div>
                   <p className="text-sm text-purple-600">
-                    maximum factoring facility
+                    maximum factoring limit
                   </p>
                 </div>
               </div>

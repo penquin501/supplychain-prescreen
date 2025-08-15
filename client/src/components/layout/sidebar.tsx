@@ -6,7 +6,7 @@ import { BarChart3, Building, FileText } from "lucide-react";
 const navigation = [
   { name: "Dashboard", href: "/", icon: BarChart3 },
   { name: "Supplier Profile", href: "/supplier-profile", icon: Building },
-  { name: "Credit Report", href: "/credit-report", icon: FileText },
+  { name: "Credit Decision", href: "/credit-report", icon: FileText },
 ];
 
 export default function Sidebar() {

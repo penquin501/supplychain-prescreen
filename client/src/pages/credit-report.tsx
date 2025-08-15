@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 
 import CreditScoreCircle from "@/components/credit/credit-score-circle";
 import { getRandomCompanyData } from "@/lib/randomData";
+import { CAFormModal } from "@/components/supplier/ca-form-modal";
 
 export default function CreditReport() {
   const [location] = useLocation();
@@ -106,7 +107,7 @@ export default function CreditReport() {
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-900">Credit Report</h2>
+        <h2 className="text-2xl font-bold text-slate-900">Credit Decision</h2>
         <p className="text-slate-600 mt-1">Comprehensive credit assessment combining all scoring models</p>
       </div>
 
@@ -191,7 +192,60 @@ export default function CreditReport() {
             <Card className="border-slate-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-slate-900">Financial Score</h4>
+                  <h4 className="font-semibold text-slate-900">A-Score</h4>
+                  <span className={`text-2xl font-bold ${
+                    parseInt(score.aScore) >= 80 ? 'text-green-600' : 
+                    parseInt(score.aScore) >= 31 ? 'text-yellow-600' : 
+                    'text-red-600'
+                  }`}>{score.aScore}</span>
+                </div>
+                <div className="w-full bg-slate-200 rounded-full h-3 mb-2">
+                  <div 
+                    className={`h-3 rounded-full transition-all duration-500 ${
+                      parseInt(score.aScore) >= 80 ? 'bg-green-500' : 
+                      parseInt(score.aScore) >= 31 ? 'bg-yellow-500' : 
+                      'bg-red-500'
+                    }`}
+                    style={{ width: `${score.aScore}%` }}
+                  ></div>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-600">Documents</span>
+                  <span className="text-slate-600">Weight: 33.3%</span>
+                </div>
+                <div className={`text-center text-sm font-medium mt-2 ${
+                  parseInt(score.aScore) >= 80 ? 'text-green-600' : 
+                  parseInt(score.aScore) >= 31 ? 'text-yellow-600' : 
+                  'text-red-600'
+                }`}>
+                  {parseInt(score.aScore) >= 80 ? 'Pass' : parseInt(score.aScore) >= 31 ? 'Pending' : 'Not Pass'}
+                </div>
+                <div className="mt-3">
+                  <CAFormModal 
+                    supplier={supplier}
+                    onSubmit={(data) => {
+                      toast({
+                        title: "CA Form Saved",
+                        description: "Supplier information has been updated successfully.",
+                      });
+                    }}
+                  >
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full text-blue-600 border-blue-600 hover:bg-blue-50"
+                    >
+                      Detail
+                    </Button>
+                  </CAFormModal>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-slate-200">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="font-semibold text-slate-900">F-Score</h4>
                   <span className={`text-2xl font-bold ${
                     parseInt(score.financialScore) >= 80 ? 'text-green-600' : 
                     parseInt(score.financialScore) >= 31 ? 'text-yellow-600' : 
@@ -225,7 +279,7 @@ export default function CreditReport() {
             <Card className="border-slate-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-slate-900">Transactional Score</h4>
+                  <h4 className="font-semibold text-slate-900">T-Score</h4>
                   <span className={`text-2xl font-bold ${
                     parseInt(score.transactionalScore) >= 80 ? 'text-green-600' : 
                     parseInt(score.transactionalScore) >= 31 ? 'text-yellow-600' : 
@@ -255,41 +309,72 @@ export default function CreditReport() {
                 </div>
               </CardContent>
             </Card>
-
-            <Card className="border-slate-200">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-slate-900">A-Score</h4>
-                  <span className={`text-2xl font-bold ${
-                    parseInt(score.aScore) >= 80 ? 'text-green-600' : 
-                    parseInt(score.aScore) >= 31 ? 'text-yellow-600' : 
-                    'text-red-600'
-                  }`}>{score.aScore}</span>
-                </div>
-                <div className="w-full bg-slate-200 rounded-full h-3 mb-2">
-                  <div 
-                    className={`h-3 rounded-full transition-all duration-500 ${
-                      parseInt(score.aScore) >= 80 ? 'bg-green-500' : 
-                      parseInt(score.aScore) >= 31 ? 'bg-yellow-500' : 
-                      'bg-red-500'
-                    }`}
-                    style={{ width: `${score.aScore}%` }}
-                  ></div>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-600">Documents</span>
-                  <span className="text-slate-600">Weight: 33.3%</span>
-                </div>
-                <div className={`text-center text-sm font-medium mt-2 ${
-                  parseInt(score.aScore) >= 80 ? 'text-green-600' : 
-                  parseInt(score.aScore) >= 31 ? 'text-yellow-600' : 
-                  'text-red-600'
-                }`}>
-                  {parseInt(score.aScore) >= 80 ? 'Pass' : parseInt(score.aScore) >= 31 ? 'Pending' : 'Not Pass'}
-                </div>
-              </CardContent>
-            </Card>
           </div>
+
+          {/* Pricing Recommendations */}
+          <Card className="border-slate-200">
+            <CardHeader>
+              <CardTitle>Pricing Recommendations</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-blue-900 mb-2">Factoring Debt</h4>
+                  <div className="text-2xl font-bold text-blue-700 mb-1">
+                    {(() => {
+                      const overallScore = parseFloat(score.overallCreditScore);
+                      if (overallScore >= 80) return "85-90%";
+                      if (overallScore >= 60) return "75-85%";
+                      return "65-75%";
+                    })()}
+                  </div>
+                  <p className="text-sm text-blue-600">
+                    of invoice value recommended for factoring
+                  </p>
+                </div>
+                
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-green-900 mb-2">Service Fee</h4>
+                  <div className="text-2xl font-bold text-green-700 mb-1">
+                    {(() => {
+                      const overallScore = parseFloat(score.overallCreditScore);
+                      if (overallScore >= 80) return "1.5-2.0%";
+                      if (overallScore >= 60) return "2.0-2.5%";
+                      return "2.5-3.0%";
+                    })()}
+                  </div>
+                  <p className="text-sm text-green-600">
+                    per factored invoice amount
+                  </p>
+                </div>
+                
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-purple-900 mb-2">Credit Limit</h4>
+                  <div className="text-2xl font-bold text-purple-700 mb-1">
+                    {(() => {
+                      const overallScore = parseFloat(score.overallCreditScore);
+                      if (overallScore >= 80) return "50-100M";
+                      if (overallScore >= 60) return "20-50M";
+                      return "5-20M";
+                    })()} THB
+                  </div>
+                  <p className="text-sm text-purple-600">
+                    maximum factoring exposure
+                  </p>
+                </div>
+              </div>
+              
+              <div className="mt-6 p-4 bg-slate-50 rounded-lg">
+                <h5 className="font-medium text-slate-900 mb-2">Pricing Rationale</h5>
+                <ul className="text-sm text-slate-600 space-y-1">
+                  <li>• Based on overall credit score of {score.overallCreditScore}%</li>
+                  <li>• Adjusted for financial grade {score.financialGrade} and transaction history</li>
+                  <li>• Competitive rates for established supplier relationships</li>
+                  <li>• Risk-adjusted pricing model considering document completion</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Risk Assessment */}
           <Card className="border-slate-200">

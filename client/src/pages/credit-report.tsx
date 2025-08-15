@@ -352,10 +352,56 @@ export default function CreditReport() {
                   <h4 className="font-semibold text-purple-900 mb-2">Credit Limit</h4>
                   <div className="text-2xl font-bold text-purple-700 mb-1">
                     {(() => {
+                      // Advanced credit limit calculation based on supplier criteria
                       const overallScore = parseFloat(score.overallCreditScore);
-                      if (overallScore >= 80) return "50-100M";
-                      if (overallScore >= 60) return "20-50M";
-                      return "5-20M";
+                      const financialScore = parseInt(score.financialScore);
+                      const transactionalScore = parseInt(score.transactionalScore);
+                      const aScore = parseInt(score.aScore);
+                      
+                      // Base credit limit from overall score
+                      let baseCreditLimit = 0;
+                      if (overallScore >= 80) baseCreditLimit = 75; // 75M base for excellent
+                      else if (overallScore >= 60) baseCreditLimit = 35; // 35M base for good
+                      else baseCreditLimit = 12; // 12M base for fair
+                      
+                      // Adjustments based on specific criteria
+                      let adjustmentFactor = 1.0;
+                      
+                      // Financial strength multiplier (most important factor)
+                      if (financialScore >= 85) adjustmentFactor *= 1.4; // AAA grade
+                      else if (financialScore >= 75) adjustmentFactor *= 1.2; // AA grade
+                      else if (financialScore >= 65) adjustmentFactor *= 1.0; // A grade
+                      else if (financialScore >= 55) adjustmentFactor *= 0.8; // B grade
+                      else adjustmentFactor *= 0.6; // C grade or below
+                      
+                      // Business maturity factor
+                      const yearsOfOperation = supplier?.yearsOfOperation || 0;
+                      if (yearsOfOperation >= 10) adjustmentFactor *= 1.3;
+                      else if (yearsOfOperation >= 5) adjustmentFactor *= 1.1;
+                      else if (yearsOfOperation >= 2) adjustmentFactor *= 1.0;
+                      else adjustmentFactor *= 0.7; // Less than 2 years
+                      
+                      // VAT registration bonus (indicates formal business structure)
+                      if (supplier?.vatRegistered) adjustmentFactor *= 1.1;
+                      
+                      // Document completion factor
+                      if (aScore >= 90) adjustmentFactor *= 1.2; // Excellent documentation
+                      else if (aScore >= 80) adjustmentFactor *= 1.1; // Good documentation
+                      else if (aScore < 60) adjustmentFactor *= 0.8; // Poor documentation
+                      
+                      // Transaction history quality
+                      if (transactionalScore >= 85) adjustmentFactor *= 1.3; // Excellent transaction history
+                      else if (transactionalScore >= 70) adjustmentFactor *= 1.1; // Good transaction history
+                      else if (transactionalScore < 50) adjustmentFactor *= 0.7; // Poor transaction history
+                      
+                      // Calculate final credit limit
+                      const finalCreditLimit = Math.round(baseCreditLimit * adjustmentFactor);
+                      
+                      // Format the result with appropriate ranges
+                      if (finalCreditLimit >= 80) return `${finalCreditLimit}-${finalCreditLimit + 20}M`;
+                      else if (finalCreditLimit >= 40) return `${finalCreditLimit}-${finalCreditLimit + 15}M`;
+                      else if (finalCreditLimit >= 20) return `${finalCreditLimit}-${finalCreditLimit + 10}M`;
+                      else return `${Math.max(finalCreditLimit, 5)}-${Math.max(finalCreditLimit + 5, 10)}M`;
                     })()} THB
                   </div>
                   <p className="text-sm text-purple-600">
@@ -365,13 +411,34 @@ export default function CreditReport() {
               </div>
               
               <div className="mt-6 p-4 bg-slate-50 rounded-lg">
-                <h5 className="font-medium text-slate-900 mb-2">Pricing Rationale</h5>
-                <ul className="text-sm text-slate-600 space-y-1">
-                  <li>• Based on overall credit score of {score.overallCreditScore}%</li>
-                  <li>• Adjusted for financial grade {score.financialGrade} and transaction history</li>
-                  <li>• Competitive rates for established supplier relationships</li>
-                  <li>• Risk-adjusted pricing model considering document completion</li>
-                </ul>
+                <h5 className="font-medium text-slate-900 mb-2">Credit Limit Calculation Factors</h5>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-600">
+                  <div>
+                    <p className="font-medium text-slate-700 mb-1">Risk Assessment:</p>
+                    <ul className="space-y-1">
+                      <li>• Overall Credit Score: {score.overallCreditScore}%</li>
+                      <li>• Financial Grade: {score.financialGrade} ({score.financialScore}%)</li>
+                      <li>• Transaction Quality: {score.transactionalScore}%</li>
+                      <li>• Document Completion: {score.aScore}%</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-medium text-slate-700 mb-1">Business Profile:</p>
+                    <ul className="space-y-1">
+                      <li>• Years of Operation: {supplier?.yearsOfOperation || 0} years</li>
+                      <li>• VAT Registration: {supplier?.vatRegistered ? 'Yes' : 'No'}</li>
+                      <li>• Business Type: {supplier?.businessType || 'N/A'}</li>
+                      <li>• Risk-adjusted exposure calculation</li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
+                  <p className="text-sm text-blue-700">
+                    <strong>Credit Limit Methodology:</strong> Base limit determined by overall score, 
+                    then adjusted for financial strength ({score.financialGrade} grade), business maturity 
+                    ({supplier?.yearsOfOperation || 0} years), documentation quality, and transaction history performance.
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>

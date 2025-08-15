@@ -96,7 +96,32 @@ export function CAFormModal({ supplier, onSubmit, children }: CAFormModalProps) 
       annualRevenue: 0,
       bankName: "",
       bankAccountNumber: "",
-      requestedCreditLimit: 0,
+      requestedCreditLimit: (() => {
+        // Calculate intelligent default credit limit
+        if (!supplier) return 0;
+        
+        // Base calculation similar to pricing recommendations
+        let baseCreditLimit = 25; // Default base in millions THB
+        let adjustmentFactor = 1.0;
+        
+        // Business maturity factor
+        const yearsOfOperation = supplier.yearsOfOperation || 0;
+        if (yearsOfOperation >= 10) adjustmentFactor *= 1.3;
+        else if (yearsOfOperation >= 5) adjustmentFactor *= 1.1;
+        else if (yearsOfOperation >= 2) adjustmentFactor *= 1.0;
+        else adjustmentFactor *= 0.7;
+        
+        // VAT registration bonus
+        if (supplier.vatRegistered) adjustmentFactor *= 1.1;
+        
+        // Business type factor
+        const businessType = supplier.businessType?.toLowerCase() || '';
+        if (businessType.includes('corporation') || businessType.includes('limited')) {
+          adjustmentFactor *= 1.2; // Formal corporation structure
+        }
+        
+        return Math.round(baseCreditLimit * adjustmentFactor);
+      })(),
       factoringPurpose: "",
       majorCustomers: "",
       creditTerms: 45, // Default credit terms from document

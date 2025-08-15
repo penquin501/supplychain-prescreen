@@ -334,17 +334,62 @@ export default function CreditReport() {
                 </div>
                 
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-green-900 mb-2">Fee</h4>
+                  <h4 className="font-semibold text-green-900 mb-2">Factoring Interest Rate</h4>
                   <div className="text-2xl font-bold text-green-700 mb-1">
                     {(() => {
+                      // Personalized factoring interest calculation based on supplier risk
                       const overallScore = parseFloat(score.overallCreditScore);
-                      if (overallScore >= 80) return "1.5-2.0%";
-                      if (overallScore >= 60) return "2.0-2.5%";
-                      return "2.5-3.0%";
+                      const financialScore = parseInt(score.financialScore);
+                      const transactionalScore = parseInt(score.transactionalScore);
+                      const aScore = parseInt(score.aScore);
+                      const yearsOfOperation = supplier?.yearsOfOperation || 0;
+                      
+                      // Base interest rate from overall credit quality
+                      let baseRate = 0;
+                      if (overallScore >= 85) baseRate = 1.2; // Premium clients
+                      else if (overallScore >= 75) baseRate = 1.5; // Excellent clients
+                      else if (overallScore >= 65) baseRate = 2.0; // Good clients
+                      else if (overallScore >= 55) baseRate = 2.5; // Fair clients
+                      else if (overallScore >= 45) baseRate = 3.2; // Below average
+                      else baseRate = 4.0; // High risk
+                      
+                      // Risk adjustments for factoring-specific factors
+                      let riskAdjustment = 0;
+                      
+                      // Financial grade risk adjustment
+                      if (financialScore >= 85) riskAdjustment -= 0.3; // AAA grade discount
+                      else if (financialScore >= 75) riskAdjustment -= 0.2; // AA grade discount
+                      else if (financialScore >= 65) riskAdjustment -= 0.1; // A grade discount
+                      else if (financialScore < 55) riskAdjustment += 0.5; // Below B grade penalty
+                      
+                      // Transaction quality adjustment (critical for factoring)
+                      if (transactionalScore >= 85) riskAdjustment -= 0.4; // Excellent transaction history
+                      else if (transactionalScore >= 70) riskAdjustment -= 0.2; // Good transaction history
+                      else if (transactionalScore < 50) riskAdjustment += 0.8; // Poor transaction history
+                      
+                      // Business maturity adjustment
+                      if (yearsOfOperation >= 10) riskAdjustment -= 0.2; // Established business
+                      else if (yearsOfOperation >= 5) riskAdjustment -= 0.1; // Mature business
+                      else if (yearsOfOperation < 2) riskAdjustment += 0.3; // New business risk
+                      
+                      // VAT registration adjustment
+                      if (supplier?.vatRegistered) riskAdjustment -= 0.1; // Formal structure
+                      else riskAdjustment += 0.2; // Informal structure risk
+                      
+                      // Document completion adjustment
+                      if (aScore >= 90) riskAdjustment -= 0.2; // Excellent compliance
+                      else if (aScore >= 80) riskAdjustment -= 0.1; // Good compliance
+                      else if (aScore < 60) riskAdjustment += 0.4; // Poor compliance risk
+                      
+                      // Calculate final interest rate
+                      const finalRate = Math.max(baseRate + riskAdjustment, 1.0); // Minimum 1.0%
+                      const upperRate = finalRate + 0.3; // Range of 0.3%
+                      
+                      return `${finalRate.toFixed(1)}-${upperRate.toFixed(1)}%`;
                     })()}
                   </div>
                   <p className="text-sm text-green-600">
-                    interest rate per factored amount
+                    monthly factoring interest rate
                   </p>
                 </div>
                 
@@ -433,6 +478,39 @@ export default function CreditReport() {
                       <li>• Financial Grade: {score.financialGrade} ({score.financialScore}%)</li>
                       <li>• Transaction Quality: {score.transactionalScore}%</li>
                       <li>• Document Completion: {score.aScore}%</li>
+                      <li>• Interest Rate: {(() => {
+                        const overallScore = parseFloat(score.overallCreditScore);
+                        const financialScore = parseInt(score.financialScore);
+                        const transactionalScore = parseInt(score.transactionalScore);
+                        const aScore = parseInt(score.aScore);
+                        const yearsOfOperation = supplier?.yearsOfOperation || 0;
+                        
+                        let baseRate = overallScore >= 85 ? 1.2 : overallScore >= 75 ? 1.5 : overallScore >= 65 ? 2.0 : overallScore >= 55 ? 2.5 : overallScore >= 45 ? 3.2 : 4.0;
+                        let riskAdjustment = 0;
+                        
+                        if (financialScore >= 85) riskAdjustment -= 0.3;
+                        else if (financialScore >= 75) riskAdjustment -= 0.2;
+                        else if (financialScore >= 65) riskAdjustment -= 0.1;
+                        else if (financialScore < 55) riskAdjustment += 0.5;
+                        
+                        if (transactionalScore >= 85) riskAdjustment -= 0.4;
+                        else if (transactionalScore >= 70) riskAdjustment -= 0.2;
+                        else if (transactionalScore < 50) riskAdjustment += 0.8;
+                        
+                        if (yearsOfOperation >= 10) riskAdjustment -= 0.2;
+                        else if (yearsOfOperation >= 5) riskAdjustment -= 0.1;
+                        else if (yearsOfOperation < 2) riskAdjustment += 0.3;
+                        
+                        if (supplier?.vatRegistered) riskAdjustment -= 0.1;
+                        else riskAdjustment += 0.2;
+                        
+                        if (aScore >= 90) riskAdjustment -= 0.2;
+                        else if (aScore >= 80) riskAdjustment -= 0.1;
+                        else if (aScore < 60) riskAdjustment += 0.4;
+                        
+                        const finalRate = Math.max(baseRate + riskAdjustment, 1.0);
+                        return `${finalRate.toFixed(1)}% base rate`;
+                      })()}</li>
                     </ul>
                   </div>
                   <div>
@@ -450,6 +528,9 @@ export default function CreditReport() {
                     <strong>Factoring Credit Limit:</strong> Base factoring facility determined by overall score, 
                     then adjusted for financial strength ({score.financialGrade} grade), transaction quality, business maturity 
                     ({supplier?.yearsOfOperation || 0} years), and document completion for factoring compliance.
+                    <br/>
+                    <strong>Factoring Interest Rate:</strong> Personalized monthly rate based on supplier-specific risk profile, 
+                    including credit quality, transaction history, business maturity, and compliance factors.
                     <br/>
                     <strong>Factoring Revenue Cap:</strong> Maximum 2M THB per month of factored invoices to ensure sustainable cash flow management.
                   </p>

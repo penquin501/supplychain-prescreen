@@ -97,42 +97,42 @@ export function CAFormModal({ supplier, onSubmit, children }: CAFormModalProps) 
       bankName: "",
       bankAccountNumber: "",
       requestedCreditLimit: (() => {
-        // Calculate intelligent default credit limit
+        // Calculate intelligent default factoring credit limit
         if (!supplier) return 0;
         
-        // Base calculation similar to pricing recommendations
-        let baseCreditLimit = 25; // Default base in millions THB
-        let adjustmentFactor = 1.0;
+        // Base factoring calculation
+        let baseFactoringLimit = 15; // Default base factoring limit in millions THB
+        let factoringAdjustment = 1.0;
         
-        // Business maturity factor
+        // Business maturity factor for factoring
         const yearsOfOperation = supplier.yearsOfOperation || 0;
-        if (yearsOfOperation >= 10) adjustmentFactor *= 1.3;
-        else if (yearsOfOperation >= 5) adjustmentFactor *= 1.1;
-        else if (yearsOfOperation >= 2) adjustmentFactor *= 1.0;
-        else adjustmentFactor *= 0.7;
+        if (yearsOfOperation >= 10) factoringAdjustment *= 1.2;
+        else if (yearsOfOperation >= 5) factoringAdjustment *= 1.1;
+        else if (yearsOfOperation >= 2) factoringAdjustment *= 1.0;
+        else factoringAdjustment *= 0.8; // Newer businesses have higher factoring risk
         
-        // VAT registration bonus
-        if (supplier.vatRegistered) adjustmentFactor *= 1.1;
+        // VAT registration bonus (important for invoice verification in factoring)
+        if (supplier.vatRegistered) factoringAdjustment *= 1.15;
         
-        // Business type factor
+        // Business type factor for factoring
         const businessType = supplier.businessType?.toLowerCase() || '';
         if (businessType.includes('corporation') || businessType.includes('limited')) {
-          adjustmentFactor *= 1.2; // Formal corporation structure
+          factoringAdjustment *= 1.1; // Formal structure better for factoring
         }
         
-        let finalCreditLimit = Math.round(baseCreditLimit * adjustmentFactor);
+        let factoringCreditLimit = Math.round(baseFactoringLimit * factoringAdjustment);
         
-        // Apply revenue cap: Maximum 2M THB per month of sales revenue
+        // Apply factoring revenue cap: Maximum 2M THB per month of factored invoices
         // Conservative approach for CA form defaults
         if (yearsOfOperation >= 5 && supplier.vatRegistered) {
-          finalCreditLimit = Math.min(finalCreditLimit, 48); // Max 48M for established (2M × 24 months)
+          factoringCreditLimit = Math.min(factoringCreditLimit, 36); // Max 36M for established factoring (2M × 18 months)
         } else if (yearsOfOperation >= 2) {
-          finalCreditLimit = Math.min(finalCreditLimit, 24); // Max 24M for mature (2M × 12 months)
+          factoringCreditLimit = Math.min(factoringCreditLimit, 24); // Max 24M for mature factoring (2M × 12 months)
         } else {
-          finalCreditLimit = Math.min(finalCreditLimit, 12); // Max 12M for new (2M × 6 months)
+          factoringCreditLimit = Math.min(factoringCreditLimit, 12); // Max 12M for new factoring (2M × 6 months)
         }
         
-        return finalCreditLimit;
+        return factoringCreditLimit;
       })(),
       factoringPurpose: "",
       majorCustomers: "",

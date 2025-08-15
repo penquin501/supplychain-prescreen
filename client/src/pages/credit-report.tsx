@@ -334,7 +334,7 @@ export default function CreditReport() {
                 </div>
                 
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-green-900 mb-2">Service Fee</h4>
+                  <h4 className="font-semibold text-green-900 mb-2">Fee</h4>
                   <div className="text-2xl font-bold text-green-700 mb-1">
                     {(() => {
                       const overallScore = parseFloat(score.overallCreditScore);
@@ -344,7 +344,7 @@ export default function CreditReport() {
                     })()}
                   </div>
                   <p className="text-sm text-green-600">
-                    per factored invoice amount
+                    interest rate per factored amount
                   </p>
                 </div>
                 
@@ -352,78 +352,73 @@ export default function CreditReport() {
                   <h4 className="font-semibold text-purple-900 mb-2">Credit Limit</h4>
                   <div className="text-2xl font-bold text-purple-700 mb-1">
                     {(() => {
-                      // Advanced credit limit calculation based on supplier criteria
+                      // Factoring-specific credit limit calculation
                       const overallScore = parseFloat(score.overallCreditScore);
                       const financialScore = parseInt(score.financialScore);
                       const transactionalScore = parseInt(score.transactionalScore);
                       const aScore = parseInt(score.aScore);
                       
-                      // Base credit limit from overall score
-                      let baseCreditLimit = 0;
-                      if (overallScore >= 80) baseCreditLimit = 75; // 75M base for excellent
-                      else if (overallScore >= 60) baseCreditLimit = 35; // 35M base for good
-                      else baseCreditLimit = 12; // 12M base for fair
+                      // Base factoring credit limit from overall score
+                      let baseFactoringLimit = 0;
+                      if (overallScore >= 80) baseFactoringLimit = 50; // 50M base for excellent factoring
+                      else if (overallScore >= 60) baseFactoringLimit = 25; // 25M base for good factoring
+                      else baseFactoringLimit = 8; // 8M base for fair factoring
                       
-                      // Adjustments based on specific criteria
-                      let adjustmentFactor = 1.0;
+                      // Factoring-specific adjustments
+                      let factoringAdjustment = 1.0;
                       
-                      // Financial strength multiplier (most important factor)
-                      if (financialScore >= 85) adjustmentFactor *= 1.4; // AAA grade
-                      else if (financialScore >= 75) adjustmentFactor *= 1.2; // AA grade
-                      else if (financialScore >= 65) adjustmentFactor *= 1.0; // A grade
-                      else if (financialScore >= 55) adjustmentFactor *= 0.8; // B grade
-                      else adjustmentFactor *= 0.6; // C grade or below
+                      // Financial strength for factoring (critical for cash flow)
+                      if (financialScore >= 85) factoringAdjustment *= 1.5; // AAA grade for factoring
+                      else if (financialScore >= 75) factoringAdjustment *= 1.3; // AA grade for factoring
+                      else if (financialScore >= 65) factoringAdjustment *= 1.0; // A grade for factoring
+                      else if (financialScore >= 55) factoringAdjustment *= 0.7; // B grade for factoring
+                      else factoringAdjustment *= 0.5; // C grade or below for factoring
                       
-                      // Business maturity factor
+                      // Transaction quality (very important for factoring)
+                      if (transactionalScore >= 85) factoringAdjustment *= 1.4; // Excellent for factoring
+                      else if (transactionalScore >= 70) factoringAdjustment *= 1.2; // Good for factoring
+                      else if (transactionalScore < 50) factoringAdjustment *= 0.6; // Poor for factoring
+                      
+                      // Business maturity for factoring reliability
                       const yearsOfOperation = supplier?.yearsOfOperation || 0;
-                      if (yearsOfOperation >= 10) adjustmentFactor *= 1.3;
-                      else if (yearsOfOperation >= 5) adjustmentFactor *= 1.1;
-                      else if (yearsOfOperation >= 2) adjustmentFactor *= 1.0;
-                      else adjustmentFactor *= 0.7; // Less than 2 years
+                      if (yearsOfOperation >= 10) factoringAdjustment *= 1.2;
+                      else if (yearsOfOperation >= 5) factoringAdjustment *= 1.1;
+                      else if (yearsOfOperation >= 2) factoringAdjustment *= 1.0;
+                      else factoringAdjustment *= 0.8; // Less than 2 years
                       
-                      // VAT registration bonus (indicates formal business structure)
-                      if (supplier?.vatRegistered) adjustmentFactor *= 1.1;
+                      // VAT registration (important for invoice verification)
+                      if (supplier?.vatRegistered) factoringAdjustment *= 1.15;
                       
-                      // Document completion factor
-                      if (aScore >= 90) adjustmentFactor *= 1.2; // Excellent documentation
-                      else if (aScore >= 80) adjustmentFactor *= 1.1; // Good documentation
-                      else if (aScore < 60) adjustmentFactor *= 0.8; // Poor documentation
+                      // Document completion (critical for factoring compliance)
+                      if (aScore >= 90) factoringAdjustment *= 1.3; // Excellent documentation for factoring
+                      else if (aScore >= 80) factoringAdjustment *= 1.1; // Good documentation for factoring
+                      else if (aScore < 60) factoringAdjustment *= 0.7; // Poor documentation for factoring
                       
-                      // Transaction history quality
-                      if (transactionalScore >= 85) adjustmentFactor *= 1.3; // Excellent transaction history
-                      else if (transactionalScore >= 70) adjustmentFactor *= 1.1; // Good transaction history
-                      else if (transactionalScore < 50) adjustmentFactor *= 0.7; // Poor transaction history
+                      // Calculate factoring credit limit
+                      let factoringCreditLimit = Math.round(baseFactoringLimit * factoringAdjustment);
                       
-                      // Calculate final credit limit
-                      let finalCreditLimit = Math.round(baseCreditLimit * adjustmentFactor);
-                      
-                      // Revenue-based cap: Maximum 2M THB per month of sales revenue
-                      // Estimate monthly revenue from annual revenue (if available from financial data)
-                      // For now, we'll use a conservative approach and cap high credit limits
-                      const revenueCapFactor = (() => {
-                        // Assume average monthly revenue estimation
-                        // For established businesses with good scores, allow higher limits
-                        // For newer/smaller businesses, apply stricter revenue-based caps
+                      // Factoring revenue cap: Maximum 2M THB per month
+                      const factoringRevenueCap = (() => {
                         if (overallScore >= 80 && yearsOfOperation >= 5) {
-                          return Math.min(finalCreditLimit, 120); // Max 120M for top performers
+                          return Math.min(factoringCreditLimit, 100); // Max 100M for top factoring clients
                         } else if (overallScore >= 60 && yearsOfOperation >= 3) {
-                          return Math.min(finalCreditLimit, 60); // Max 60M for good performers
+                          return Math.min(factoringCreditLimit, 48); // Max 48M for good factoring clients
                         } else {
-                          return Math.min(finalCreditLimit, 24); // Max 24M for average (2M × 12 months)
+                          return Math.min(factoringCreditLimit, 24); // Max 24M for standard factoring (2M × 12 months)
                         }
                       })();
                       
-                      finalCreditLimit = revenueCapFactor;
+                      factoringCreditLimit = factoringRevenueCap;
                       
-                      // Format the result with appropriate ranges
-                      if (finalCreditLimit >= 80) return `${finalCreditLimit}-${finalCreditLimit + 20}M`;
-                      else if (finalCreditLimit >= 40) return `${finalCreditLimit}-${finalCreditLimit + 15}M`;
-                      else if (finalCreditLimit >= 20) return `${finalCreditLimit}-${finalCreditLimit + 10}M`;
-                      else return `${Math.max(finalCreditLimit, 5)}-${Math.max(finalCreditLimit + 5, 10)}M`;
+                      // Format factoring credit limit with appropriate ranges
+                      if (factoringCreditLimit >= 60) return `${factoringCreditLimit}-${factoringCreditLimit + 15}M`;
+                      else if (factoringCreditLimit >= 30) return `${factoringCreditLimit}-${factoringCreditLimit + 10}M`;
+                      else if (factoringCreditLimit >= 15) return `${factoringCreditLimit}-${factoringCreditLimit + 8}M`;
+                      else return `${Math.max(factoringCreditLimit, 3)}-${Math.max(factoringCreditLimit + 5, 8)}M`;
                     })()} THB
                   </div>
                   <p className="text-sm text-purple-600">
-                    maximum factoring exposure
+                    maximum factoring facility
                   </p>
                 </div>
               </div>
@@ -452,11 +447,11 @@ export default function CreditReport() {
                 </div>
                 <div className="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
                   <p className="text-sm text-blue-700">
-                    <strong>Credit Limit Methodology:</strong> Base limit determined by overall score, 
-                    then adjusted for financial strength ({score.financialGrade} grade), business maturity 
-                    ({supplier?.yearsOfOperation || 0} years), documentation quality, and transaction history performance.
+                    <strong>Factoring Credit Limit:</strong> Base factoring facility determined by overall score, 
+                    then adjusted for financial strength ({score.financialGrade} grade), transaction quality, business maturity 
+                    ({supplier?.yearsOfOperation || 0} years), and document completion for factoring compliance.
                     <br/>
-                    <strong>Revenue Cap:</strong> Maximum 2M THB per month of estimated sales revenue applied to ensure sustainable factoring exposure.
+                    <strong>Factoring Revenue Cap:</strong> Maximum 2M THB per month of factored invoices to ensure sustainable cash flow management.
                   </p>
                 </div>
               </div>

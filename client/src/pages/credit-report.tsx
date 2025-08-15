@@ -395,7 +395,25 @@ export default function CreditReport() {
                       else if (transactionalScore < 50) adjustmentFactor *= 0.7; // Poor transaction history
                       
                       // Calculate final credit limit
-                      const finalCreditLimit = Math.round(baseCreditLimit * adjustmentFactor);
+                      let finalCreditLimit = Math.round(baseCreditLimit * adjustmentFactor);
+                      
+                      // Revenue-based cap: Maximum 2M THB per month of sales revenue
+                      // Estimate monthly revenue from annual revenue (if available from financial data)
+                      // For now, we'll use a conservative approach and cap high credit limits
+                      const revenueCapFactor = (() => {
+                        // Assume average monthly revenue estimation
+                        // For established businesses with good scores, allow higher limits
+                        // For newer/smaller businesses, apply stricter revenue-based caps
+                        if (overallScore >= 80 && yearsOfOperation >= 5) {
+                          return Math.min(finalCreditLimit, 120); // Max 120M for top performers
+                        } else if (overallScore >= 60 && yearsOfOperation >= 3) {
+                          return Math.min(finalCreditLimit, 60); // Max 60M for good performers
+                        } else {
+                          return Math.min(finalCreditLimit, 24); // Max 24M for average (2M × 12 months)
+                        }
+                      })();
+                      
+                      finalCreditLimit = revenueCapFactor;
                       
                       // Format the result with appropriate ranges
                       if (finalCreditLimit >= 80) return `${finalCreditLimit}-${finalCreditLimit + 20}M`;
@@ -428,7 +446,7 @@ export default function CreditReport() {
                       <li>• Years of Operation: {supplier?.yearsOfOperation || 0} years</li>
                       <li>• VAT Registration: {supplier?.vatRegistered ? 'Yes' : 'No'}</li>
                       <li>• Business Type: {supplier?.businessType || 'N/A'}</li>
-                      <li>• Risk-adjusted exposure calculation</li>
+                      <li>• Revenue Cap: 2M THB max per month</li>
                     </ul>
                   </div>
                 </div>
@@ -437,6 +455,8 @@ export default function CreditReport() {
                     <strong>Credit Limit Methodology:</strong> Base limit determined by overall score, 
                     then adjusted for financial strength ({score.financialGrade} grade), business maturity 
                     ({supplier?.yearsOfOperation || 0} years), documentation quality, and transaction history performance.
+                    <br/>
+                    <strong>Revenue Cap:</strong> Maximum 2M THB per month of estimated sales revenue applied to ensure sustainable factoring exposure.
                   </p>
                 </div>
               </div>

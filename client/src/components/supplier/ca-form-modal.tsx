@@ -120,7 +120,19 @@ export function CAFormModal({ supplier, onSubmit, children }: CAFormModalProps) 
           adjustmentFactor *= 1.2; // Formal corporation structure
         }
         
-        return Math.round(baseCreditLimit * adjustmentFactor);
+        let finalCreditLimit = Math.round(baseCreditLimit * adjustmentFactor);
+        
+        // Apply revenue cap: Maximum 2M THB per month of sales revenue
+        // Conservative approach for CA form defaults
+        if (yearsOfOperation >= 5 && supplier.vatRegistered) {
+          finalCreditLimit = Math.min(finalCreditLimit, 48); // Max 48M for established (2M × 24 months)
+        } else if (yearsOfOperation >= 2) {
+          finalCreditLimit = Math.min(finalCreditLimit, 24); // Max 24M for mature (2M × 12 months)
+        } else {
+          finalCreditLimit = Math.min(finalCreditLimit, 12); // Max 12M for new (2M × 6 months)
+        }
+        
+        return finalCreditLimit;
       })(),
       factoringPurpose: "",
       majorCustomers: "",

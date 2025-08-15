@@ -539,6 +539,208 @@ export default function CreditReport() {
             </CardContent>
           </Card>
 
+          {/* Factoring Service Fees */}
+          <Card className="border-slate-200">
+            <CardHeader>
+              <CardTitle>Factoring Service Fees</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                Recommended fee structure based on risk assessment and credit profile
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-blue-900 mb-2">Service Fee</h4>
+                  <div className="text-2xl font-bold text-blue-700 mb-1">
+                    {(() => {
+                      const overallScore = parseFloat(score.overallCreditScore);
+                      const financialScore = parseInt(score.financialScore);
+                      
+                      // Risk-based service fee calculation
+                      if (overallScore >= 85 && financialScore >= 80) return "1.8-2.2%";
+                      else if (overallScore >= 75 && financialScore >= 70) return "2.2-2.8%";
+                      else if (overallScore >= 65) return "2.8-3.5%";
+                      else if (overallScore >= 55) return "3.5-4.2%";
+                      else return "4.2-5.0%";
+                    })()}
+                  </div>
+                  <p className="text-sm text-blue-600">
+                    per factored invoice
+                  </p>
+                </div>
+                
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-green-900 mb-2">Processing Fee</h4>
+                  <div className="text-2xl font-bold text-green-700 mb-1">
+                    {(() => {
+                      const overallScore = parseFloat(score.overallCreditScore);
+                      const aScore = parseInt(score.aScore);
+                      
+                      // Document completion affects processing complexity
+                      if (overallScore >= 80 && aScore >= 90) return "3,000";
+                      else if (overallScore >= 70 && aScore >= 80) return "4,000";
+                      else if (overallScore >= 60) return "5,000";
+                      else if (overallScore >= 50) return "6,000";
+                      else return "7,500";
+                    })()} THB
+                  </div>
+                  <p className="text-sm text-green-600">
+                    one-time setup fee
+                  </p>
+                </div>
+                
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-purple-900 mb-2">Maintenance Fee</h4>
+                  <div className="text-2xl font-bold text-purple-700 mb-1">
+                    {(() => {
+                      const overallScore = parseFloat(score.overallCreditScore);
+                      const transactionalScore = parseInt(score.transactionalScore);
+                      
+                      // Transaction quality affects maintenance needs
+                      if (overallScore >= 80 && transactionalScore >= 85) return "800";
+                      else if (overallScore >= 70 && transactionalScore >= 70) return "1,000";
+                      else if (overallScore >= 60) return "1,200";
+                      else if (overallScore >= 50) return "1,500";
+                      else return "2,000";
+                    })()} THB
+                  </div>
+                  <p className="text-sm text-purple-600">
+                    monthly account fee
+                  </p>
+                </div>
+                
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-orange-900 mb-2">Documentation</h4>
+                  <div className="text-2xl font-bold text-orange-700 mb-1">
+                    {(() => {
+                      const aScore = parseInt(score.aScore);
+                      const financialScore = parseInt(score.financialScore);
+                      
+                      // Better documentation = lower verification costs
+                      if (aScore >= 90 && financialScore >= 80) return "1,500";
+                      else if (aScore >= 80) return "2,000";
+                      else if (aScore >= 70) return "2,500";
+                      else if (aScore >= 60) return "3,000";
+                      else return "4,000";
+                    })()} THB
+                  </div>
+                  <p className="text-sm text-orange-600">
+                    verification fee
+                  </p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-slate-50 rounded-lg p-4">
+                  <h5 className="font-medium text-slate-900 mb-3">Fee Calculation Factors</h5>
+                  <div className="text-sm text-slate-600 space-y-2">
+                    <div className="flex justify-between">
+                      <span>Overall Credit Score:</span>
+                      <span className="font-medium">{score.overallCreditScore}%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Financial Grade:</span>
+                      <span className="font-medium">{score.financialGrade}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Transaction Quality:</span>
+                      <span className="font-medium">{score.transactionalScore}%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Document Completion:</span>
+                      <span className="font-medium">{score.aScore}%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Business Maturity:</span>
+                      <span className="font-medium">{supplier?.yearsOfOperation || 0} years</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-slate-50 rounded-lg p-4">
+                  <h5 className="font-medium text-slate-900 mb-3">Monthly Cost Estimate</h5>
+                  <div className="text-sm text-slate-600 space-y-2">
+                    <div className="flex justify-between">
+                      <span>Service Fee (on 10M THB):</span>
+                      <span className="font-medium">
+                        {(() => {
+                          const overallScore = parseFloat(score.overallCreditScore);
+                          const financialScore = parseInt(score.financialScore);
+                          let serviceFeeRate = 0;
+                          
+                          if (overallScore >= 85 && financialScore >= 80) serviceFeeRate = 2.0;
+                          else if (overallScore >= 75 && financialScore >= 70) serviceFeeRate = 2.5;
+                          else if (overallScore >= 65) serviceFeeRate = 3.2;
+                          else if (overallScore >= 55) serviceFeeRate = 3.8;
+                          else serviceFeeRate = 4.6;
+                          
+                          const monthlyServiceFee = (10000000 * serviceFeeRate / 100);
+                          return `${monthlyServiceFee.toLocaleString()} THB`;
+                        })()}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Monthly Maintenance:</span>
+                      <span className="font-medium">
+                        {(() => {
+                          const overallScore = parseFloat(score.overallCreditScore);
+                          const transactionalScore = parseInt(score.transactionalScore);
+                          
+                          if (overallScore >= 80 && transactionalScore >= 85) return "800";
+                          else if (overallScore >= 70 && transactionalScore >= 70) return "1,000";
+                          else if (overallScore >= 60) return "1,200";
+                          else if (overallScore >= 50) return "1,500";
+                          else return "2,000";
+                        })()} THB
+                      </span>
+                    </div>
+                    <div className="border-t pt-2 mt-2">
+                      <div className="flex justify-between font-medium">
+                        <span>Total Monthly (10M THB):</span>
+                        <span>
+                          {(() => {
+                            const overallScore = parseFloat(score.overallCreditScore);
+                            const financialScore = parseInt(score.financialScore);
+                            const transactionalScore = parseInt(score.transactionalScore);
+                            
+                            let serviceFeeRate = 0;
+                            if (overallScore >= 85 && financialScore >= 80) serviceFeeRate = 2.0;
+                            else if (overallScore >= 75 && financialScore >= 70) serviceFeeRate = 2.5;
+                            else if (overallScore >= 65) serviceFeeRate = 3.2;
+                            else if (overallScore >= 55) serviceFeeRate = 3.8;
+                            else serviceFeeRate = 4.6;
+                            
+                            const monthlyServiceFee = (10000000 * serviceFeeRate / 100);
+                            
+                            let maintenanceFee = 0;
+                            if (overallScore >= 80 && transactionalScore >= 85) maintenanceFee = 800;
+                            else if (overallScore >= 70 && transactionalScore >= 70) maintenanceFee = 1000;
+                            else if (overallScore >= 60) maintenanceFee = 1200;
+                            else if (overallScore >= 50) maintenanceFee = 1500;
+                            else maintenanceFee = 2000;
+                            
+                            const total = monthlyServiceFee + maintenanceFee;
+                            return `${total.toLocaleString()} THB`;
+                          })()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h5 className="font-medium text-blue-900 mb-2">Fee Structure Benefits</h5>
+                <div className="text-sm text-blue-700 space-y-1">
+                  <p>• <strong>Risk-based Pricing:</strong> Lower fees for higher credit scores and better financial grades</p>
+                  <p>• <strong>Performance Incentives:</strong> Reduced service fees for excellent transaction history</p>
+                  <p>• <strong>Compliance Rewards:</strong> Lower documentation fees for complete A-Score submissions</p>
+                  <p>• <strong>Transparent Structure:</strong> No hidden fees - all costs clearly defined in factoring agreement</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Risk Assessment */}
           <Card className="border-slate-200">
             <CardHeader>

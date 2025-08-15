@@ -53,6 +53,14 @@ const caFormSchema = z.object({
   majorCustomers: z.string().min(1, "Major customers information is required"),
   creditTerms: z.number().min(0, "Credit terms must be positive"),
   
+  // Factoring Service Fees
+  serviceFeeRate: z.number().min(0).max(10, "Service fee rate must be between 0-10%"),
+  processingFee: z.number().min(0, "Processing fee must be positive"),
+  maintenanceFeeMonthly: z.number().min(0, "Monthly maintenance fee must be positive"),
+  documentationFee: z.number().min(0, "Documentation fee must be positive"),
+  verificationFee: z.number().min(0, "Verification fee must be positive"),
+  factoringInterestRate: z.number().min(0).max(25, "Interest rate must be between 0-25%"),
+  
   // Guarantors Information
   guarantor1Name: z.string().optional(),
   guarantor1Position: z.string().optional(),
@@ -137,6 +145,15 @@ export function CAFormModal({ supplier, onSubmit, children }: CAFormModalProps) 
       factoringPurpose: "",
       majorCustomers: "",
       creditTerms: 45, // Default credit terms from document
+      
+      // Factoring Service Fees defaults
+      serviceFeeRate: 2.5, // Default 2.5% service fee
+      processingFee: 5000, // Default 5,000 THB processing fee
+      maintenanceFeeMonthly: 1000, // Default 1,000 THB monthly maintenance
+      documentationFee: 2000, // Default 2,000 THB documentation fee
+      verificationFee: 1500, // Default 1,500 THB verification fee
+      factoringInterestRate: 12.0, // Default 12% annual interest rate
+      
       guarantor1Name: "",
       guarantor1Position: "",
       guarantor2Name: "",
@@ -630,6 +647,147 @@ export function CAFormModal({ supplier, onSubmit, children }: CAFormModalProps) 
                     </FormItem>
                   )}
                 />
+              </CardContent>
+            </Card>
+
+            {/* Factoring Service Fees */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Factoring Service Fees</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Service fees and charges applicable to the factoring facility
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="serviceFeeRate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Service Fee Rate (%)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="number" 
+                            step="0.1"
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                            placeholder="2.5"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="factoringInterestRate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Interest Rate (% p.a.)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="number" 
+                            step="0.1"
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                            placeholder="12.0"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="processingFee"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Processing Fee (THB)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="number" 
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                            placeholder="5,000"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="maintenanceFeeMonthly"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Monthly Maintenance Fee (THB)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="number" 
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                            placeholder="1,000"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="documentationFee"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Documentation Fee (THB)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="number" 
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                            placeholder="2,000"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="verificationFee"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Verification Fee (THB)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            {...field} 
+                            type="number" 
+                            onChange={(e) => field.onChange(Number(e.target.value))}
+                            placeholder="1,500"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg">
+                  <h4 className="font-medium text-sm mb-2">Fee Summary</h4>
+                  <div className="text-sm text-muted-foreground space-y-1">
+                    <p>• Service Fee: {form.watch("serviceFeeRate") || 0}% per factored invoice</p>
+                    <p>• Interest Rate: {form.watch("factoringInterestRate") || 0}% per annum</p>
+                    <p>• One-time Setup: {((form.watch("processingFee") || 0) + (form.watch("documentationFee") || 0) + (form.watch("verificationFee") || 0)).toLocaleString()} THB</p>
+                    <p>• Monthly Maintenance: {(form.watch("maintenanceFeeMonthly") || 0).toLocaleString()} THB</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 

@@ -61,17 +61,17 @@ export class MemStorage implements IStorage {
     // Create sample suppliers
     const supplier1: Supplier = {
       id: "supplier-1",
-      companyName: "ABC Manufacturing Co., Ltd.",
-      taxId: "1234567890123",
+      companyName: "บริษัท ทรี โพรเกรส โปรดักส์ จำกัด",
+      taxId: "01055410008416",
       registrationType: "Ltd",
       vatRegistered: true,
-      businessType: "Manufacturing",
-      establishedDate: "2018-03-15",
-      address: "123 Industrial Road, Bangkok 10400",
-      contactPerson: "Mr. John Smith (CFO)",
-      yearsOfOperation: 5,
+      businessType: "การขายส่งเครื่องดินเผาเครื่องแก้วและเครื่องครัว",
+      establishedDate: "1998-02-09",
+      address: "145 ถนนจันทน์ 16 แขวงทุ่งวัดดอน เขตสาทร กรุงเทพมหานคร 10120",
+      contactPerson: "0-2287-4405",
+      yearsOfOperation: 27.5,
       status: "approved",
-      createdAt: "2023-01-15",
+      createdAt: "2025-08-15",
     };
 
     const supplier2: Supplier = {
@@ -188,8 +188,8 @@ export class MemStorage implements IStorage {
     const suppliersFinancialData = [
       {
         supplierId: supplier1.id,
-        baseRevenue: [28500000, 32100000, 38700000, 42300000, 45200000], // Growing company
-        profitMargin: 0.21
+        baseRevenue: [18500000, 19800000, 21200000, 22800000, 24200000], // Stable ceramics/kitchenware wholesale business
+        profitMargin: 0.15
       },
       {
         supplierId: supplier2.id,
@@ -266,10 +266,10 @@ export class MemStorage implements IStorage {
     const transactionData = [
       {
         supplierId: supplier1.id,
-        buyers: ["Big Retail Corp", "Global Mall Chain", "Super Store Ltd"],
-        transactionCount: 12,
-        avgAmount: 850000,
-        paymentTerms: [60, 90, 120]
+        buyers: ["Central Department Store", "Robinson Department Store", "Home Pro", "Index Living Mall"],
+        transactionCount: 18,
+        avgAmount: 380000,
+        paymentTerms: [45, 60, 60]
       },
       {
         supplierId: supplier2.id,
@@ -360,7 +360,18 @@ export class MemStorage implements IStorage {
     const allSuppliers = [supplier1, supplier2, supplier3, supplier4, supplier5, supplier6, supplier7, supplier8];
     
     allSuppliers.forEach(supplier => {
-      const randomDocs = getRandomDocumentSubmissions(supplier.id);
+      let randomDocs;
+      
+      // Special case for supplier-1 (Tree Progress Products) - 17 out of 18 documents submitted
+      if (supplier.id === "supplier-1") {
+        randomDocs = getRandomDocumentSubmissions(supplier.id).map((doc, index) => ({
+          ...doc,
+          isSubmitted: index !== 16 // Submit all except document index 16 (Credit Bureau Reports)
+        }));
+      } else {
+        randomDocs = getRandomDocumentSubmissions(supplier.id);
+      }
+      
       randomDocs.forEach(docData => {
         const docId = randomUUID();
         const submissionDate = docData.isSubmitted ? 
@@ -388,11 +399,11 @@ export class MemStorage implements IStorage {
     const supplierScores = [
       {
         supplierId: supplier1.id,
-        financialScore: "85",
-        financialGrade: "B+",
-        transactionalScore: "82",
-        aScore: "89", // 16/18 * 100
-        overallCreditScore: "85", // (85+82+89)/3
+        financialScore: "88",
+        financialGrade: "A-",
+        transactionalScore: "92",
+        aScore: "94", // 17/18 * 100
+        overallCreditScore: "91", // (88+92+94)/3
         recommendation: "approved"
       },
       {

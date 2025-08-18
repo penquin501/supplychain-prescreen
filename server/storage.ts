@@ -370,19 +370,91 @@ export class MemStorage implements IStorage {
       }
     ];
 
-    // Create Tree Progress Products financial records
+    // Create Tree Progress Products financial records with full Balance Sheet detail
     treeProgressFinancialData.forEach(yearData => {
       const financialDataId = randomUUID();
       const data: FinancialData = {
         id: financialDataId,
         supplierId: supplier1.id,
         year: yearData.year,
+        
+        // Balance Sheet - Assets
+        cashAndDeposits: yearData.cashAndDeposits?.toString() || null,
+        accountsReceivable: yearData.accountsReceivable?.toString() || null,
+        accountsNotesReceivableNet: yearData.accountsReceivable?.toString() || null,
+        totalShortTermLoans: yearData.longTermInvestments ? "0" : null,
+        inventoriesNet: yearData.inventories?.toString() || null,
+        accruedIncome: null,
+        prepaidExpenses: null,
+        otherCurrentAssets: yearData.otherCurrentAssets?.toString() || null,
+        othersCurrentAssets: null,
+        totalCurrentAssets: Math.round(yearData.currentAssets).toString(),
+        totalLongTermLoansInvestments: yearData.longTermInvestments?.toString() || null,
+        propertyPlantEquipmentNet: yearData.nonCurrentAssets ? (yearData.nonCurrentAssets - (yearData.longTermInvestments || 0)).toString() : null,
+        otherNonCurrentAssets: null,
+        othersNonCurrentAssets: null,
+        totalNonCurrentAssets: yearData.nonCurrentAssets?.toString() || null,
+        totalAssets: Math.round(yearData.totalAssets).toString(),
+        
+        // Balance Sheet - Liabilities
+        bankOverdraftsShortTermLoans: null,
+        accountsPayable: yearData.accountsPayable?.toString() || null,
+        totalAccountsPayableNotesPayable: yearData.accountsPayable?.toString() || null,
+        currentPortionLongTermLoans: null,
+        totalShortTermLoansLiabilities: null,
+        accruedExpenses: null,
+        unearnedRevenues: null,
+        otherCurrentLiabilities: yearData.otherCurrentLiabilities?.toString() || null,
+        othersCurrentLiabilities: null,
+        totalCurrentLiabilities: Math.round(yearData.currentLiabilities).toString(),
+        totalLongTermLoans: null,
+        otherNonCurrentLiabilities: null,
+        othersNonCurrentLiabilities: null,
+        totalNonCurrentLiabilities: null,
+        totalLiabilities: Math.round(yearData.totalLiabilities).toString(),
+        
+        // Balance Sheet - Shareholders' Equity
+        authorizedPreferredStocks: null,
+        authorizedCommonStocks: yearData.authorizedCapital?.toString() || null,
+        issuedPaidUpPreferredStocks: null,
+        issuedPaidUpCommonStocks: yearData.paidUpCapital?.toString() || null,
+        appraisalSurplusPropertyPlantEquipment: null,
+        accumulatedRetainedEarnings: yearData.retainedEarnings?.toString() || null,
+        othersShareholdersEquity: null,
+        totalShareholdersEquity: Math.round(yearData.totalEquity).toString(),
+        totalLiabilitiesShareholdersEquity: Math.round(yearData.totalAssets).toString(),
+        
+        // Additional Shareholders' Equity Information
+        commonStocksAuthorizedShares: 10000,
+        commonStocksAuthorizedParValue: "100",
+        commonStocksIssuedPaidUpShares: null,
+        commonStocksIssuedPaidUpParValue: null,
+        
+        // Income Statement
+        netSales: Math.round(yearData.salesRevenue).toString(),
+        totalOtherIncome: "0",
+        totalRevenue: Math.round(yearData.salesRevenue).toString(),
+        costOfSalesServices: Math.round(yearData.costOfGoodsSold).toString(),
+        grossProfitLoss: Math.round(yearData.grossProfit).toString(),
+        totalOperatingExpenses: Math.round(yearData.grossProfit - yearData.operatingIncome).toString(),
+        operatingIncomeLoss: Math.round(yearData.operatingIncome).toString(),
+        otherExpenses: "0",
+        incomeBeforeDepreciationAmortization: Math.round(yearData.operatingIncome).toString(),
+        incomeBeforeInterestIncomeTaxes: Math.round(yearData.operatingIncome).toString(),
+        interestExpenses: Math.round(yearData.interestExpense).toString(),
+        incomeTaxes: Math.round(yearData.incomeTax).toString(),
+        extraordinaryItems: null,
+        othersIncomeStatement: null,
+        netIncomeLoss: Math.round(yearData.netIncome).toString(),
+        earningsLossPerShare: null,
+        numberOfWeightedAverageOrdinaryShares: null,
+        
+        // Legacy fields for backward compatibility
         salesRevenue: Math.round(yearData.salesRevenue).toString(),
         costOfGoodsSold: Math.round(yearData.costOfGoodsSold).toString(),
         grossProfit: Math.round(yearData.grossProfit).toString(),
         netIncome: Math.round(yearData.netIncome).toString(),
-        totalAssets: Math.round(yearData.totalAssets).toString(),
-        totalDebt: Math.round(yearData.totalLiabilities).toString(), // Use totalLiabilities from BS_ file
+        totalDebt: Math.round(yearData.totalLiabilities).toString(),
         totalEquity: Math.round(yearData.totalEquity).toString(),
         currentAssets: Math.round(yearData.currentAssets).toString(),
         currentLiabilities: Math.round(yearData.currentLiabilities).toString(),
@@ -412,11 +484,83 @@ export class MemStorage implements IStorage {
           id: financialDataId,
           supplierId: supplierData.supplierId,
           year,
+          
+          // Balance Sheet - Assets
+          cashAndDeposits: Math.round(currentAssets * 0.3).toString(),
+          accountsReceivable: Math.round(currentAssets * 0.25).toString(),
+          accountsNotesReceivableNet: Math.round(currentAssets * 0.25).toString(),
+          totalShortTermLoans: null,
+          inventoriesNet: Math.round(currentAssets * 0.35).toString(),
+          accruedIncome: null,
+          prepaidExpenses: null,
+          otherCurrentAssets: Math.round(currentAssets * 0.1).toString(),
+          othersCurrentAssets: null,
+          totalCurrentAssets: currentAssets.toString(),
+          totalLongTermLoansInvestments: null,
+          propertyPlantEquipmentNet: Math.round((totalAssets - currentAssets) * 0.8).toString(),
+          otherNonCurrentAssets: null,
+          othersNonCurrentAssets: null,
+          totalNonCurrentAssets: (totalAssets - currentAssets).toString(),
+          totalAssets: totalAssets.toString(),
+          
+          // Balance Sheet - Liabilities
+          bankOverdraftsShortTermLoans: null,
+          accountsPayable: Math.round(currentLiabilities * 0.8).toString(),
+          totalAccountsPayableNotesPayable: Math.round(currentLiabilities * 0.8).toString(),
+          currentPortionLongTermLoans: null,
+          totalShortTermLoansLiabilities: null,
+          accruedExpenses: null,
+          unearnedRevenues: null,
+          otherCurrentLiabilities: Math.round(currentLiabilities * 0.2).toString(),
+          othersCurrentLiabilities: null,
+          totalCurrentLiabilities: currentLiabilities.toString(),
+          totalLongTermLoans: Math.round((totalDebt - currentLiabilities)).toString(),
+          otherNonCurrentLiabilities: null,
+          othersNonCurrentLiabilities: null,
+          totalNonCurrentLiabilities: Math.round((totalDebt - currentLiabilities)).toString(),
+          totalLiabilities: totalDebt.toString(),
+          
+          // Balance Sheet - Shareholders' Equity
+          authorizedPreferredStocks: null,
+          authorizedCommonStocks: "1000000",
+          issuedPaidUpPreferredStocks: null,
+          issuedPaidUpCommonStocks: "1000000",
+          appraisalSurplusPropertyPlantEquipment: null,
+          accumulatedRetainedEarnings: (totalEquity - 1000000).toString(),
+          othersShareholdersEquity: null,
+          totalShareholdersEquity: totalEquity.toString(),
+          totalLiabilitiesShareholdersEquity: totalAssets.toString(),
+          
+          // Additional Shareholders' Equity Information
+          commonStocksAuthorizedShares: 10000,
+          commonStocksAuthorizedParValue: "100",
+          commonStocksIssuedPaidUpShares: 10000,
+          commonStocksIssuedPaidUpParValue: "100",
+          
+          // Income Statement
+          netSales: revenue.toString(),
+          totalOtherIncome: "0",
+          totalRevenue: revenue.toString(),
+          costOfSalesServices: cogs.toString(),
+          grossProfitLoss: grossProfit.toString(),
+          totalOperatingExpenses: Math.round(grossProfit - netIncome - Math.round(totalDebt * 0.05)).toString(),
+          operatingIncomeLoss: Math.round(netIncome + Math.round(totalDebt * 0.05)).toString(),
+          otherExpenses: "0",
+          incomeBeforeDepreciationAmortization: Math.round(netIncome + Math.round(totalDebt * 0.05)).toString(),
+          incomeBeforeInterestIncomeTaxes: Math.round(netIncome + Math.round(totalDebt * 0.05)).toString(),
+          interestExpenses: Math.round(totalDebt * 0.05).toString(),
+          incomeTaxes: "0",
+          extraordinaryItems: null,
+          othersIncomeStatement: null,
+          netIncomeLoss: netIncome.toString(),
+          earningsLossPerShare: null,
+          numberOfWeightedAverageOrdinaryShares: null,
+          
+          // Legacy fields for backward compatibility
           salesRevenue: revenue.toString(),
           costOfGoodsSold: cogs.toString(),
           grossProfit: grossProfit.toString(),
           netIncome: netIncome.toString(),
-          totalAssets: totalAssets.toString(),
           totalDebt: totalDebt.toString(),
           totalEquity: totalEquity.toString(),
           currentAssets: currentAssets.toString(),
@@ -734,7 +878,11 @@ export class MemStorage implements IStorage {
       id,
       isSubmitted: document.isSubmitted || false,
       submittedDate: document.submittedDate || null,
-      isVerified: document.isVerified || false
+      isVerified: document.isVerified || false,
+      approvalStatus: document.approvalStatus || "pending",
+      reviewedBy: document.reviewedBy || null,
+      reviewedDate: document.reviewedDate || null,
+      fileUrl: document.fileUrl || null
     };
     this.documents.set(id, newDocument);
     return newDocument;

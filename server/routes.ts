@@ -42,6 +42,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/suppliers/:id/financial-data", async (req, res) => {
     try {
       const financialData = await storage.getFinancialData(req.params.id);
+      // Prevent caching to ensure fresh data
+      res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.set('Pragma', 'no-cache');
+      res.set('Expires', '0');
       res.json(financialData);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch financial data" });

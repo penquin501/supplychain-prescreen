@@ -228,9 +228,111 @@ export class MemStorage implements IStorage {
       }
     ];
 
-    const years = [2019, 2020, 2021, 2022, 2023];
+    // Create authentic financial data for Tree Progress Products (supplier-1) from CSV files
+    const treeProgressFinancialData = [
+      {
+        year: 2020,
+        salesRevenue: 28452559.77,
+        costOfGoodsSold: 19539344.78,
+        grossProfit: 8913214.99,
+        netIncome: 2210364.23,
+        totalAssets: 26721672.88,
+        totalEquity: 25336701.99,
+        totalDebt: 1384970.89,
+        currentAssets: 24997455.88,
+        currentLiabilities: 1384970.89,
+        operatingIncome: 2789771.75,
+        interestExpense: 0,
+        incomeTax: 579407.52
+      },
+      {
+        year: 2021,
+        salesRevenue: 26476100.07,
+        costOfGoodsSold: 17563151.43,
+        grossProfit: 8912948.64,
+        netIncome: 1874777.66,
+        totalAssets: 30118420.71,
+        totalEquity: 27211479.65,
+        totalDebt: 2906941.06,
+        currentAssets: 28827486.82,
+        currentLiabilities: 2906941.06,
+        operatingIncome: 2354974.90,
+        interestExpense: 0,
+        incomeTax: 484378.46
+      },
+      {
+        year: 2022,
+        salesRevenue: 31325089.09,
+        costOfGoodsSold: 21622702.84,
+        grossProfit: 9702386.25,
+        netIncome: 2199650.98,
+        totalAssets: 32271856.03,
+        totalEquity: 28411130.63,
+        totalDebt: 3860725.40,
+        currentAssets: 31296273.96,
+        currentLiabilities: 3860725.40,
+        operatingIncome: 2765863.35,
+        interestExpense: 0,
+        incomeTax: 566212.83
+      },
+      {
+        year: 2023,
+        salesRevenue: 31712108.16,
+        costOfGoodsSold: 21952043.96,
+        grossProfit: 9760064.20,
+        netIncome: 1703150.37,
+        totalAssets: 33353870.23,
+        totalEquity: 30114281.00,
+        totalDebt: 3239589.23,
+        currentAssets: 32715783.77,
+        currentLiabilities: 3239589.23,
+        operatingIncome: 2138770.74,
+        interestExpense: 0,
+        incomeTax: 435621.34
+      },
+      {
+        year: 2024,
+        salesRevenue: 34681792.23,
+        costOfGoodsSold: 23984155.48,
+        grossProfit: 10637319.11,
+        netIncome: 2247657.37,
+        totalAssets: 34333653.93,
+        totalEquity: 30361938.37,
+        totalDebt: 3971715.56,
+        currentAssets: 23999230.41,
+        currentLiabilities: 3971715.56,
+        operatingIncome: 2766750.71,
+        interestExpense: 0,
+        incomeTax: 579410.98
+      }
+    ];
+
+    // Create Tree Progress Products financial records
+    treeProgressFinancialData.forEach(yearData => {
+      const financialDataId = randomUUID();
+      const data: FinancialData = {
+        id: financialDataId,
+        supplierId: supplier1.id,
+        year: yearData.year,
+        salesRevenue: Math.round(yearData.salesRevenue).toString(),
+        costOfGoodsSold: Math.round(yearData.costOfGoodsSold).toString(),
+        grossProfit: Math.round(yearData.grossProfit).toString(),
+        netIncome: Math.round(yearData.netIncome).toString(),
+        totalAssets: Math.round(yearData.totalAssets).toString(),
+        totalDebt: Math.round(yearData.totalDebt).toString(),
+        totalEquity: Math.round(yearData.totalEquity).toString(),
+        currentAssets: Math.round(yearData.currentAssets).toString(),
+        currentLiabilities: Math.round(yearData.currentLiabilities).toString(),
+        interestExpense: Math.round(yearData.interestExpense).toString(),
+      };
+      this.financialData.set(financialDataId, data);
+    });
+
+    // Generate financial data for other suppliers (excluding supplier-1)
+    const years = [2020, 2021, 2022, 2023, 2024];
+    const otherSuppliersData = suppliersFinancialData.filter(s => s.supplierId !== supplier1.id);
     
-    suppliersFinancialData.forEach(supplierData => {
+    otherSuppliersData.forEach(supplierData => {
       years.forEach((year, index) => {
         const revenue = supplierData.baseRevenue[index];
         const cogs = Math.round(revenue * 0.62);

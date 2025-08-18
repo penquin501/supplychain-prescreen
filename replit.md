@@ -4,6 +4,13 @@ This is a Supply Chain Finance (SCF) Pre-Screen Platform built as a full-stack w
 
 The system allows users to manage supplier profiles, analyze financial data over multiple years, track transaction histories, and generate automated credit scores and reports to support lending decisions in supply chain finance scenarios.
 
+## Recent Changes (August 18, 2025)
+- Updated primary supplier data to authentic Thai company: บริษัท ทรี โพรเกรส โปรดักส์ จำกัด (Tree Progress Products Co., Ltd.)
+- Integrated authentic 5-year financial data (2020-2024) from official Balance Sheet and Income Statement CSV files
+- Business profile updated to ceramics/kitchenware wholesale with 27.5 years of operation
+- Financial scoring reflects actual performance: A- grade with strong stability indicators
+- Machine learning system implemented for pricing decision capture and future recommendation improvements
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.

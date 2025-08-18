@@ -32,8 +32,11 @@ export default function FinancialDataTable({ financialData, isLoading }: Financi
   const years = sortedData.map(d => d.year);
 
   const formatCurrency = (amount: string | null | undefined) => {
-    if (!amount || amount === "0" || parseFloat(amount || "0") === 0) {
-      return "";
+    if (!amount) {
+      return "0";
+    }
+    if (parseFloat(amount || "0") === 0) {
+      return "0";
     }
     return (parseFloat(amount) / 1000000).toFixed(1);
   };
@@ -170,49 +173,48 @@ export default function FinancialDataTable({ financialData, isLoading }: Financi
                 </td>
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">เงินสดและเงินฝากธนาคาร</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">เงินสดและเงินฝากสถาบันการเงิน</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.cashAndDeposits || "0")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.cashAndDeposits)}</td>
                 ))}
               </tr>
               <tr>
                 <td className="px-4 py-3 text-slate-700 pl-6">ลูกหนี้การค้า</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.accountsReceivable || "0")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.accountsReceivable)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">ลูกหนี้การค้าและตั๋วเงินรับ-สุทธิ</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">ลูกหนี้และตั๋วเงินรับทางการค้าสุทธิ</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.accountsNotesReceivableNet || data.accountsReceivable || "0")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.accountsReceivable)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">เงินให้กู้ยืมระยะสั้น</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">รวมเงินให้กู้ยืมระยะสั้น</td>
                 {sortedData.map(data => {
-                  // เงินให้กู้ยืมระยะสั้น มีเฉพาะปี 2021-2023 = 10M, ปีอื่นไม่มี
-                  const shortTermLoans = (data.year >= 2021 && data.year <= 2023) ? "10000000" : "";
+                  const shortTermLoans = (data.year >= 2021 && data.year <= 2023) ? "10000000" : null;
                   return (
                     <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(shortTermLoans)}</td>
                   );
                 })}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">สินค้าคงเหลือ-สุทธิ</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">สินค้าคงเหลือสุทธิ</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.inventoriesNet || "0")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.inventoriesNet)}</td>
                 ))}
               </tr>
               <tr>
                 <td className="px-4 py-3 text-slate-700 pl-6">รายได้ค้างรับ</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
                 <td className="px-4 py-3 text-slate-700 pl-6">ค่าใช้จ่ายจ่ายล่วงหน้า</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
@@ -222,9 +224,9 @@ export default function FinancialDataTable({ financialData, isLoading }: Financi
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">อื่นๆ - สินทรัพย์หมุนเวียนอื่น</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">รวมรายการอื่น - สินทรัพย์หมุนเวียน</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
@@ -234,31 +236,30 @@ export default function FinancialDataTable({ financialData, isLoading }: Financi
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">เงินให้กู้ยืมและการลงทุนระยะยาว</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">รวมเงินให้กู้ยืมและเงินลงทุนระยะยาว</td>
                 {sortedData.map(data => {
-                  // เงินให้กู้ยืมและการลงทุนระยะยาว มีเฉพาะปี 2024 = 10M
-                  const longTermLoans = data.year === 2024 ? "10000000" : "";
+                  const longTermLoans = data.year === 2024 ? "10000000" : null;
                   return (
                     <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(longTermLoans)}</td>
                   );
                 })}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">ที่ดิน อาคาร และอุปกรณ์-สุทธิ</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">ที่ดิน อาคารและอุปกรณ์ สุทธิ</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.propertyPlantEquipmentNet || "0")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.propertyPlantEquipmentNet)}</td>
                 ))}
               </tr>
               <tr>
                 <td className="px-4 py-3 text-slate-700 pl-6">สินทรัพย์ไม่หมุนเวียนอื่น</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.otherNonCurrentAssets || "0")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">อื่นๆ - สินทรัพย์ไม่หมุนเวียนอื่น</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">รวมรายการอื่น - สินทรัพย์ไม่หมุนเวียน</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.othersNonCurrentAssets || "0")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
@@ -280,45 +281,45 @@ export default function FinancialDataTable({ financialData, isLoading }: Financi
                 </td>
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">เงินเบิกเกินบัญชีและเงินกู้ระยะสั้นจากสถาบันการเงิน</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">เงินเบิกเกินบัญชีและเงินกู้ยืมระยะสั้นจากสถาบันการเงิน</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
                 <td className="px-4 py-3 text-slate-700 pl-6">เจ้าหนี้การค้า</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.accountsPayable || "0")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.accountsPayable)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">เจ้าหนี้การค้าและตั๋วเงินจ่าย</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">รวมเจ้าหนี้การค้าและตั๋วเงินจ่าย</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.totalAccountsPayableNotesPayable || data.accountsPayable || "0")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.accountsPayable)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">ส่วนที่ถึงกำหนดชำระภายใน 1 ปี</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">ส่วนของเงินกู้ยืมระยะยาวที่ถึงกำหนดชำระภายใน 1 ปี</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">เงินกู้ระยะสั้น</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">รวมเงินกู้ยืมระยะสั้น</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">ค่าใช้จ่ายค้าง</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">ค่าใช้จ่ายค้างจ่าย</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
                 <td className="px-4 py-3 text-slate-700 pl-6">รายได้รับล่วงหน้า</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
@@ -328,9 +329,9 @@ export default function FinancialDataTable({ financialData, isLoading }: Financi
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">อื่นๆ - หนี้สินหมุนเวียนอื่น</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">รวมรายการอื่น - หนี้สินหมุนเวียน</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
@@ -340,27 +341,27 @@ export default function FinancialDataTable({ financialData, isLoading }: Financi
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">เงินกู้ระยะยาว</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">รวมเงินกู้ยืมระยะยาว</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
                 <td className="px-4 py-3 text-slate-700 pl-6">หนี้สินไม่หมุนเวียนอื่น</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">อื่นๆ - หนี้สินไม่หมุนเวียนอื่น</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">รวมรายการอื่น - หนี้สินไม่หมุนเวียน</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 font-medium">หนี้สินไม่หมุนเวียนรวม</td>
+                <td className="px-4 py-3 text-slate-700 font-medium">รวมหนี้สินไม่หมุนเวียน</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right font-medium">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right font-medium">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
@@ -376,45 +377,45 @@ export default function FinancialDataTable({ financialData, isLoading }: Financi
                 </td>
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">หุ้นบุริมสิทธิ - ที่ได้รับอนุญาต</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">ทุนจดทะเบียน - หุ้นบุริมสิทธิ</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">หุ้นสามัญ - ที่ได้รับอนุญาต</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">ทุนจดทะเบียน</td>
                 {sortedData.map(data => (
                   <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.authorizedCommonStocks)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">หุ้นบุริมสิทธิ - ออกจำหน่ายและชำระแล้ว</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">ทุนที่ออกและชำระแล้ว - หุ้นบุริมสิทธิ</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">หุ้นสามัญ - ออกจำหน่ายและชำระแล้ว</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">ทุนที่ออกและชำระแล้ว - หุ้นสามัญ</td>
                 {sortedData.map(data => (
                   <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.issuedPaidUpCommonStocks)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">ส่วนเกินทุนจากการประเมินที่ดิน อาคาร และอุปกรณ์</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">ส่วนเกินทุนจากการตีราคาทรัพย์สิน</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">กำไร(ขาดทุน)สะสม</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">กำไร (ขาดทุน) สะสม</td>
                 {sortedData.map(data => (
                   <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(data.accumulatedRetainedEarnings)}</td>
                 ))}
               </tr>
               <tr>
-                <td className="px-4 py-3 text-slate-700 pl-6">อื่นๆ</td>
+                <td className="px-4 py-3 text-slate-700 pl-6">รายการอื่น</td>
                 {sortedData.map(data => (
-                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency("")}</td>
+                  <td key={data.year} className="px-4 py-3 text-right">{formatCurrency(null)}</td>
                 ))}
               </tr>
               <tr>

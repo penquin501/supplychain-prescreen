@@ -1,0 +1,50 @@
+สินทรัพย์	Assets						
+เงินสดและเงินฝากสถาบันการเงิน	Cash and deposits at financial institutions		18330909.57	17755375.09	16006840.68	14232707.34	10412588.01
+ลูกหนี้การค้า	Accounts receivable		3851636.82	3216371.35	3604871.46	2768751.48	2592059.04
+ลูกหนี้และตั๋วเงินรับทางการค้าสุทธิ	Accounts and notes receivable - net		3851636.82	3216371.35	3604871.46	2768751.48	2592059.04
+รวมเงินให้กู้ยืมระยะสั้น	Total short- term loans			10000000	10000000	10000000	10000000
+สินค้าคงเหลือสุทธิ	Inventories - net		1810413.21	1687165	1660623.75	1820749.24	1987530.07
+รายได้ค้างรับ	Accrued income						
+ค่าใช้จ่ายจ่ายล่วงหน้า	Prepaid expenses						
+สินทรัพย์หมุนเวียนอื่น	Other current assets		6270.81	56872.33	23938.07	5278.76	5278.76
+รวมรายการอื่น - สินทรัพย์หมุนเวียน	Others						
+รวมสินทรัพย์หมุนเวียน	Total current assets		23999230.41	32715783.77	31296273.96	28827486.82	24997455.88
+รวมเงินให้กู้ยืมและเงินลงทุนระยะยาว	Total long-term loans and investments		10000000				
+ที่ดิน อาคารและอุปกรณ์ สุทธิ	Property, plant and equipment - net		334423.52	638086.46	975582.07	1290933.89	1724217
+สินทรัพย์ไม่หมุนเวียนอื่น	Other non-current assets						
+รวมรายการอื่น - สินทรัพย์ไม่หมุนเวียน	Others						
+รวมสินทรัพย์ไม่หมุนเวียน	Total non-current assets		10334423.52	638086.46	975582.07	1290933.89	1724217
+รวมสินทรัพย์	Total assets		34333653.93	33353870.23	32271856.03	30118420.71	26721672.88
+หนี้สินและส่วนของผู้ถือหุ้น	Liabilities and shareholders' equity						
+หนี้สิน	Liabilities						
+เงินเบิกเกินบัญชีและเงินกู้ยืมระยะสั้นจากสถาบันการเงิน	Bank overdrafts and short-term loans from financial institutions						
+เจ้าหนี้การค้า	Accounts payable		3672304.58	3083967.89	3544512.57	2672562.6	1055563.37
+รวมเจ้าหนี้การค้าและตั๋วเงินจ่าย	Total accounts payable and notes payable		3672304.58	3083967.89	3544512.57	2672562.6	1055563.37
+ส่วนของเงินกู้ยืมระยะยาวที่ถึงกำหนดชำระภายใน 1 ปี	Current portion of long-term loans						
+รวมเงินกู้ยืมระยะสั้น	Total short-term loans						
+ค่าใช้จ่ายค้างจ่าย	Accrued expenses						
+รายได้รับล่วงหน้า	Unearned revenues						
+หนี้สินหมุนเวียนอื่น	Other current liabilities		299410.98	155621.34	316212.83	234378.46	329407.52
+รวมรายการอื่น - หนี้สินหมุนเวียน	Others						
+รวมหนี้สินหมุนเวียน	Total current liabilities		3971715.56	3239589.23	3860725.4	2906941.06	1384970.89
+รวมเงินกู้ยืมระยะยาว	Total long-term loans						
+หนี้สินไม่หมุนเวียนอื่น	Other non-current liabilities						
+รวมรายการอื่น - หนี้สินไม่หมุนเวียน	Others						
+รวมหนี้สินไม่หมุนเวียน	Total non-current liabilities						
+รวมหนี้สิน	Total Liabilities		3971715.56	3239589.23	3860725.4	2906941.06	1384970.89
+ส่วนของผู้ถือหุ้น	Shareholder's equity						
+ทุนจดทะเบียน - หุ้นบุริมสิทธิ	Authorized preferred stocks						
+ทุนจดทะเบียน	Authorized common stocks		1000000	1000000	1000000	1000000	1000000
+ทุนที่ออกและชำระแล้ว - หุ้นบุริมสิทธิ	Issued and paid-up preferred stocks						
+ทุนที่ออกและชำระแล้ว - หุ้นสามัญ	Issued and paid-up common stocks		1000000	1000000	1000000	1000000	1000000
+ส่วนเกินทุนจากการตีราคาทรัพย์สิน	Appraisal surplus on property, plant and equipment						
+กำไร (ขาดทุน) สะสม	Accumulated retained earnings		29361938.37	29114281	27411130.63	26211479.65	24336701.99
+รายการอื่น	Others						
+รวมส่วนของผู้ถือหุ้น	Total shareholders' equity		30361938.37	30114281	28411130.63	27211479.65	25336701.99
+รวมหนิ้สินและส่วนของผู้ถือหุ้น	Total liabilities and shareholders' equity		34333653.93	33353870.23	32271856.03	30118420.71	26721672.88
+ข้อมูลเพิ่มเติมในส่วนของผู้ถือหุ้น	Additional information for shareholders' equity						
+หุ้นสามัญ	Common stocks						
+จำนวนหุ้น - จดทะเบียน	No.of shares - Authorized		10000	10000	10000	10000	10000
+มูลค่าที่ตราไว้ (บาท) - จดทะเบียน	Par value (Baht) - Authorized		100	100	100	100	100
+จำนวนหุ้น - ที่ออกและเรียกชำระแล้ว	No.of shares - Issued and paid-up						
+มูลค่าที่ตราไว้ (บาท) - ที่ออกและเรียกชำระแล้ว	Par value (Baht) - Issued and Paid-up						

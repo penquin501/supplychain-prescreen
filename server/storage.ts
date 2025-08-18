@@ -228,82 +228,145 @@ export class MemStorage implements IStorage {
       }
     ];
 
-    // Create authentic financial data for Tree Progress Products (supplier-1) from CSV files
+    // Authentic financial data from Tree Progress Products CSV files (BS_ and IC_)
+    // Balance Sheet data matches exactly with BS_0105541008416_TREE PROGRESS PRODUCT CO.,LTD._20250818102819_1755493549559.csv
+    // Income Statement data matches exactly with IC_0105541008416_TREE PROGRESS PRODUCT CO.,LTD._20250818102819_1755493549558.csv
     const treeProgressFinancialData = [
       {
         year: 2020,
+        // Income Statement data (IC_ file)
         salesRevenue: 28452559.77,
         costOfGoodsSold: 19539344.78,
         grossProfit: 8913214.99,
         netIncome: 2210364.23,
-        totalAssets: 26721672.88,
-        totalEquity: 25336701.99,
-        totalDebt: 1384970.89,
-        currentAssets: 24997455.88,
-        currentLiabilities: 1384970.89,
         operatingIncome: 2789771.75,
         interestExpense: 0,
-        incomeTax: 579407.52
+        incomeTax: 579407.52,
+        // Balance Sheet data (BS_ file) - Year 2020 is last column
+        totalAssets: 26721672.88,
+        currentAssets: 24997455.88,
+        nonCurrentAssets: 1724217.00,
+        cashAndDeposits: 10412588.01,
+        accountsReceivable: 2592059.04,
+        inventories: 1987530.07,
+        otherCurrentAssets: 5278.76,
+        totalLiabilities: 1384970.89,
+        currentLiabilities: 1384970.89,
+        accountsPayable: 1055563.37,
+        otherCurrentLiabilities: 329407.52,
+        totalEquity: 25336701.99,
+        authorizedCapital: 1000000.00,
+        paidUpCapital: 1000000.00,
+        retainedEarnings: 24336701.99
       },
       {
         year: 2021,
+        // Income Statement data (IC_ file)
         salesRevenue: 26476100.07,
         costOfGoodsSold: 17563151.43,
         grossProfit: 8912948.64,
         netIncome: 1874777.66,
-        totalAssets: 30118420.71,
-        totalEquity: 27211479.65,
-        totalDebt: 2906941.06,
-        currentAssets: 28827486.82,
-        currentLiabilities: 2906941.06,
         operatingIncome: 2354974.90,
         interestExpense: 0,
-        incomeTax: 484378.46
+        incomeTax: 484378.46,
+        // Balance Sheet data (BS_ file) - Year 2021 is 4th column
+        totalAssets: 30118420.71,
+        currentAssets: 28827486.82,
+        nonCurrentAssets: 1290933.89,
+        cashAndDeposits: 14232707.34,
+        accountsReceivable: 2768751.48,
+        inventories: 1820749.24,
+        otherCurrentAssets: 5278.76,
+        totalLiabilities: 2906941.06,
+        currentLiabilities: 2906941.06,
+        accountsPayable: 2672562.60,
+        otherCurrentLiabilities: 234378.46,
+        totalEquity: 27211479.65,
+        authorizedCapital: 1000000.00,
+        paidUpCapital: 1000000.00,
+        retainedEarnings: 26211479.65
       },
       {
         year: 2022,
+        // Income Statement data (IC_ file)
         salesRevenue: 31325089.09,
         costOfGoodsSold: 21622702.84,
         grossProfit: 9702386.25,
         netIncome: 2199650.98,
-        totalAssets: 32271856.03,
-        totalEquity: 28411130.63,
-        totalDebt: 3860725.40,
-        currentAssets: 31296273.96,
-        currentLiabilities: 3860725.40,
         operatingIncome: 2765863.35,
         interestExpense: 0,
-        incomeTax: 566212.83
+        incomeTax: 566212.83,
+        // Balance Sheet data (BS_ file) - Year 2022 is 3rd column
+        totalAssets: 32271856.03,
+        currentAssets: 31296273.96,
+        nonCurrentAssets: 975582.07,
+        cashAndDeposits: 16006840.68,
+        accountsReceivable: 3604871.46,
+        inventories: 1660623.75,
+        otherCurrentAssets: 23938.07,
+        totalLiabilities: 3860725.40,
+        currentLiabilities: 3860725.40,
+        accountsPayable: 3544512.57,
+        otherCurrentLiabilities: 316212.83,
+        totalEquity: 28411130.63,
+        authorizedCapital: 1000000.00,
+        paidUpCapital: 1000000.00,
+        retainedEarnings: 27411130.63
       },
       {
         year: 2023,
+        // Income Statement data (IC_ file)
         salesRevenue: 31712108.16,
         costOfGoodsSold: 21952043.96,
         grossProfit: 9760064.20,
         netIncome: 1703150.37,
-        totalAssets: 33353870.23,
-        totalEquity: 30114281.00,
-        totalDebt: 3239589.23,
-        currentAssets: 32715783.77,
-        currentLiabilities: 3239589.23,
         operatingIncome: 2138770.74,
         interestExpense: 0,
-        incomeTax: 435621.34
+        incomeTax: 435621.34,
+        // Balance Sheet data (BS_ file) - Year 2023 is 2nd column
+        totalAssets: 33353870.23,
+        currentAssets: 32715783.77,
+        nonCurrentAssets: 638086.46,
+        cashAndDeposits: 17755375.09,
+        accountsReceivable: 3216371.35,
+        inventories: 1687165.00,
+        otherCurrentAssets: 56872.33,
+        totalLiabilities: 3239589.23,
+        currentLiabilities: 3239589.23,
+        accountsPayable: 3083967.89,
+        otherCurrentLiabilities: 155621.34,
+        totalEquity: 30114281.00,
+        authorizedCapital: 1000000.00,
+        paidUpCapital: 1000000.00,
+        retainedEarnings: 29114281.00
       },
       {
         year: 2024,
+        // Income Statement data (IC_ file)
         salesRevenue: 34681792.23,
         costOfGoodsSold: 23984155.48,
         grossProfit: 10637319.11,
         netIncome: 2247657.37,
-        totalAssets: 34333653.93,
-        totalEquity: 30361938.37,
-        totalDebt: 3971715.56,
-        currentAssets: 23999230.41,
-        currentLiabilities: 3971715.56,
         operatingIncome: 2766750.71,
         interestExpense: 0,
-        incomeTax: 579410.98
+        incomeTax: 579410.98,
+        // Balance Sheet data (BS_ file) - Year 2024 is 1st column
+        totalAssets: 34333653.93,
+        currentAssets: 23999230.41,
+        nonCurrentAssets: 10334423.52,
+        cashAndDeposits: 18330909.57,
+        accountsReceivable: 3851636.82,
+        inventories: 1810413.21,
+        otherCurrentAssets: 6270.81,
+        longTermInvestments: 10000000.00,
+        totalLiabilities: 3971715.56,
+        currentLiabilities: 3971715.56,
+        accountsPayable: 3672304.58,
+        otherCurrentLiabilities: 299410.98,
+        totalEquity: 30361938.37,
+        authorizedCapital: 1000000.00,
+        paidUpCapital: 1000000.00,
+        retainedEarnings: 29361938.37
       }
     ];
 
@@ -319,7 +382,7 @@ export class MemStorage implements IStorage {
         grossProfit: Math.round(yearData.grossProfit).toString(),
         netIncome: Math.round(yearData.netIncome).toString(),
         totalAssets: Math.round(yearData.totalAssets).toString(),
-        totalDebt: Math.round(yearData.totalDebt).toString(),
+        totalDebt: Math.round(yearData.totalLiabilities).toString(), // Use totalLiabilities from BS_ file
         totalEquity: Math.round(yearData.totalEquity).toString(),
         currentAssets: Math.round(yearData.currentAssets).toString(),
         currentLiabilities: Math.round(yearData.currentLiabilities).toString(),

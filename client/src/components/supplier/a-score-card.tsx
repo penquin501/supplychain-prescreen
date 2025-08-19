@@ -122,7 +122,7 @@ export default function AScoreCard({ supplierId, documents }: AScoreCardProps) {
     <Card className="border-slate-200">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>A-Score</CardTitle>
+          <CardTitle>Application Document</CardTitle>
           <Badge className={status.className}>
             <StatusIcon className="h-3 w-3 mr-1" />
             {status.badge}

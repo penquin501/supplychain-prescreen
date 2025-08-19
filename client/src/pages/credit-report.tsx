@@ -321,7 +321,7 @@ export default function CreditReport() {
             <Card className="border-slate-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-slate-900">A-Score</h4>
+                  <h4 className="font-semibold text-slate-900">Application Document</h4>
                   <span className={`text-2xl font-bold ${
                     parseInt(score.aScore) >= 80 ? 'text-green-600' : 
                     parseInt(score.aScore) >= 31 ? 'text-yellow-600' : 

@@ -123,7 +123,7 @@ export default function FinancialScoreCard({
   return (
     <Card className="border-slate-200">
       <CardHeader>
-        <CardTitle>Financial Score</CardTitle>
+        <CardTitle>F-Score</CardTitle>
       </CardHeader>
       <CardContent>
         {randomData ? (

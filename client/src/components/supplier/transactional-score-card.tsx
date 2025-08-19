@@ -61,7 +61,7 @@ export default function TransactionalScoreCard({ supplierId }: TransactionalScor
   return (
     <Card className="border-slate-200">
       <CardHeader>
-        <CardTitle>Transactional Score</CardTitle>
+        <CardTitle>T-Score</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="text-center mb-4">

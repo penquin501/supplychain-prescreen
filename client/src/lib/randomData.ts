@@ -464,7 +464,24 @@ export function getRandomCompanyData(supplierId: string): RandomCompanyData {
   ];
 
   // Calculate qualification score and grade
-  const { score: qualificationTotalScore, grade: financialGrade } = calculateQualificationScoreAndGrade(qualificationResults);
+  let { score: qualificationTotalScore, grade: financialGrade } = calculateQualificationScoreAndGrade(qualificationResults);
+
+  // If supplierId === "supplier-1", override results to "Yes"
+  let adjustedQualificationResults = qualificationResults;
+  if (supplierId === "supplier-1") {
+    adjustedQualificationResults = qualificationResults.map((item) => {
+      const weightValue = parseFloat(item.weight) / 100;
+      return {
+        ...item,
+        result: "Yes",
+        value: 1,
+        scoring: weightValue.toFixed(2),
+      };
+    });
+    const { score: adjScore, grade: adjGrade } = calculateQualificationScoreAndGrade(adjustedQualificationResults);
+    qualificationTotalScore = adjScore;
+    financialGrade = adjGrade;
+  }
 
   // Generate score change data based on supplier ID
   function generateScoreChange(supplierId: string): ScoreChangeData {
@@ -518,7 +535,7 @@ export function getRandomCompanyData(supplierId: string): RandomCompanyData {
 
   return {
     ...company,
-    qualificationResults,
+    qualificationResults: adjustedQualificationResults,
     qualificationTotalScore,
     financialGrade,
     financialData: {

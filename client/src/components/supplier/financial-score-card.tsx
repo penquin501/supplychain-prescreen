@@ -16,11 +16,11 @@ interface FinancialScoreCardProps {
   randomData?: RandomCompanyData;
 }
 
-export default function FinancialScoreCard({ 
-  supplierId, 
-  supplier, 
+export default function FinancialScoreCard({
+  supplierId,
+  supplier,
   financialData,
-  randomData 
+  randomData,
 }: FinancialScoreCardProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -28,12 +28,17 @@ export default function FinancialScoreCard({
 
   const calculateScoreMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest("POST", `/api/suppliers/${supplierId}/calculate-score`);
+      const response = await apiRequest(
+        "POST",
+        `/api/suppliers/${supplierId}/calculate-score`
+      );
       return await response.json();
     },
     onSuccess: (data) => {
       setScore(data);
-      queryClient.invalidateQueries({ queryKey: ["/api/suppliers", supplierId, "score"] });
+      queryClient.invalidateQueries({
+        queryKey: ["/api/suppliers", supplierId, "score"],
+      });
       toast({
         title: "Score Calculated",
         description: "Financial score has been successfully calculated.",
@@ -49,23 +54,27 @@ export default function FinancialScoreCard({
   });
 
   const latestFinancial = financialData?.sort((a, b) => b.year - a.year)[0];
-  
+
   const getGradeBadge = (grade: string) => {
     const gradeColors: Record<string, string> = {
-      'AAA': 'bg-green-100 text-green-800',
-      'AA': 'bg-green-100 text-green-800',
-      'A': 'bg-green-100 text-green-800',
-      'B+': 'bg-blue-100 text-blue-800',
-      'B': 'bg-blue-100 text-blue-800',
-      'C+': 'bg-yellow-100 text-yellow-800',
-      'C': 'bg-yellow-100 text-yellow-800',
-      'D+': 'bg-orange-100 text-orange-800',
-      'D': 'bg-orange-100 text-orange-800',
-      'F': 'bg-red-100 text-red-800',
+      AAA: "bg-green-100 text-green-800",
+      AA: "bg-green-100 text-green-800",
+      A: "bg-green-100 text-green-800",
+      "B+": "bg-blue-100 text-blue-800",
+      B: "bg-blue-100 text-blue-800",
+      "C+": "bg-yellow-100 text-yellow-800",
+      C: "bg-yellow-100 text-yellow-800",
+      "D+": "bg-orange-100 text-orange-800",
+      D: "bg-orange-100 text-orange-800",
+      F: "bg-red-100 text-red-800",
     };
-    
+
     return (
-      <Badge className={`${gradeColors[grade] || 'bg-slate-100 text-slate-800'} hover:${gradeColors[grade] || 'bg-slate-100'}`}>
+      <Badge
+        className={`${
+          gradeColors[grade] || "bg-slate-100 text-slate-800"
+        } hover:${gradeColors[grade] || "bg-slate-100"}`}
+      >
         {grade}
       </Badge>
     );
@@ -75,15 +84,19 @@ export default function FinancialScoreCard({
     if (!supplier || !latestFinancial) return [];
 
     const revenue = parseFloat(latestFinancial.salesRevenue);
-    const deRatio = parseFloat(latestFinancial.totalDebt) / parseFloat(latestFinancial.totalEquity);
-    const currentRatio = parseFloat(latestFinancial.currentAssets) / parseFloat(latestFinancial.currentLiabilities);
+    const deRatio =
+      parseFloat(latestFinancial.totalDebt) /
+      parseFloat(latestFinancial.totalEquity);
+    const currentRatio =
+      parseFloat(latestFinancial.currentAssets) /
+      parseFloat(latestFinancial.currentLiabilities);
     const netIncome = parseFloat(latestFinancial.netIncome);
 
     return [
       {
         label: "Entity Type",
         value: supplier.registrationType,
-        status: ['PLC', 'Ltd', 'LP'].includes(supplier.registrationType),
+        status: ["PLC", "Ltd", "LP"].includes(supplier.registrationType),
       },
       {
         label: "VAT Registration",
@@ -121,7 +134,7 @@ export default function FinancialScoreCard({
   const criteria = checkCriteria();
 
   return (
-    <Card className="border-slate-200">
+    <Card className="border-slate-200  h-full flex flex-col">
       <CardHeader>
         <CardTitle>F-Score</CardTitle>
       </CardHeader>
@@ -130,38 +143,45 @@ export default function FinancialScoreCard({
           <>
             <div className="text-center mb-4">
               <div className="flex items-center justify-center gap-4 mb-2">
-                <div className={`text-4xl font-bold px-3 py-1 rounded-lg ${(() => {
-                  const gradeColors: Record<string, string> = {
-                    'AAA': 'bg-green-100 text-green-800',
-                    'AA': 'bg-green-100 text-green-800',
-                    'A': 'bg-green-100 text-green-800',
-                    'B+': 'bg-yellow-100 text-yellow-800',
-                    'B': 'bg-yellow-100 text-yellow-800',
-                    'C+': 'bg-yellow-100 text-yellow-800',
-                    'C': 'bg-yellow-100 text-yellow-800',
-                    'D+': 'bg-yellow-100 text-yellow-800',
-                    'D': 'bg-yellow-100 text-yellow-800',
-                    'F': 'bg-red-100 text-red-800',
-                  };
-                  return gradeColors[randomData.financialGrade] || 'bg-slate-100 text-slate-800';
-                })()}`}>
+                <div
+                  className={`text-4xl font-bold px-3 py-1 rounded-lg ${(() => {
+                    const gradeColors: Record<string, string> = {
+                      AAA: "bg-green-100 text-green-800",
+                      AA: "bg-green-100 text-green-800",
+                      A: "bg-green-100 text-green-800",
+                      "B+": "bg-yellow-100 text-yellow-800",
+                      B: "bg-yellow-100 text-yellow-800",
+                      "C+": "bg-yellow-100 text-yellow-800",
+                      C: "bg-yellow-100 text-yellow-800",
+                      "D+": "bg-yellow-100 text-yellow-800",
+                      D: "bg-yellow-100 text-yellow-800",
+                      F: "bg-red-100 text-red-800",
+                    };
+                    return (
+                      gradeColors[randomData.financialGrade] ||
+                      "bg-slate-100 text-slate-800"
+                    );
+                  })()}`}
+                >
                   {randomData.financialGrade}
                 </div>
                 <div className="text-4xl font-bold text-financial-primary">
                   {randomData.qualificationTotalScore}%
                 </div>
               </div>
-              <div className={`text-sm font-medium ${(() => {
-                const score = randomData.qualificationTotalScore;
-                if (score >= 80) return 'text-green-600';
-                if (score >= 31) return 'text-yellow-600';
-                return 'text-red-600';
-              })()}`}>
+              <div
+                className={`text-sm font-medium ${(() => {
+                  const score = randomData.qualificationTotalScore;
+                  if (score >= 80) return "text-green-600";
+                  if (score >= 31) return "text-yellow-600";
+                  return "text-red-600";
+                })()}`}
+              >
                 {(() => {
                   const score = randomData.qualificationTotalScore;
-                  if (score >= 80) return 'Pass';
-                  if (score >= 31) return 'Pending';
-                  return 'Not Pass';
+                  if (score >= 80) return "Pass";
+                  if (score >= 31) return "Pending";
+                  return "Not Pass";
                 })()}
               </div>
             </div>

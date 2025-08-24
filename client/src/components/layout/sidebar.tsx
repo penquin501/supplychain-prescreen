@@ -65,7 +65,8 @@ export default function Sidebar() {
   const [location, navigate] = useLocation();
   const [hash, setHash] = useState<string>(() => window.location.hash);
   const [expandedMenus, setExpandedMenus] = useState<Set<string>>(
-    new Set(["Credit Decision Intelligence"])
+    // new Set(["Credit Decision Intelligence"])
+    new Set()
   );
 
   useEffect(() => {
@@ -75,11 +76,9 @@ export default function Sidebar() {
   }, []);
 
   const scrollToId = (id: string) => {
-    // รอให้ DOM อัปเดตและ component render เสร็จก่อน
     setTimeout(() => {
       const el = document.getElementById(id);
       if (!el) {
-        // ลองอีกครั้งหากไม่เจอ
         setTimeout(() => {
           const retryEl = document.getElementById(id);
           if (retryEl) {
@@ -94,7 +93,6 @@ export default function Sidebar() {
         return;
       }
       el.scrollIntoView({ behavior: "smooth", block: "start" });
-      // ชดเชยกรณีมี header ติดบน
       window.scrollBy({
         top: -80,
         left: 0,
@@ -120,15 +118,11 @@ export default function Sidebar() {
   ) => {
     e.preventDefault();
 
-    // Navigate to the URL first
     navigate(href);
 
-    // รอให้ navigation เสร็จก่อน
     setTimeout(() => {
-      // Update hash
       window.location.hash = sectionId;
 
-      // Trigger hashchange event manually
       const hashChangeEvent = new HashChangeEvent("hashchange", {
         oldURL: window.location.href.split("#")[0],
         newURL: window.location.href,
